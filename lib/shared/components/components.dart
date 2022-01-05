@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:social_app/shared/style/colors.dart';
+
 
 Future<dynamic> navigateAndRemove(BuildContext context, Widget screen) {
   return Navigator.pushAndRemoveUntil(context,
@@ -144,7 +144,6 @@ Widget myElevatedButton({
             borderCircular ?? 0.0,
           ),
         ),
-        primary: mainColor,
       ),
     ),
   );

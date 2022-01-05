@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layouts/home_layout.dart';
@@ -7,7 +8,7 @@ import 'package:social_app/shared/bloc_observer.dart';
 import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
-import 'package:social_app/shared/style/themes/themes.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,8 +44,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: ThemesHelper.lightTheme,
-        darkTheme: ThemesHelper.darkTheme,
+        theme: FlexColorScheme.light(scheme: FlexScheme.bahamaBlue).toTheme,
+        darkTheme: FlexColorScheme.dark(scheme: FlexScheme.bahamaBlue).toTheme,
         themeMode: ThemeMode.light,
         home: page,
       ),
