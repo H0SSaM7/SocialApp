@@ -1,33 +1,53 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/shared/bloc_observer.dart';
+import 'package:social_app/shared/consistent/consistent.dart';
+import 'package:social_app/shared/cubit/cubit.dart';
+import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
+import 'package:social_app/shared/style/themes/themes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocOverrides.runZoned(
     () async {
       await Firebase.initializeApp();
-      runApp(const MyApp());
+      await CachedHelper.init();
+      uId = CachedHelper.getPref(key: 'uId');
+      firstPage() {
+        if (uId == null) {
+          return const LoginScreen();
+        } else {
+          return const HomeLayout();
+        }
+      }
+
+      runApp(MyApp(
+        page: firstPage(),
+      ));
     },
     blocObserver: MyBlocObserver(),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  const MyApp({Key? key, this.page}) : super(key: key);
+  final Widget? page;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.brown,
+    return BlocProvider(
+      create: (context) => SocialCubit()..getUserDate(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemesHelper.lightTheme,
+        darkTheme: ThemesHelper.darkTheme,
+        themeMode: ThemeMode.light,
+        home: page,
       ),
-      home: const LoginScreen(),
     );
   }
 }

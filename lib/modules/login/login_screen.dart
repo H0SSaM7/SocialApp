@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/layouts/home_layout.dart';
 
 import 'package:social_app/modules/login/cubit/login_cubit.dart';
 import 'package:social_app/modules/login/cubit/login_states.dart';
 import 'package:social_app/modules/register/register_screen.dart';
 import 'package:social_app/shared/components/components.dart';
+import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 import 'package:social_app/shared/style/colors.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -19,7 +21,11 @@ class LoginScreen extends StatelessWidget {
       create: (context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
-          if (state is LoginSuccessState) {}
+          if (state is LoginSuccessState) {
+            CachedHelper.savePref(key: 'uId', value: state.uId).then((value) {
+              navigateAndRemove(context, const HomeLayout());
+            });
+          }
         },
         builder: (context, state) {
           LoginCubit cubit = LoginCubit.get(context);
@@ -93,22 +99,22 @@ class LoginScreen extends StatelessWidget {
                                   ),
                                 ),
                                 onSubmitted: (value) {
-                                  // if (formKey.currentState!.validate()) {
-                                  //   cubit.userLogin(
-                                  //     email: emailController.text,
-                                  //     password: passwordController.text,
-                                  //   );
-                                  // }
+                                  if (formKey.currentState!.validate()) {
+                                    cubit.userLogin(
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                    );
+                                  }
                                 }),
                             const SizedBox(height: 20),
                             myElevatedButton(
                               onPressed: () {
-                                // if (formKey.currentState!.validate()) {
-                                //   cubit.userLogin(
-                                //     email: emailController.text,
-                                //     password: passwordController.text,
-                                //   );
-                                // }
+                                if (formKey.currentState!.validate()) {
+                                  cubit.userLogin(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
+                                }
                               },
                               child: state is LoginLoadingState
                                   ? const CircularProgressIndicator(

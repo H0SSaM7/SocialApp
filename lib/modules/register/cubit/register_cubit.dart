@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/register/cubit/register_states.dart';
+import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
   RegisterCubit() : super(RegisterInitialState());
@@ -48,6 +49,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
         .doc(uId)
         .set(model.toJson())
         .then((value) {
+      CachedHelper.savePref(key: 'uId', value: uId);
       emit(RegisterUserCreateSuccessState());
     }).catchError((onError) {
       debugPrint(onError.toString());
