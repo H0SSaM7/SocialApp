@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
 Future<dynamic> navigateAndRemove(BuildContext context, Widget screen) {
   return Navigator.pushAndRemoveUntil(context,
       MaterialPageRoute(builder: (context) => screen), (route) => false);

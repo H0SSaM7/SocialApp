@@ -9,7 +9,6 @@ import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   BlocOverrides.runZoned(
