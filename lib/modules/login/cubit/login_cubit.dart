@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,24 +10,17 @@ class LoginCubit extends Cubit<LoginStates> {
 
   static LoginCubit get(BuildContext context) => BlocProvider.of(context);
 
-  // void userLogin({required String email, required String password}) {
-  //   emit(LoginLoadingState());
-  //   DioHelper.post(
-  //     url: loginURL,
-  //     data: {
-  //       'email': email,
-  //       'password': password,
-  //     },
-  //   ).then((value) {
-  //     UserModel data = UserModel.fromJson(value.data);
-  //     emit(LoginSuccessState(userLoginClass: data));
-  //
-  //     debugPrint(value.data.toString());
-  //   }).catchError((error) {
-  //     debugPrint(error.toString());
-  //     emit(LoginErrorState());
-  //   });
-  // }
+  void userLogin({required String email, required String password}) {
+    emit(LoginLoadingState());
+    FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password)
+        .then((value) {
+      emit(LoginSuccessState());
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+      emit(LoginErrorState());
+    });
+  }
 
   bool isObscure = true;
   void changePasswordVisibility() {

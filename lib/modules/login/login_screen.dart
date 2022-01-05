@@ -24,96 +24,115 @@ class LoginScreen extends StatelessWidget {
         builder: (context, state) {
           LoginCubit cubit = LoginCubit.get(context);
           return Scaffold(
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  key: formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'LOGIN',
-                          style:
-                              Theme.of(context).textTheme.headline4!.copyWith(
+            body: SafeArea(
+              child: Container(
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Color(0xfff3d5b5),
+                    Colors.white,
+                    Colors.white,
+                    Colors.white,
+                    Color(0xfff3d5b5),
+                  ],
+                )),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Center(
+                    child: Form(
+                      key: formKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'LOGIN',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline4!
+                                  .copyWith(
                                     color: mainColor,
                                     fontWeight: FontWeight.bold,
                                   ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Log in to catch up with the best deals',
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
-                        const SizedBox(height: 40),
-                        myFormField(
-                          type: TextInputType.emailAddress,
-                          controller: emailController,
-                          icon: const Icon(Icons.email_rounded),
-                          title: 'Email Address',
-                          validateText: 'Enter Email Address',
-                          context: context,
-                        ),
-                        const SizedBox(height: 20),
-                        myFormField(
-                            type: TextInputType.visiblePassword,
-                            controller: passwordController,
-                            icon: const Icon(Icons.lock_outline),
-                            title: 'Password',
-                            validateText: 'Password is too short',
-                            context: context,
-                            isObscure: cubit.isObscure,
-                            suffix: IconButton(
-                              onPressed: () {
-                                cubit.changePasswordVisibility();
-                              },
-                              icon: Icon(
-                                cubit.isObscure
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.black,
-                                size: 22,
-                              ),
                             ),
-                            onSubmitted: (value) {
-                              // if (formKey.currentState!.validate()) {
-                              //   cubit.userLogin(
-                              //     email: emailController.text,
-                              //     password: passwordController.text,
-                              //   );
-                              // }
-                            }),
-                        const SizedBox(height: 20),
-                        myElevatedButton(
-                          onPressed: () {
-                            // if (formKey.currentState!.validate()) {
-                            //   cubit.userLogin(
-                            //     email: emailController.text,
-                            //     password: passwordController.text,
-                            //   );
-                            // }
-                          },
-                          child: state is LoginLoadingState
-                              ? const CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
-                              : const Text('LOGIN'),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Don't have an account? "),
-                            TextButton(
+                            const SizedBox(height: 10),
+                            Text(
+                              'Log in to catch up with the best deals',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                            const SizedBox(height: 40),
+                            myFormField(
+                              type: TextInputType.emailAddress,
+                              controller: emailController,
+                              icon: const Icon(Icons.email_rounded),
+                              title: 'Email Address',
+                              validateText: 'Enter Email Address',
+                              context: context,
+                            ),
+                            const SizedBox(height: 20),
+                            myFormField(
+                                type: TextInputType.visiblePassword,
+                                controller: passwordController,
+                                icon: const Icon(Icons.lock_outline),
+                                title: 'Password',
+                                validateText: 'Password is too short',
+                                context: context,
+                                isObscure: cubit.isObscure,
+                                suffix: IconButton(
+                                  onPressed: () {
+                                    cubit.changePasswordVisibility();
+                                  },
+                                  icon: Icon(
+                                    cubit.isObscure
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.black,
+                                    size: 22,
+                                  ),
+                                ),
+                                onSubmitted: (value) {
+                                  // if (formKey.currentState!.validate()) {
+                                  //   cubit.userLogin(
+                                  //     email: emailController.text,
+                                  //     password: passwordController.text,
+                                  //   );
+                                  // }
+                                }),
+                            const SizedBox(height: 20),
+                            myElevatedButton(
                               onPressed: () {
-                                navigateTo(context, const RegisterScreen());
+                                // if (formKey.currentState!.validate()) {
+                                //   cubit.userLogin(
+                                //     email: emailController.text,
+                                //     password: passwordController.text,
+                                //   );
+                                // }
                               },
-                              child: const Text('REGISTER'),
+                              child: state is LoginLoadingState
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : const Text('LOGIN'),
+                              borderCircular: 15,
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Don't have an account? "),
+                                TextButton(
+                                  onPressed: () {
+                                    navigateTo(context, const RegisterScreen());
+                                  },
+                                  child: const Text('REGISTER'),
+                                )
+                              ],
                             )
                           ],
-                        )
-                      ],
+                        ),
+                      ),
                     ),
                   ),
                 ),

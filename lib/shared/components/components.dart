@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:social_app/shared/style/colors.dart';
 
 Future<dynamic> navigateAndRemove(BuildContext context, Widget screen) {
   return Navigator.pushAndRemoveUntil(context,
@@ -94,7 +95,9 @@ TextFormField myFormField(
     Widget? suffix,
     Function(String)? onSubmitted}) {
   return TextFormField(
-      style: const TextStyle(fontSize: 16),
+      style: const TextStyle(
+        fontSize: 16,
+      ),
       onChanged: onChange,
       onFieldSubmitted: onSubmitted,
       readOnly: readOnly ?? false,
@@ -132,12 +135,17 @@ Widget myElevatedButton({
       onPressed: onPressed,
       child: child,
       style: ElevatedButton.styleFrom(
-          fixedSize: Size(
-            width ?? double.maxFinite,
-            height ?? 55,
+        fixedSize: Size(
+          width ?? double.maxFinite,
+          height ?? 55,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            borderCircular ?? 0.0,
           ),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderCircular ?? 0.0))),
+        ),
+        primary: mainColor,
+      ),
     ),
   );
 }
@@ -169,6 +177,7 @@ Color toastColor(toastStates state) {
   }
 }
 
+// settings card
 Container myCard(
     {required String title,
     required IconData leadingIcon,
@@ -213,6 +222,7 @@ Container myCard(
   );
 }
 
+// profile image with edit icon on it.
 Stack myProfileImage({ImageProvider? image, required Function() changeImage}) {
   return Stack(
     alignment: const Alignment(0.9, 0.9),
