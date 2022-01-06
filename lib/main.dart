@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/shared/bloc_observer.dart';
@@ -43,9 +44,15 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        theme: FlexColorScheme.light(scheme: FlexScheme.bahamaBlue).toTheme,
-        darkTheme: FlexColorScheme.dark(scheme: FlexScheme.bahamaBlue).toTheme,
-        themeMode: ThemeMode.light,
+        theme: FlexColorScheme.light(
+                fontFamily: GoogleFonts.ptSans().fontFamily,
+                scheme: FlexScheme.bahamaBlue)
+            .toTheme,
+        darkTheme: FlexColorScheme.dark(
+                fontFamily: GoogleFonts.ptSans().fontFamily,
+                scheme: FlexScheme.bahamaBlue)
+            .toTheme,
+        themeMode: ThemeMode.dark,
         home: page,
       ),
     );
