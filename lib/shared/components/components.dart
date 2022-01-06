@@ -221,29 +221,34 @@ Container myCard(
 }
 
 // profile image with edit icon on it.
-Stack myProfileImage({ImageProvider? image, required Function() changeImage}) {
-  return Stack(
-    alignment: const Alignment(0.9, 0.9),
-    children: [
-      CircleAvatar(
-        radius: 55,
-        child: const Icon(
-          Icons.person,
-          size: 40,
-        ),
-        backgroundImage: image,
-      ),
-      InkWell(
-        onTap: changeImage,
-        child: CircleAvatar(
-          radius: 13,
-          backgroundColor: Colors.yellow[800],
+Widget myProfileImage(
+    {ImageProvider? image, required Function() changeImageTap}) {
+  return CircleAvatar(
+    backgroundColor: Colors.white,
+    radius: 66,
+    child: Stack(
+      alignment: const Alignment(0.9, 0.9),
+      children: [
+        CircleAvatar(
+          radius: 62,
           child: const Icon(
-            Icons.edit_outlined,
-            size: 12,
+            Icons.person,
+            size: 40,
           ),
+          backgroundImage: image.toString().isEmpty ? null : image,
         ),
-      )
-    ],
+        InkWell(
+          onTap: changeImageTap,
+          child: CircleAvatar(
+            radius: 13,
+            backgroundColor: Colors.yellow[800],
+            child: const Icon(
+              Icons.edit_outlined,
+              size: 12,
+            ),
+          ),
+        )
+      ],
+    ),
   );
 }

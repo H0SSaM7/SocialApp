@@ -4,6 +4,8 @@ import 'package:social_app/layouts/Home_layout.dart';
 import 'package:social_app/modules/register/cubit/register_cubit.dart';
 import 'package:social_app/modules/register/cubit/register_states.dart';
 import 'package:social_app/shared/components/components.dart';
+import 'package:social_app/shared/consistent/consistent.dart';
+import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -20,7 +22,13 @@ class RegisterScreen extends StatelessWidget {
       child: BlocConsumer<RegisterCubit, RegisterStates>(
         listener: (context, state) {
           if (state is RegisterUserCreateSuccessState) {
+            CachedHelper.savePref(key: 'uId', value: state.uId).then((value) {
+              uId = CachedHelper.getPref(key: 'uId');
+            });
             navigateAndRemove(context, const HomeLayout());
+          }
+          if (state is RegisterErrorState) {
+            myToast(msg: state.error.split(']')[1], state: toastStates.error);
           }
         },
         builder: (context, state) {
@@ -98,13 +106,13 @@ class RegisterScreen extends StatelessWidget {
                                 ),
                               ),
                               onSubmitted: (value) {
-                                // if (formKey.currentState!.validate()) {
-                                //   cubit.userRegister(
-                                //       email: emailController.text,
-                                //       password: passwordController.text,
-                                //       phone: phoneController.text,
-                                //       name: nameController.text);
-                                // }
+                                if (formKey.currentState!.validate()) {
+                                  cubit.userRegister(
+                                      email: emailController.text,
+                                      password: passwordController.text,
+                                      phone: phoneController.text,
+                                      name: nameController.text);
+                                }
                               }),
                           const SizedBox(height: 20),
                           myElevatedButton(
@@ -117,7 +125,7 @@ class RegisterScreen extends StatelessWidget {
                                     phone: phoneController.text);
                               }
                             },
-                            child: state is RegisterLoadingState
+                            child: state is RegisterUserCreateLoadingState
                                 ? const CircularProgressIndicator(
                                     color: Colors.white,
                                   )

@@ -45,14 +45,24 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: FlexColorScheme.light(
+                textTheme: const TextTheme(
+                    bodyText1: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                )),
                 fontFamily: GoogleFonts.ptSans().fontFamily,
                 scheme: FlexScheme.bahamaBlue)
             .toTheme,
         darkTheme: FlexColorScheme.dark(
+                textTheme: const TextTheme(
+                    bodyText1: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                )),
                 fontFamily: GoogleFonts.ptSans().fontFamily,
                 scheme: FlexScheme.bahamaBlue)
             .toTheme,
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.light,
         home: page,
       ),
     );

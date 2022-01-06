@@ -155,7 +155,7 @@ class ExploreScreen extends StatelessWidget {
               ),
             ),
             Image.network(
-              'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
+              'https://image.freepik.com/free-vector/espresso-coffee-cup-coffee-beans_79603-1038.jpg',
               height: 160,
               width: double.maxFinite,
               fit: BoxFit.fill,

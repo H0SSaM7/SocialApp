@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/register/cubit/register_states.dart';
-import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
   RegisterCubit() : super(RegisterInitialState());
@@ -30,7 +29,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
       userCreate(email: email, phone: phone, name: name, uId: value.user!.uid);
     }).catchError((onError) {
       debugPrint(onError.toString());
-      emit(RegisterErrorState());
+      emit(RegisterErrorState(onError.toString()));
     });
   }
 
@@ -42,15 +41,22 @@ class RegisterCubit extends Cubit<RegisterStates> {
   }) {
     emit(RegisterUserCreateLoadingState());
 
-    UserModel model =
-        UserModel(name: name, email: email, phone: phone, uId: uId);
+    UserModel model = UserModel(
+      name: name,
+      email: email,
+      phone: phone,
+      uId: uId,
+      emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
+      bio: 'Write your bio ...',
+      personalImage: '',
+      coverImage: '',
+    );
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .set(model.toJson())
         .then((value) {
-      CachedHelper.savePref(key: 'uId', value: uId);
-      emit(RegisterUserCreateSuccessState());
+      emit(RegisterUserCreateSuccessState(uId));
     }).catchError((onError) {
       debugPrint(onError.toString());
       emit(RegisterUserCreateErrorState());

@@ -10,6 +10,10 @@ class LoginSuccessState extends LoginStates {
   LoginSuccessState(this.uId);
 }
 
-class LoginErrorState extends LoginStates {}
+class LoginErrorState extends LoginStates {
+  final String error;
+
+  LoginErrorState(this.error);
+}
 
 class LoginChangePasswordTextState extends LoginStates {}

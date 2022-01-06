@@ -15,7 +15,8 @@ class HomeLayout extends StatelessWidget {
         SocialCubit cubit = SocialCubit.get(context);
         return Scaffold(
             appBar: AppBar(
-              title: const Text('Explore'),
+              title: Text(cubit.appBarTitles[cubit.currentIndex]),
+              centerTitle: true,
             ),
             bottomNavigationBar: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,

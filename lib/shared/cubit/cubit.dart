@@ -41,4 +41,11 @@ class SocialCubit extends Cubit<SocialStates> {
     UsersScreen(),
     SettingsScreen(),
   ];
+  List<String> appBarTitles = const [
+    'Explore',
+    'Chats',
+    'Add Post',
+    'Users',
+    'Profile'
+  ];
 }

@@ -26,6 +26,9 @@ class LoginScreen extends StatelessWidget {
               navigateAndRemove(context, const HomeLayout());
             });
           }
+          if (state is LoginErrorState) {
+            myToast(msg: state.error.split(']')[1], state: toastStates.error);
+          }
         },
         builder: (context, state) {
           LoginCubit cubit = LoginCubit.get(context);
