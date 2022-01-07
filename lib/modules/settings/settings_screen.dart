@@ -20,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
             condition: cubit.userModel != null,
             builder: (context) {
               return Container(
-                color: Theme.of(context).splashColor,
+                color: Theme.of(context).hoverColor,
                 child: Column(
                   children: [
                     SizedBox(
@@ -39,7 +39,7 @@ class SettingsScreen extends StatelessWidget {
                                 borderRadius: const BorderRadius.vertical(
                                   bottom: Radius.elliptical(
                                     150,
-                                    100,
+                                    70,
                                   ),
                                 ),
                               ),

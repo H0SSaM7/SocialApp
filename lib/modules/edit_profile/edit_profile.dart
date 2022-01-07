@@ -49,20 +49,28 @@ class EidProfile extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  myProfileImage(
-                      enableEdit: true,
-                      changeImageTap: () async {
-                        await cubit.pickImage();
-                        cubit.uploadImage();
-                      },
-                      image: cubit.profileImage == null
-                          ? NetworkImage(
-                              cubit.userModel!.profileImage!,
-                            )
-                          : FileImage(
-                              File(cubit.profileImage!.path),
-                            ),
-                      context: context),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      myProfileImage(
+                        enableEdit: true,
+                        changeImageTap: () async {
+                          await cubit.pickImage();
+                          cubit.uploadImage();
+                        },
+                        image: cubit.profileImage == null
+                            ? NetworkImage(
+                                cubit.userModel!.profileImage!,
+                              )
+                            : FileImage(
+                                File(cubit.profileImage!.path),
+                              ),
+                        context: context,
+                      ),
+                      if (state is SocialLoadingUploadImageState)
+                        const CircularProgressIndicator.adaptive()
+                    ],
+                  ),
                   const SizedBox(
                     height: 20,
                   ),

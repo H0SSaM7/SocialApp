@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/models/user_model.dart';
-import 'package:social_app/modules/add_post/add_post_screen.dart';
 import 'package:social_app/modules/chats/chats_screen.dart';
 import 'package:social_app/modules/explore/explore_screen.dart';
 import 'package:social_app/modules/settings/settings_screen.dart';
@@ -48,17 +47,10 @@ class SocialCubit extends Cubit<SocialStates> {
   List<Widget> screens = const [
     ExploreScreen(),
     ChatsScreen(),
-    AddPostScreen(),
     UsersScreen(),
     SettingsScreen(),
   ];
-  List<String> appBarTitles = const [
-    'Explore',
-    'Chats',
-    'Add Post',
-    'Users',
-    'Profile'
-  ];
+  List<String> appBarTitles = const ['Explore', 'Chats', 'Users', 'Profile'];
   // image picker and upload methods
 
   final ImagePicker _picker = ImagePicker();
@@ -74,12 +66,14 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialPickImageState());
   }
 
-  // if will store the url from fireStorage in it
+  // to will store the url from fireStorage in it
   String? imageUrl;
+  //upload image to fireBaseStorage
   uploadImage() {
     if (profileImage == null) {
       null;
     } else {
+      emit(SocialLoadingUploadImageState());
       firebase_storage.FirebaseStorage.instance
           .ref()
           .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
@@ -87,11 +81,15 @@ class SocialCubit extends Cubit<SocialStates> {
           .then((p0) {
         p0.ref.getDownloadURL().then((value) {
           imageUrl = value;
+          emit(SocialSuccessUploadImageState());
+        }).catchError((error) {
+          debugPrint(error.toString());
         });
       });
     }
   }
 
+// update whole profile include image
   updateProfile({
     required String email,
     required String phone,
