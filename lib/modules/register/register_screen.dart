@@ -23,7 +23,7 @@ class RegisterScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is RegisterUserCreateSuccessState) {
             CachedHelper.savePref(key: 'uId', value: state.uId).then((value) {
-              uId = CachedHelper.getPref(key: 'uId');
+              currentUserId = CachedHelper.getPref(key: 'uId');
             });
             navigateAndRemove(context, const HomeLayout());
           }

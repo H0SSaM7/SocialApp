@@ -151,10 +151,12 @@ Container myCard(
 }
 
 // profile image with edit icon on it.
-Widget myProfileImage(
-    {var image,
-    required Function() changeImageTap,
-    required BuildContext context}) {
+Widget myProfileImage({
+  var image,
+  Function()? changeImageTap,
+  required BuildContext context,
+  required bool enableEdit,
+}) {
   return CircleAvatar(
     backgroundColor: Colors.white,
     radius: 66,
@@ -171,16 +173,17 @@ Widget myProfileImage(
                 )
               : null,
         ),
-        InkWell(
-          onTap: changeImageTap,
-          child: const CircleAvatar(
-            radius: 13,
-            child: Icon(
-              Icons.edit_outlined,
-              size: 12,
-            ),
-          ),
-        )
+        enableEdit
+            ? InkWell(
+                onTap: changeImageTap,
+                child: const CircleAvatar(
+                  radius: 13,
+                  child: Icon(
+                    Icons.edit_outlined,
+                    size: 12,
+                  ),
+                ))
+            : const SizedBox()
       ],
     ),
   );

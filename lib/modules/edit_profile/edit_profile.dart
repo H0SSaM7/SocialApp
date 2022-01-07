@@ -14,19 +14,31 @@ class EidProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController nameController = TextEditingController();
     TextEditingController bioController = TextEditingController();
+    TextEditingController phoneController = TextEditingController();
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (context, state) {},
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
         nameController.text = cubit.userModel!.name!;
         bioController.text = cubit.userModel!.bio!;
+        phoneController.text = cubit.userModel!.phone!;
 
         return Scaffold(
           appBar: AppBar(
             title: const Text('Edit Profile'),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () async {
+              await cubit.updateProfile(
+                email: cubit.userModel!.email!,
+                phone: phoneController.text,
+                name: nameController.text,
+                uId: cubit.userModel!.uId!,
+                bio: bioController.text,
+                profileImage: cubit.imageUrl ?? cubit.userModel!.profileImage!,
+              );
+              Navigator.pop(context);
+            },
             child: const Text('Update'),
           ),
           body: Padding(
@@ -34,41 +46,58 @@ class EidProfile extends StatelessWidget {
               horizontal: 12,
               vertical: 8,
             ),
-            child: Column(
-              children: [
-                myProfileImage(
-                    changeImageTap: () {
-                      cubit.pickImage();
-                    },
-                    image: cubit.image == null
-                        ? NetworkImage(
-                            cubit.userModel!.personalImage!,
-                          )
-                        : FileImage(
-                            File(cubit.image!.path),
-                          ),
-                    context: context),
-                const SizedBox(
-                  height: 20,
-                ),
-                myFormField(
-                  type: TextInputType.name,
-                  controller: nameController,
-                  icon: const Icon((Icons.person)),
-                  title: 'Name',
-                  validateText: 'Name must not be empty.',
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                myFormField(
-                  type: TextInputType.name,
-                  controller: bioController,
-                  icon: const Icon((Icons.info)),
-                  title: 'bio',
-                  validateText: 'bio must not be empty.',
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  myProfileImage(
+                      enableEdit: true,
+                      changeImageTap: () async {
+                        await cubit.pickImage();
+                        cubit.uploadImage();
+                      },
+                      image: cubit.profileImage == null
+                          ? NetworkImage(
+                              cubit.userModel!.profileImage!,
+                            )
+                          : FileImage(
+                              File(cubit.profileImage!.path),
+                            ),
+                      context: context),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  myFormField(
+                    type: TextInputType.name,
+                    controller: nameController,
+                    icon: const Icon((Icons.person)),
+                    title: 'Name',
+                    validateText: 'Name must not be empty.',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  myFormField(
+                    type: TextInputType.name,
+                    controller: bioController,
+                    icon: const Icon((Icons.info)),
+                    title: 'Bio',
+                    validateText: 'Bio must not be empty.',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  myFormField(
+                    type: TextInputType.phone,
+                    controller: phoneController,
+                    icon: const Icon((Icons.phone_android)),
+                    title: 'Phone',
+                    validateText: 'Phone must not be empty.',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
           ),
         );

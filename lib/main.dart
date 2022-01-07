@@ -16,9 +16,9 @@ void main() {
     () async {
       await Firebase.initializeApp();
       await CachedHelper.init();
-      uId = CachedHelper.getPref(key: 'uId');
+      currentUserId = CachedHelper.getPref(key: 'uId');
       firstPage() {
-        if (uId == null) {
+        if (currentUserId == null) {
           return const LoginScreen();
         } else {
           return const HomeLayout();
@@ -47,18 +47,20 @@ class MyApp extends StatelessWidget {
         theme: FlexColorScheme.light(
                 textTheme: const TextTheme(
                     bodyText1: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                )),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    caption: TextStyle(fontSize: 12.5)),
                 fontFamily: GoogleFonts.ptSans().fontFamily,
                 scheme: FlexScheme.bahamaBlue)
             .toTheme,
         darkTheme: FlexColorScheme.dark(
                 textTheme: const TextTheme(
-                    bodyText1: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                )),
+                  bodyText1: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
                 fontFamily: GoogleFonts.ptSans().fontFamily,
                 scheme: FlexScheme.bahamaBlue)
             .toTheme,

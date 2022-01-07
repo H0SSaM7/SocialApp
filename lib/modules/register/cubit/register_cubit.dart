@@ -48,8 +48,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
       uId: uId,
       emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
       bio: 'Write your bio ...',
-      personalImage: '',
-      coverImage: '',
+      profileImage: '',
     );
     FirebaseFirestore.instance
         .collection('users')
