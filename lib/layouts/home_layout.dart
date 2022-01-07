@@ -30,7 +30,7 @@ class HomeLayout extends StatelessWidget {
                 BottomNavigationBarItem(
                     icon: FaIcon(FontAwesomeIcons.user), label: 'Users'),
                 BottomNavigationBarItem(
-                    icon: FaIcon(FontAwesomeIcons.cog), label: 'settings'),
+                    icon: FaIcon(Icons.settings_outlined), label: 'settings'),
               ],
               currentIndex: cubit.currentIndex,
               onTap: (index) {

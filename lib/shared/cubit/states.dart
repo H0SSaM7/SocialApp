@@ -9,3 +9,5 @@ class SocialSuccessGetUserState extends SocialStates {}
 class SocialErrorGetUserState extends SocialStates {}
 
 class SocialChangeNavBarState extends SocialStates {}
+
+class SocialPickImageState extends SocialStates {}

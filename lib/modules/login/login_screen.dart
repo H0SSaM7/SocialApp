@@ -63,7 +63,6 @@ class LoginScreen extends StatelessWidget {
                             icon: const Icon(Icons.email_rounded),
                             title: 'Email Address',
                             validateText: 'Enter Email Address',
-                            context: context,
                           ),
                           const SizedBox(height: 20),
                           myFormField(
@@ -72,7 +71,6 @@ class LoginScreen extends StatelessWidget {
                               icon: const Icon(Icons.lock_outline),
                               title: 'Password',
                               validateText: 'Password is too short',
-                              context: context,
                               isObscure: cubit.isObscure,
                               suffix: IconButton(
                                 onPressed: () {

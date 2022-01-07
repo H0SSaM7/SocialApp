@@ -11,75 +11,6 @@ Future<dynamic> navigateTo(BuildContext context, Widget screen) {
       context, MaterialPageRoute(builder: (context) => screen));
 }
 
-Widget buildListViewArticles(List<dynamic> articles) {
-  return ListView.separated(
-      physics: const BouncingScrollPhysics(),
-      itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.all(11),
-          height: 135,
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: getImage(
-                    url: articles[index].imageUrl, height: 130, width: 130),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(articles[index].title!,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyText1),
-                    const Spacer(),
-                    Text(
-                      articles[index].publishAt!,
-                      style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                width: 6.0,
-              )
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) => const Divider(),
-      itemCount: articles.length);
-}
-
-Widget getImage({String? url, required double width, required double height}) {
-  Widget image;
-  if (url == null) {
-    image = Image.asset(
-      'images/noImage.png',
-      width: width,
-      height: height,
-      fit: BoxFit.fill,
-    );
-    return image;
-  } else {
-    image = Image.network(
-      url,
-      width: width,
-      height: height,
-      fit: BoxFit.fill,
-    );
-    return image;
-  }
-}
-
 TextFormField myFormField(
     {required TextInputType type,
     bool? isObscure,
@@ -90,7 +21,6 @@ TextFormField myFormField(
     bool? readOnly,
     required String validateText,
     Function(String)? onChange,
-    required BuildContext context,
     Widget? suffix,
     Function(String)? onSubmitted}) {
   return TextFormField(
@@ -222,7 +152,9 @@ Container myCard(
 
 // profile image with edit icon on it.
 Widget myProfileImage(
-    {ImageProvider? image, required Function() changeImageTap}) {
+    {var image,
+    required Function() changeImageTap,
+    required BuildContext context}) {
   return CircleAvatar(
     backgroundColor: Colors.white,
     radius: 66,
@@ -230,19 +162,20 @@ Widget myProfileImage(
       alignment: const Alignment(0.9, 0.9),
       children: [
         CircleAvatar(
+          backgroundImage: image,
           radius: 62,
-          child: const Icon(
-            Icons.person,
-            size: 40,
-          ),
-          backgroundImage: image.toString().isEmpty ? null : image,
+          child: image == null
+              ? const Icon(
+                  Icons.person,
+                  size: 40,
+                )
+              : null,
         ),
         InkWell(
           onTap: changeImageTap,
-          child: CircleAvatar(
+          child: const CircleAvatar(
             radius: 13,
-            backgroundColor: Colors.yellow[800],
-            child: const Icon(
+            child: Icon(
               Icons.edit_outlined,
               size: 12,
             ),

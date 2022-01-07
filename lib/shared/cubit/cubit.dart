@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/add_post/add_post_screen.dart';
 import 'package:social_app/modules/chats/chats_screen.dart';
@@ -16,6 +17,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   static SocialCubit get(context) => BlocProvider.of(context);
   UserModel? userModel;
+  // getting user data when the app open.
   getUserDate() {
     emit(SocialLoadingGetUserState());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
@@ -28,6 +30,7 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
+// home page work
   int currentIndex = 0;
   changeNavbar(int index) {
     currentIndex = index;
@@ -48,4 +51,12 @@ class SocialCubit extends Cubit<SocialStates> {
     'Users',
     'Profile'
   ];
+  // image picker and upload methods
+
+  final ImagePicker _picker = ImagePicker();
+  XFile? image;
+  pickImage() async {
+    image = await _picker.pickImage(source: ImageSource.gallery);
+    emit(SocialPickImageState());
+  }
 }

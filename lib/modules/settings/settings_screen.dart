@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_app/modules/edit_profile/edit_profile.dart';
 import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
@@ -40,7 +41,8 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     myProfileImage(
                         image: NetworkImage(cubit.userModel!.personalImage!),
-                        changeImageTap: () {})
+                        changeImageTap: () {},
+                        context: context)
                   ],
                 ),
               ),
@@ -84,8 +86,10 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {},
-                        child: const Text('Add photos'),
+                        onPressed: () {
+                          navigateTo(context, const EidProfile());
+                        },
+                        child: const Text('Edit Profile'),
                       ),
                     ),
                     const SizedBox(
@@ -94,7 +98,7 @@ class SettingsScreen extends StatelessWidget {
                     OutlinedButton(
                         onPressed: () {},
                         child: const FaIcon(
-                          FontAwesomeIcons.solidEdit,
+                          FontAwesomeIcons.cog,
                           size: 15,
                         ))
                   ],
