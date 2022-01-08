@@ -51,7 +51,9 @@ TextFormField myFormField(
       ));
 }
 
-Widget myElevatedButton({
+Widget myElevatedButton(
+  context, {
+  Color? color,
   required Function() onPressed,
   required Widget child,
   double? width,
@@ -64,6 +66,7 @@ Widget myElevatedButton({
       onPressed: onPressed,
       child: child,
       style: ElevatedButton.styleFrom(
+        primary: color ?? Theme.of(context).primaryColor,
         fixedSize: Size(
           width ?? double.maxFinite,
           height ?? 55,

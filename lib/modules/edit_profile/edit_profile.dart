@@ -35,7 +35,8 @@ class EidProfile extends StatelessWidget {
                 name: nameController.text,
                 uId: cubit.userModel!.uId!,
                 bio: bioController.text,
-                profileImage: cubit.imageUrl ?? cubit.userModel!.profileImage!,
+                profileImage:
+                    cubit.profileImageUrl ?? cubit.userModel!.profileImage!,
               );
               Navigator.pop(context);
             },
@@ -55,7 +56,7 @@ class EidProfile extends StatelessWidget {
                       myProfileImage(
                         enableEdit: true,
                         changeImageTap: () async {
-                          await cubit.pickImage();
+                          cubit.profileImage = await cubit.pickImage();
                           cubit.uploadImage();
                         },
                         image: cubit.profileImage == null

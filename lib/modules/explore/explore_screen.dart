@@ -15,62 +15,60 @@ class ExploreScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialStates>(
         builder: (context, state) {
           SocialCubit cubit = SocialCubit.get(context);
-          return SingleChildScrollView(
-            child: ConditionalBuilder(
-              condition: cubit.userModel != null,
-              builder: (context) {
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      buildEmailVerifyCheck(),
-                      Card(
-                        elevation: 5.0,
-                        clipBehavior: Clip.antiAlias,
-                        child: Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            Image.network(
-                              'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
-                              height: 185,
-                              width: double.maxFinite,
-                              fit: BoxFit.cover,
+          return ConditionalBuilder(
+            condition: cubit.userModel != null,
+            builder: (context) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    buildEmailVerifyCheck(),
+                    Card(
+                      elevation: 5.0,
+                      clipBehavior: Clip.antiAlias,
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Image.network(
+                            'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
+                            height: 185,
+                            width: double.maxFinite,
+                            fit: BoxFit.cover,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Communicate with friends',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1!
+                                  .copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Communicate with friends',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                              ),
-                            )
-                          ],
-                        ),
+                          )
+                        ],
                       ),
-                      ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return buildPostsCard(context);
-                          },
-                          separatorBuilder: (context, index) => const SizedBox(
-                                height: 10,
-                              ),
-                          itemCount: 10),
-                      const SizedBox(
-                        height: 10,
-                      )
-                    ],
-                  ),
-                );
-              },
-              fallback: (context) {
-                return const Center(child: CircularProgressIndicator());
-              },
-            ),
+                    ),
+                    ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return buildPostsCard(context);
+                        },
+                        separatorBuilder: (context, index) => const SizedBox(
+                              height: 10,
+                            ),
+                        itemCount: 10),
+                    const SizedBox(
+                      height: 10,
+                    )
+                  ],
+                ),
+              );
+            },
+            fallback: (context) {
+              return const Center(child: CircularProgressIndicator());
+            },
           );
         },
         listener: (context, state) {});

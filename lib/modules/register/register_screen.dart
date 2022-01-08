@@ -112,6 +112,7 @@ class RegisterScreen extends StatelessWidget {
                               }),
                           const SizedBox(height: 20),
                           myElevatedButton(
+                            context,
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 cubit.userRegister(

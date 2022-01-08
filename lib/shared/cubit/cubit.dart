@@ -54,21 +54,24 @@ class SocialCubit extends Cubit<SocialStates> {
   // image picker and upload methods
 
   final ImagePicker _picker = ImagePicker();
+  // file image variables
   File? profileImage;
-
+  File? postImage;
+  // Url image variables
+  String? postImageUrl;
+  String? profileImageUrl;
+// it return the picked image from device and i store it in any variable
   pickImage() async {
-    XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image == null) {
+    XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage == null) {
       null;
     } else {
-      profileImage = File(image.path);
+      return File(pickedImage.path);
     }
     emit(SocialPickImageState());
   }
 
-  // to will store the url from fireStorage in it
-  String? imageUrl;
-  //upload image to fireBaseStorage
+  //its return url of the picked image after store it in firebase
   uploadImage() {
     if (profileImage == null) {
       null;
@@ -80,7 +83,7 @@ class SocialCubit extends Cubit<SocialStates> {
           .putFile(profileImage!)
           .then((p0) {
         p0.ref.getDownloadURL().then((value) {
-          imageUrl = value;
+          profileImageUrl = value;
           emit(SocialSuccessUploadImageState());
         }).catchError((error) {
           debugPrint(error.toString());
@@ -89,7 +92,7 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-// update whole profile include image
+// update the whole profile properties
   updateProfile({
     required String email,
     required String phone,

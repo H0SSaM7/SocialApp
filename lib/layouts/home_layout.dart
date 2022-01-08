@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_app/modules/add_post/add_post_screen.dart';
+import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
 
@@ -24,7 +26,9 @@ class HomeLayout extends StatelessWidget {
                 FloatingActionButtonLocation.miniCenterDocked,
             floatingActionButton: FloatingActionButton(
               tooltip: 'New post',
-              onPressed: () {},
+              onPressed: () {
+                navigateTo(context, const AddPostScreen());
+              },
               child: const Icon(Icons.add),
             ),
             body: cubit.screens[cubit.currentIndex]);
