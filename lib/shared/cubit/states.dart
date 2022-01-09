@@ -34,3 +34,8 @@ class SocialLoadingCreateNewPostState extends SocialStates {}
 class SocialSuccessCreateNewPostState extends SocialStates {}
 
 class SocialErrorCreateNewPostState extends SocialStates {}
+
+//like post
+class SocialSuccessPostLikeState extends SocialStates {}
+
+class SocialErrorPostLikeState extends SocialStates {}

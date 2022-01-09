@@ -55,7 +55,8 @@ class ExploreScreen extends StatelessWidget {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        return buildPostsCard(context, cubit.posts[index]);
+                        return buildPostsCard(
+                            context, cubit.posts[index], cubit, index);
                       },
                       separatorBuilder: (context, index) => const SizedBox(
                         height: 10,
@@ -77,7 +78,8 @@ class ExploreScreen extends StatelessWidget {
         listener: (context, state) {});
   }
 
-  Card buildPostsCard(BuildContext context, PostsModel model) {
+  Card buildPostsCard(
+      BuildContext context, PostsModel model, SocialCubit cubit, int index) {
     return Card(
       elevation: 5.0,
       child: Padding(
@@ -182,7 +184,7 @@ class ExploreScreen extends StatelessWidget {
                   buildLoveCommentCard(
                     context,
                     icon: const FaIcon(
-                      FontAwesomeIcons.heart,
+                      FontAwesomeIcons.solidHeart,
                       color: Colors.pink,
                       size: 16,
                     ),
@@ -213,17 +215,22 @@ class ExploreScreen extends StatelessWidget {
                     backgroundImage: NetworkImage(
                         SocialCubit.get(context).userModel!.profileImage!)),
                 const SizedBox(width: 15),
+                // write post tap -----------------------------
                 Text(
                   'Write a comment ...',
                   style: Theme.of(context).textTheme.caption,
                 ),
                 const Spacer(),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    cubit.postLike(postId: cubit.postsId[index]);
+                  },
                   child: Row(
                     children: const [
                       FaIcon(
-                        FontAwesomeIcons.heart,
+                        false
+                            ? FontAwesomeIcons.solidHeart
+                            : FontAwesomeIcons.heart,
                         color: Colors.pink,
                         size: 20,
                       ),
