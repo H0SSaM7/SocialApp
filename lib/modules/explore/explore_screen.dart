@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
@@ -16,7 +17,8 @@ class ExploreScreen extends StatelessWidget {
         builder: (context, state) {
           SocialCubit cubit = SocialCubit.get(context);
           return ConditionalBuilder(
-            condition: cubit.userModel != null,
+            condition: true,
+            // cubit.posts.isEmpty,
             builder: (context) {
               return SingleChildScrollView(
                 child: Column(
@@ -50,15 +52,16 @@ class ExploreScreen extends StatelessWidget {
                       ),
                     ),
                     ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return buildPostsCard(context);
-                        },
-                        separatorBuilder: (context, index) => const SizedBox(
-                              height: 10,
-                            ),
-                        itemCount: 10),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return buildPostsCard(context, cubit.posts[index]);
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 10,
+                      ),
+                      itemCount: cubit.posts.length,
+                    ),
                     const SizedBox(
                       height: 10,
                     )
@@ -74,7 +77,7 @@ class ExploreScreen extends StatelessWidget {
         listener: (context, state) {});
   }
 
-  Card buildPostsCard(BuildContext context) {
+  Card buildPostsCard(BuildContext context, PostsModel model) {
     return Card(
       elevation: 5.0,
       child: Padding(
@@ -87,24 +90,24 @@ class ExploreScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
-                vertical: 5.0,
                 horizontal: 4,
+                vertical: 2,
               ),
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 26,
-                    backgroundImage: NetworkImage(
-                        'https://image.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg'),
-                  ),
+                  // profile image -----------------------
+                  CircleAvatar(
+                      radius: 26,
+                      backgroundImage: NetworkImage(model.profileImage!)),
                   const SizedBox(width: 15),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
+// publisher name -----------------------------
                           Text(
-                            'Hossam Ramadan',
+                            model.name!,
                             style:
                                 Theme.of(context).textTheme.subtitle1!.copyWith(
                                       fontWeight: FontWeight.bold,
@@ -120,8 +123,9 @@ class ExploreScreen extends StatelessWidget {
                           )
                         ],
                       ),
+// date of the post --------------
                       Text(
-                        'janyary 23, 2022 at 10:00 pm',
+                        model.date!,
                         style: Theme.of(context).textTheme.caption,
                       )
                     ],
@@ -136,28 +140,41 @@ class ExploreScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(),
-            Text(
-                'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letterss',
-                style: Theme.of(context).textTheme.bodyText1!),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: InkWell(
-                onTap: () {},
-                child: const Text(
-                  '#Software',
-                  style: TextStyle(
-                    color: Colors.blue,
-                  ),
+//description of he post
+            if (model.postDescription!.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(),
+                  Text(model.postDescription!,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1!
+                          .copyWith(fontSize: 16)),
+                ],
+              ),
+            // Padding(
+            //   padding: const EdgeInsets.all(5.0),
+            //   child: InkWell(
+            //     onTap: () {},
+            //     child: const Text(
+            //       '#Software',
+            //       style: TextStyle(
+            //         color: Colors.blue,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            if (model.postImage!.isNotEmpty)
+// Post image ----------------------------
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Image.network(
+                  model.postImage!,
+                  height: 160,
+                  width: double.maxFinite,
                 ),
               ),
-            ),
-            Image.network(
-              'https://image.freepik.com/free-vector/espresso-coffee-cup-coffee-beans_79603-1038.jpg',
-              height: 160,
-              width: double.maxFinite,
-              fit: BoxFit.fill,
-            ),
             SizedBox(
               height: 30,
               child: Row(
@@ -190,11 +207,11 @@ class ExploreScreen extends StatelessWidget {
             const Divider(),
             Row(
               children: [
-                const CircleAvatar(
-                  radius: 18,
-                  backgroundImage: NetworkImage(
-                      'https://image.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg'),
-                ),
+                CircleAvatar(
+                    radius: 18,
+                    // user phone in beside comments
+                    backgroundImage: NetworkImage(
+                        SocialCubit.get(context).userModel!.profileImage!)),
                 const SizedBox(width: 15),
                 Text(
                   'Write a comment ...',

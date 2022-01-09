@@ -13,133 +13,179 @@ class AddPostScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var postController = TextEditingController();
     return BlocConsumer<SocialCubit, SocialStates>(
-        builder: (context, state) {
-          SocialCubit cubit = SocialCubit.get(context);
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Create post'),
-            ),
-            bottomNavigationBar: SizedBox(
-              height: 80,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    // add image button -----------------
-                    Expanded(
-                      child: OutlinedButton.icon(
-                          onPressed: () async {
-                            cubit.postImage = await cubit.pickImage();
-                          },
-                          icon: const FaIcon(
-                            FontAwesomeIcons.image,
-                            size: 16,
-                          ),
-                          label: const Text('Image')),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    // add tags button -----------------
-                    OutlinedButton(
-                      onPressed: () {},
-                      child: const Text('#Tags'),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    // Publish the post button -----------------
-                    Expanded(
-                      child: myElevatedButton(
-                        context,
-                        height: 38,
-                        borderCircular: 50,
-                        onPressed: () {},
-                        child: const Text(
-                          'PUBLISH',
-                        ),
+      listener: (context, state) {
+        if (state is SocialSuccessCreateNewPostState) {
+          myToast(
+              msg: 'Create New Post Successfully ', state: toastStates.success);
+          Navigator.pop(context);
+        }
+      },
+      builder: (context, state) {
+        SocialCubit cubit = SocialCubit.get(context);
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Create post'),
+          ),
+          bottomNavigationBar: SizedBox(
+            height: 80,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  // add image button -----------------
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        cubit.setPostImage();
+                      },
+                      icon: const FaIcon(
+                        FontAwesomeIcons.image,
+                        size: 16,
                       ),
+                      label: const Text('Image'),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  // add tags button -----------------
+                  OutlinedButton(
+                    onPressed: () {},
+                    child: const Text('#Tags'),
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  // Publish the post button -----------------
+                  Expanded(
+                    child: myElevatedButton(context,
+                        height: 38, borderCircular: 50, onPressed: () async {
+                      // if the user didn't input any fields
+                      if (cubit.postImage == null &&
+                          postController.text.isEmpty) {
+                        myToast(
+                            msg: 'There is no Post to create !',
+                            state: toastStates.warning);
+                        // if the user input only description
+                      } else if (cubit.postImage == null &&
+                          postController.text.isNotEmpty) {
+                        cubit.createNewPost(
+                            postImage: '',
+                            date: DateTime.now().toString(),
+                            postDescription: postController.text);
+
+                        // case the user input description and choose image
+                      } else {
+                        cubit.uploadPostImageAndCreatePost(
+                            date: DateTime.now().toString(),
+                            postDescription: postController.text);
+                      }
+                    },
+                        child: ConditionalBuilder(
+                            condition:
+                                state is SocialLoadingUploadPostImageState,
+                            builder: (context) {
+                              return const FittedBox(
+                                fit: BoxFit.contain,
+                                child: CircularProgressIndicator.adaptive(
+                                  backgroundColor: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              );
+                            },
+                            fallback: (context) {
+                              return const Text('PUBLISH');
+                            })),
+                  ),
+                ],
               ),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const CircleAvatar(
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (State is SocialLoadingCreateNewPostState)
+                    const LinearProgressIndicator(),
+                  if (State is SocialLoadingCreateNewPostState)
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  Row(
+                    children: [
+                      CircleAvatar(
                           radius: 26,
-                          // profile image
+                          // profile image --------------
                           backgroundImage: NetworkImage(
-                              'https://image.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg'),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          'Hossam Ramadan',
-                          style:
-                              Theme.of(context).textTheme.subtitle1!.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
-                    ),
-                    TextFormField(
-                      maxLines: 15,
-                      minLines: 5,
-                      controller: postController,
-                      decoration: InputDecoration(
-                        fillColor: Theme.of(context).scaffoldBackgroundColor,
-                        hintText: 'What is in your mind !',
-                        border: InputBorder.none,
+                            cubit.userModel!.profileImage!,
+                          )),
+                      const SizedBox(
+                        width: 20,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 10,
-                        right: 10,
+                      Text(
+                        'Hossam Ramadan',
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                      child: ConditionalBuilder(
-                        condition: cubit.postImage != null,
-                        builder: (context) => buildAddImage(cubit),
-                        fallback: (context) => const SizedBox(),
-                      ),
+                    ],
+                  ),
+                  TextFormField(
+                    maxLines: 15,
+                    minLines: 5,
+                    controller: postController,
+                    decoration: InputDecoration(
+                      fillColor: Theme.of(context).scaffoldBackgroundColor,
+                      hintText: 'What is in your mind !',
+                      border: InputBorder.none,
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                      right: 10,
+                    ),
+                    child: ConditionalBuilder(
+                      condition: cubit.postImage != null,
+                      builder: (context) => buildAddImage(cubit),
+                      fallback: (context) => const SizedBox(),
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
-        },
-        listener: (context, state) {});
+          ),
+        );
+      },
+    );
   }
 
   Stack buildAddImage(SocialCubit cubit) {
     return Stack(
-      alignment: AlignmentDirectional.topEnd,
+      alignment: Alignment.topCenter,
       children: [
-        Image.file(
-          cubit.postImage!,
-          width: double.maxFinite,
-          height: 180,
-          fit: BoxFit.cover,
+        Align(
+          alignment: AlignmentDirectional.center,
+          child: Image.file(
+            cubit.postImage!,
+            height: 200,
+          ),
         ),
         IconButton(
-          padding: EdgeInsets.zero,
+          padding: const EdgeInsets.all(4),
+          alignment: Alignment.topRight,
           onPressed: () {
-            cubit.postImage = null;
+            cubit.deletePickedPostImage();
           },
           icon: const CircleAvatar(
-            radius: 15,
+            backgroundColor: Colors.red,
+            radius: 10,
             child: Icon(
-              Icons.delete_forever,
-              size: 18,
+              Icons.cancel_outlined,
+              size: 15,
+              color: Colors.white,
             ),
           ),
         ),

@@ -29,16 +29,18 @@ class EidProfile extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              await cubit.updateProfile(
-                email: cubit.userModel!.email!,
-                phone: phoneController.text,
-                name: nameController.text,
-                uId: cubit.userModel!.uId!,
-                bio: bioController.text,
-                profileImage:
-                    cubit.profileImageUrl ?? cubit.userModel!.profileImage!,
-              );
-              Navigator.pop(context);
+              if (state is! SocialLoadingUploadProfileImageState) {
+                await cubit.updateProfile(
+                  email: cubit.userModel!.email!,
+                  phone: phoneController.text,
+                  name: nameController.text,
+                  uId: cubit.userModel!.uId!,
+                  bio: bioController.text,
+                  profileImage:
+                      cubit.profileImageUrl ?? cubit.userModel!.profileImage!,
+                );
+                Navigator.pop(context);
+              }
             },
             child: const Text('Update'),
           ),
@@ -56,8 +58,8 @@ class EidProfile extends StatelessWidget {
                       myProfileImage(
                         enableEdit: true,
                         changeImageTap: () async {
-                          cubit.profileImage = await cubit.pickImage();
-                          cubit.uploadImage();
+                          await cubit.setProfileImage();
+                          cubit.uploadProfileImage();
                         },
                         image: cubit.profileImage == null
                             ? NetworkImage(
@@ -68,7 +70,7 @@ class EidProfile extends StatelessWidget {
                               ),
                         context: context,
                       ),
-                      if (state is SocialLoadingUploadImageState)
+                      if (state is SocialLoadingUploadProfileImageState)
                         const CircularProgressIndicator.adaptive()
                     ],
                   ),

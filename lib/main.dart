@@ -40,7 +40,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SocialCubit()..getUserDate(),
+      create: (context) => SocialCubit()
+        ..getUserDate()
+        ..getPosts(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
@@ -48,7 +50,7 @@ class MyApp extends StatelessWidget {
                 textTheme: const TextTheme(
                     bodyText1: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                     caption: TextStyle(fontSize: 12.5)),
                 fontFamily: GoogleFonts.ptSans().fontFamily,
@@ -64,7 +66,7 @@ class MyApp extends StatelessWidget {
                 fontFamily: GoogleFonts.ptSans().fontFamily,
                 scheme: FlexScheme.bahamaBlue)
             .toTheme,
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.light,
         home: page,
       ),
     );
