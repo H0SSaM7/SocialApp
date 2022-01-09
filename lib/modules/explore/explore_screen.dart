@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/shared/components/components.dart';
+
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
 
@@ -189,7 +190,7 @@ class ExploreScreen extends StatelessWidget {
                       size: 16,
                     ),
                     spacer: false,
-                    title: '200',
+                    title: '${cubit.countLikes[index]}',
                     onTap: () {},
                   ),
                   buildLoveCommentCard(
@@ -200,7 +201,7 @@ class ExploreScreen extends StatelessWidget {
                       color: Colors.yellow[800],
                       size: 16,
                     ),
-                    title: '100 Comments',
+                    title: '${cubit.countComments[index]} Comments',
                     onTap: () {},
                   ),
                 ],
@@ -214,11 +215,21 @@ class ExploreScreen extends StatelessWidget {
                     // user phone in beside comments
                     backgroundImage: NetworkImage(
                         SocialCubit.get(context).userModel!.profileImage!)),
-                const SizedBox(width: 15),
-                // write post tap -----------------------------
-                Text(
-                  'Write a comment ...',
-                  style: Theme.of(context).textTheme.caption,
+
+                // write comment tap -----------------------------
+                SizedBox(
+                  width: 200,
+                  child: TextFormField(
+                    onFieldSubmitted: (value) {
+                      cubit.postComment(
+                          postId: cubit.postsId[index], comment: value);
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Write a comment',
+                      fillColor: Theme.of(context).colorScheme.background,
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
                 const Spacer(),
                 InkWell(
@@ -228,9 +239,7 @@ class ExploreScreen extends StatelessWidget {
                   child: Row(
                     children: const [
                       FaIcon(
-                        false
-                            ? FontAwesomeIcons.solidHeart
-                            : FontAwesomeIcons.heart,
+                        FontAwesomeIcons.heart,
                         color: Colors.pink,
                         size: 20,
                       ),

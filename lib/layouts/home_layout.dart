@@ -16,6 +16,7 @@ class HomeLayout extends StatelessWidget {
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
         return Scaffold(
+            resizeToAvoidBottomInset: false,
             extendBody: true,
             appBar: AppBar(
               title: Text(cubit.appBarTitles[cubit.currentIndex]),
@@ -25,6 +26,7 @@ class HomeLayout extends StatelessWidget {
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterDocked,
             floatingActionButton: FloatingActionButton(
+              clipBehavior: Clip.none,
               tooltip: 'New post',
               onPressed: () {
                 navigateTo(context, const AddPostScreen());
