@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/shared/components/components.dart';
+import 'package:social_app/shared/consistent/consistent.dart';
 
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
@@ -17,63 +18,71 @@ class ExploreScreen extends StatelessWidget {
     return BlocConsumer<SocialCubit, SocialStates>(
         builder: (context, state) {
           SocialCubit cubit = SocialCubit.get(context);
-          return ConditionalBuilder(
-            condition: true,
-            // cubit.posts.isEmpty,
-            builder: (context) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    buildEmailVerifyCheck(),
-                    Card(
-                      elevation: 5.0,
-                      clipBehavior: Clip.antiAlias,
-                      child: Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Image.network(
-                            'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
-                            height: 185,
-                            width: double.maxFinite,
-                            fit: BoxFit.cover,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Communicate with friends',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1!
-                                  .copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+          return RefreshIndicator(
+            onRefresh: () async {
+              cubit.getPosts();
+            },
+            child: ConditionalBuilder(
+              condition: cubit.posts.isNotEmpty &&
+                  cubit.userModel != null &&
+                  cubit.commentsList.isNotEmpty &&
+                  cubit.likesList.isNotEmpty,
+              builder: (context) {
+                return SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      buildEmailVerifyCheck(),
+                      Card(
+                        elevation: 5.0,
+                        clipBehavior: Clip.antiAlias,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            Image.network(
+                              'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
+                              height: 185,
+                              width: double.maxFinite,
+                              fit: BoxFit.cover,
                             ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Communicate with friends',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .subtitle1!
+                                    .copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return buildPostsCard(
-                            context, cubit.posts[index], cubit, index);
-                      },
-                      separatorBuilder: (context, index) => const SizedBox(
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return buildPostsCard(
+                              context, cubit.posts[index], cubit, index);
+                        },
+                        separatorBuilder: (context, index) => const SizedBox(
+                          height: 10,
+                        ),
+                        itemCount: cubit.posts.length,
+                      ),
+                      const SizedBox(
                         height: 10,
-                      ),
-                      itemCount: cubit.posts.length,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    )
-                  ],
-                ),
-              );
-            },
-            fallback: (context) {
-              return const Center(child: CircularProgressIndicator());
-            },
+                      )
+                    ],
+                  ),
+                );
+              },
+              fallback: (context) {
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
           );
         },
         listener: (context, state) {});
@@ -190,7 +199,7 @@ class ExploreScreen extends StatelessWidget {
                       size: 16,
                     ),
                     spacer: false,
-                    title: '${cubit.countLikes[index]}',
+                    title: '${cubit.likesList[index].length}',
                     onTap: () {},
                   ),
                   buildLoveCommentCard(
@@ -201,7 +210,8 @@ class ExploreScreen extends StatelessWidget {
                       color: Colors.yellow[800],
                       size: 16,
                     ),
-                    title: '${cubit.countComments[index]} Comments',
+                    title: '${cubit.commentsList[index].length}',
+                    // '${cubit.countComments[index]} Comments',
                     onTap: () {},
                   ),
                 ],
@@ -216,7 +226,7 @@ class ExploreScreen extends StatelessWidget {
                     backgroundImage: NetworkImage(
                         SocialCubit.get(context).userModel!.profileImage!)),
 
-                // write comment tap -----------------------------
+// write comment tap -----------------------------
                 SizedBox(
                   width: 200,
                   child: TextFormField(
@@ -237,16 +247,18 @@ class ExploreScreen extends StatelessWidget {
                     cubit.postLike(postId: cubit.postsId[index]);
                   },
                   child: Row(
-                    children: const [
+                    children: [
                       FaIcon(
-                        FontAwesomeIcons.heart,
+                        checkIsLikedPost(cubit, index) != null
+                            ? FontAwesomeIcons.solidHeart
+                            : FontAwesomeIcons.heart,
                         color: Colors.pink,
                         size: 20,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5.0,
                       ),
-                      Text('Like')
+                      const Text('Like')
                     ],
                   ),
                 )
@@ -261,7 +273,7 @@ class ExploreScreen extends StatelessWidget {
   Expanded buildLoveCommentCard(
     BuildContext context, {
     required Function() onTap,
-    required String title,
+    required String? title,
     required FaIcon icon,
     required bool spacer,
   }) {
@@ -279,7 +291,7 @@ class ExploreScreen extends StatelessWidget {
                 width: 5,
               ),
               Text(
-                title,
+                title ?? '0',
                 style: Theme.of(context).textTheme.caption,
               ),
             ],
@@ -313,5 +325,13 @@ class ExploreScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  checkIsLikedPost(SocialCubit cubit, int index) {
+    for (var element in cubit.likesList[index]) {
+      if (element.containsKey(currentUserId)) {
+        return true;
+      }
+    }
   }
 }

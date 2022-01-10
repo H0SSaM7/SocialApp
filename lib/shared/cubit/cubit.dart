@@ -21,6 +21,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   static SocialCubit get(context) => BlocProvider.of(context);
   UserModel? userModel;
+
   // getting user data when the app open.
   getUserDate() {
     emit(SocialLoadingGetUserState());
@@ -30,6 +31,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .get()
         .then((value) {
       userModel = UserModel.fromJson(value.data()!);
+
       emit(SocialSuccessGetUserState());
     }).catchError((onError) {
       debugPrint(onError);
@@ -37,8 +39,24 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
+  List<UserModel> users = [];
+  getAllUsers() {
+    emit(SocialLoadingGetAllUsersState());
+    FirebaseFirestore.instance.collection('users').get().then((value) {
+      for (var element in value.docs) {
+        users.add(UserModel.fromJson(element.data()));
+        emit(SocialSuccessGetAllUsersState());
+      }
+    }).catchError((error) {
+      emit(SocialErrorGetAllUsersState());
+
+      print(error.toString());
+    });
+  }
+
 // home page work
   int currentIndex = 0;
+
   changeNavbar(int index) {
     currentIndex = index;
     emit(SocialChangeNavBarState());
@@ -51,15 +69,19 @@ class SocialCubit extends Cubit<SocialStates> {
     SettingsScreen(),
   ];
   List<String> appBarTitles = const ['Explore', 'Chats', 'Users', 'Profile'];
+
   // image picker and upload methods
 
   final ImagePicker _picker = ImagePicker();
+
   // file image variables
   File? profileImage;
   File? postImage;
+
   // Url image variables
   String? postImageUrl;
   String? profileImageUrl;
+
   // this method only to render picked image
   setProfileImage() async {
     profileImage = await pickImage();
@@ -188,49 +210,63 @@ class SocialCubit extends Cubit<SocialStates> {
 
   List<PostsModel> posts = [];
   List<String> postsId = [];
-  // Map<String, bool> likedPost = {};
-  List<int> countLikes = [];
-  List<int> countComments = [];
+  List<List<Map<String, dynamic>>> likesList = [];
+  List<List<Map<String, dynamic>>> commentsList = [];
 
-  getPosts() {
+  getPosts() async {
     emit(SocialLoadingGetPostsState());
-    FirebaseFirestore.instance.collection('posts').get().then((value) {
-      for (var element in value.docs) {
-        element.reference.collection('likes').get().then((value) {
-          countLikes.add(value.docs.length);
-          posts.add(PostsModel.fromMap(element.data()));
-          postsId.add(element.id);
-        }).catchError((error) {
-          debugPrint(' $error ### in GET POSTS');
-        });
-        element.reference.collection('comments').get().then((value) {
-          countComments.add(value.docs.length);
-        }).catchError((error) {
-          debugPrint(' $error ### in GET POSTS');
-        });
+    try {
+      QuerySnapshot<Map<String, dynamic>> data =
+          await FirebaseFirestore.instance.collection('posts').get();
+      for (var element in data.docs) {
+        posts.add(PostsModel.fromMap(element.data()));
+        postsId.add(element.id);
+        // after get the post collection go to references of this collection
+        // and open likes collection
+        // and make a list of each post in this list contain userId and its bollen value
+        QuerySnapshot<Map<String, dynamic>> likesData =
+            await element.reference.collection('likes').get();
+        List<Map<String, dynamic>> anyLike = [];
+        for (var e in likesData.docs) {
+          anyLike.add({e.id: e.data()['like']});
+        }
+
+        likesList.add(anyLike);
+        // after get the post collection go to refrence of this collection
+        // and open comment collection
+        // and make a list of each post this list contain userid and its bollen value
+        QuerySnapshot<Map<String, dynamic>> commentsData =
+            await element.reference.collection('comments').get();
+        List<Map<String, dynamic>> anyComment = [];
+        for (var e in commentsData.docs) {
+          anyComment.add({e.id: e.data()['like']});
+        }
+        commentsList.add(anyComment);
       }
       emit(SocialSuccessGetPostsState());
-    }).catchError((error) {
-      debugPrint(error.toString() + ' ### error in get posts ###');
-      emit(SocialErrorGetPostsState());
-    });
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(SocialSuccessGetPostsState());
+    }
   }
 
-  // getLikes() {
-  //   FirebaseFirestore.instance.collection('posts').get().then((value) {
-  //     for (var element in value.docs) {
-  //       element.reference.collection('likes').get().then((value) {
-  //         countLiked.add(value.docs.length);
-  //         for (var e in value.docs) {
-  //           likedPost.addAll({e.id: e.data()['like']});
-  //         }
-  //       }).catchError((error) {
-  //         debugPrint(' $error ### in GET POSTS');
-  //       });
+  // getLikes() async {
+  //   try {
+  //     QuerySnapshot data =
+  //         await FirebaseFirestore.instance.collection('posts').get();
+  //     for (var element in data.docs) {
+  //       QuerySnapshot<Map<String, dynamic>> likesData =
+  //           await element.reference.collection('likes').get();
+  //       List<Map<String, dynamic>> any = [];
+  //       for (var e in likesData.docs) {
+  //         any.add({e.id: e.data()["like"]});
+  //       }
+  //       likesList.add(any);
+  //       emit(SocialRefreshLikesState());
   //     }
-  //   }).catchError((error) {
-  //     print(error.toString());
-  //   });
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
   // }
 
   postLike({required String postId}) {
@@ -242,7 +278,6 @@ class SocialCubit extends Cubit<SocialStates> {
         .set({
       'like': true,
     }).then((value) {
-      // getLikes();
       emit(SocialSuccessPostLikeState());
     }).catchError((error) {
       emit(SocialErrorPostLikeState());

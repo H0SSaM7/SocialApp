@@ -42,7 +42,8 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => SocialCubit()
         ..getUserDate()
-        ..getPosts(),
+        ..getPosts()
+        ..getAllUsers(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',

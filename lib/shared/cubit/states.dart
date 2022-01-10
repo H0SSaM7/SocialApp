@@ -8,6 +8,12 @@ class SocialSuccessGetUserState extends SocialStates {}
 
 class SocialErrorGetUserState extends SocialStates {}
 
+class SocialLoadingGetAllUsersState extends SocialStates {}
+
+class SocialSuccessGetAllUsersState extends SocialStates {}
+
+class SocialErrorGetAllUsersState extends SocialStates {}
+
 class SocialLoadingGetPostsState extends SocialStates {}
 
 class SocialSuccessGetPostsState extends SocialStates {}
@@ -39,6 +45,8 @@ class SocialErrorCreateNewPostState extends SocialStates {}
 class SocialSuccessPostLikeState extends SocialStates {}
 
 class SocialErrorPostLikeState extends SocialStates {}
+
+class SocialRefreshLikesState extends SocialStates {}
 
 //post comment
 class SocialSuccessPostCommentState extends SocialStates {}
