@@ -1,6 +1,8 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/modules/chat_room/chat_room_screen.dart';
+import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
 
@@ -35,7 +37,13 @@ class ChatsScreen extends StatelessWidget {
 
   InkWell buildChatsCard(SocialCubit cubit, BuildContext context, int index) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        navigateTo(
+            context,
+            ChatRoomScreen(
+              userModel: cubit.users[index],
+            ));
+      },
       child: SizedBox(
         height: 90,
         child: Row(

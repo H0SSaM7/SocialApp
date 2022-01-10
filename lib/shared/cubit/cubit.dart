@@ -42,16 +42,20 @@ class SocialCubit extends Cubit<SocialStates> {
   List<UserModel> users = [];
   getAllUsers() {
     emit(SocialLoadingGetAllUsersState());
-    FirebaseFirestore.instance.collection('users').get().then((value) {
-      for (var element in value.docs) {
-        users.add(UserModel.fromJson(element.data()));
-        emit(SocialSuccessGetAllUsersState());
-      }
-    }).catchError((error) {
-      emit(SocialErrorGetAllUsersState());
+    if (users.isEmpty) {
+      FirebaseFirestore.instance.collection('users').get().then((value) {
+        for (var element in value.docs) {
+          if (element.data()['uId'] != currentUserId) {
+            users.add(UserModel.fromJson(element.data()));
+          }
+          emit(SocialSuccessGetAllUsersState());
+        }
+      }).catchError((error) {
+        emit(SocialErrorGetAllUsersState());
 
-      print(error.toString());
-    });
+        print(error.toString());
+      });
+    }
   }
 
 // home page work
