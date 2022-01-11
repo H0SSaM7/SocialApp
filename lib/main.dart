@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
                 fontFamily: GoogleFonts.ptSans().fontFamily,
                 scheme: FlexScheme.bahamaBlue)
             .toTheme,
-        themeMode: ThemeMode.light,
+        themeMode: ThemeMode.dark,
         home: page,
       ),
     );

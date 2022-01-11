@@ -23,7 +23,9 @@ class ChatsScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return buildChatsCard(cubit, context, index);
                   },
-                  separatorBuilder: (context, index) => const Divider(),
+                  separatorBuilder: (context, index) => const SizedBox(
+                        height: 5.0,
+                      ),
                   itemCount: cubit.users.length);
             },
             fallback: (context) => const Center(
@@ -35,35 +37,38 @@ class ChatsScreen extends StatelessWidget {
     );
   }
 
-  InkWell buildChatsCard(SocialCubit cubit, BuildContext context, int index) {
-    return InkWell(
-      onTap: () {
-        navigateTo(
-            context,
-            ChatRoomScreen(
-              userModel: cubit.users[index],
-            ));
-      },
-      child: SizedBox(
-        height: 90,
-        child: Row(
-          children: [
-            const SizedBox(
-              width: 20,
-            ),
-            // profile image -----------------------
-            CircleAvatar(
-                radius: 26,
-                backgroundImage:
-                    NetworkImage(cubit.users[index].profileImage!)),
-            const SizedBox(width: 15),
-            Text(
-              cubit.users[index].name!,
-              style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
+  Widget buildChatsCard(SocialCubit cubit, BuildContext context, int index) {
+    return Card(
+      elevation: 4.0,
+      child: InkWell(
+        onTap: () {
+          navigateTo(
+              context,
+              ChatRoomScreen(
+                userModel: cubit.users[index],
+              ));
+        },
+        child: SizedBox(
+          height: 90,
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 20,
+              ),
+              // profile image -----------------------
+              CircleAvatar(
+                  radius: 26,
+                  backgroundImage:
+                      NetworkImage(cubit.users[index].profileImage!)),
+              const SizedBox(width: 15),
+              Text(
+                cubit.users[index].name!,
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ],
+          ),
         ),
       ),
     );

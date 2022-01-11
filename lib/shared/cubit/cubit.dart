@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:social_app/models/chats_model.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/chats/chats_screen.dart';
@@ -40,6 +41,7 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   List<UserModel> users = [];
+
   getAllUsers() {
     emit(SocialLoadingGetAllUsersState());
     if (users.isEmpty) {
@@ -53,7 +55,7 @@ class SocialCubit extends Cubit<SocialStates> {
       }).catchError((error) {
         emit(SocialErrorGetAllUsersState());
 
-        print(error.toString());
+        debugPrint(error.toString());
       });
     }
   }
@@ -302,6 +304,49 @@ class SocialCubit extends Cubit<SocialStates> {
     }).catchError((error) {
       emit(SocialErrorPostCommentState());
       debugPrint(error.toString());
+    });
+  }
+
+  ChatsModel? chatsModel;
+
+  sendMessages({
+    required String receiverId,
+    required String message,
+    required String date,
+  }) {
+    chatsModel = ChatsModel(
+      receiverId: receiverId,
+      message: message,
+      date: date,
+      senderId: currentUserId,
+    );
+    // setup message for me
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(currentUserId)
+        .collection('chats')
+        .doc(receiverId)
+        .collection('messages')
+        .add(chatsModel!.toMap())
+        .then((value) {
+      emit(SocialSuccessSendMessagesFromMeState());
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+      emit(SocialErrorSendMessagesFromMeState());
+    });
+    // setup message for other user
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(receiverId)
+        .collection('chats')
+        .doc(currentUserId)
+        .collection('messages')
+        .add(chatsModel!.toMap())
+        .then((value) {
+      emit(SocialSuccessSendMessagesToOtherState());
+    }).catchError((onError) {
+      debugPrint(onError.toString());
+      emit(SocialErrorSendMessagesToOtherState());
     });
   }
 }

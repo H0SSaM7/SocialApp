@@ -225,6 +225,9 @@ class ExploreScreen extends StatelessWidget {
                     // user phone in beside comments
                     backgroundImage: NetworkImage(
                         SocialCubit.get(context).userModel!.profileImage!)),
+                const SizedBox(
+                  width: 10,
+                ),
 
 // write comment tap -----------------------------
                 SizedBox(
@@ -234,9 +237,9 @@ class ExploreScreen extends StatelessWidget {
                       cubit.postComment(
                           postId: cubit.postsId[index], comment: value);
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Write a comment',
-                      fillColor: Theme.of(context).colorScheme.background,
+                      fillColor: Colors.transparent,
                       border: InputBorder.none,
                     ),
                   ),
