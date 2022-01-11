@@ -61,3 +61,5 @@ class SocialErrorSendMessagesFromMeState extends SocialStates {}
 class SocialSuccessSendMessagesToOtherState extends SocialStates {}
 
 class SocialErrorSendMessagesToOtherState extends SocialStates {}
+
+class SocialSuccessfullyReceivedMessage extends SocialStates {}
