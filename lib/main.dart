@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,11 +11,30 @@ import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 
-void main() {
+Future<void> backGroundMessage(RemoteMessage message) async {
+  print(message.data.toString() + 'ONBACKGROUND');
+}
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  var token = await FirebaseMessaging.instance.getToken();
+  print(token.toString());
+  FirebaseMessaging.onMessage.listen((event) {
+    print(event.data);
+  }).onError((error) {
+    print(error.toString());
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((event) {
+    print(event.data);
+  }).onError((error) {
+    print(error.toString());
+  });
+
+  FirebaseMessaging.onBackgroundMessage(backGroundMessage);
+
   BlocOverrides.runZoned(
     () async {
-      await Firebase.initializeApp();
       await CachedHelper.init();
       currentUserId = CachedHelper.getPref(key: 'uId');
       firstPage() {
