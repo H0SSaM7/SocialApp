@@ -28,6 +28,7 @@ dependencies:
   font_awesome_flutter: ^9.2.0
   flex_color_scheme: ^4.1.1
   google_fonts: ^2.2.0
+  dio: ^4.0.4
   image_picker: ^0.8.4+4
   firebase_storage: ^10.2.4
   firebase_messaging: ^11.2.5

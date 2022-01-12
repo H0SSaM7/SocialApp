@@ -3,8 +3,8 @@ class UserModel {
   String? email;
   String? phone;
   String? uId;
+  String? token;
   String? profileImage;
-
   String? bio;
   bool? emailVerified;
 
@@ -16,9 +16,11 @@ class UserModel {
     this.bio,
     this.profileImage,
     this.emailVerified,
+    this.token,
   });
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    token = json['token'];
     email = json['email'];
     phone = json['phone'];
     uId = json['uId'];
@@ -35,6 +37,7 @@ class UserModel {
       'personalImage': profileImage,
       'bio': bio,
       'emailVerified': emailVerified,
+      'token': token,
     };
   }
 }

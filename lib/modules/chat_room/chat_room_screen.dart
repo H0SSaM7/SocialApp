@@ -87,8 +87,11 @@ class ChatRoomScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
+                              print(userModel.token);
                               if (messageController.text.isNotEmpty) {
                                 cubit.sendMessages(
+                                    receiverName: userModel.name!,
+                                    receiverToken: userModel.token!,
                                     receiverId: userModel.uId!,
                                     message: messageController.text,
                                     date: DateTime.now().toString());

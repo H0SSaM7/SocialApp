@@ -16,6 +16,7 @@ import 'package:social_app/modules/users/users_screen.dart';
 import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/states.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:social_app/shared/network/remote/dio_helper.dart';
 
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
@@ -31,6 +32,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(currentUserId)
         .get()
         .then((value) {
+      print(value.data().toString());
       userModel = UserModel.fromJson(value.data()!);
 
       emit(SocialSuccessGetUserState());
@@ -310,6 +312,8 @@ class SocialCubit extends Cubit<SocialStates> {
   ChatsModel? chatsModel;
 
   sendMessages({
+    required String receiverName,
+    required String receiverToken,
     required String receiverId,
     required String message,
     required String date,
@@ -329,6 +333,8 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection('messages')
         .add(chatsModel!.toMap())
         .then((value) {
+      DioHelper.post(
+          token: receiverToken, userName: receiverName, message: message);
       emit(SocialSuccessSendMessagesFromMeState());
     }).catchError((onError) {
       debugPrint(onError.toString());
