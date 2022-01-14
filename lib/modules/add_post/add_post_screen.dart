@@ -107,12 +107,6 @@ class AddPostScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (State is SocialLoadingCreateNewPostState)
-                    const LinearProgressIndicator(),
-                  if (State is SocialLoadingCreateNewPostState)
-                    const SizedBox(
-                      height: 10,
-                    ),
                   Row(
                     children: [
                       CircleAvatar(
@@ -164,14 +158,12 @@ class AddPostScreen extends StatelessWidget {
 
   Stack buildAddImage(SocialCubit cubit) {
     return Stack(
-      alignment: Alignment.topCenter,
+      alignment: Alignment.topRight,
       children: [
-        Align(
-          alignment: AlignmentDirectional.center,
-          child: Image.file(
-            cubit.postImage!,
-            height: 200,
-          ),
+        Image.file(
+          cubit.postImage!,
+          height: 300,
+          fit: BoxFit.cover,
         ),
         IconButton(
           padding: const EdgeInsets.all(4),

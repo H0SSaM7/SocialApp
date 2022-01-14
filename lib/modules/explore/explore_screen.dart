@@ -20,13 +20,12 @@ class ExploreScreen extends StatelessWidget {
           SocialCubit cubit = SocialCubit.get(context);
           return RefreshIndicator(
             onRefresh: () async {
-              cubit.getPosts();
+              cubit.getStreamPosts();
             },
             child: ConditionalBuilder(
-              condition: cubit.posts.isNotEmpty &&
-                  cubit.userModel != null &&
-                  cubit.commentsList.isNotEmpty &&
-                  cubit.likesList.isNotEmpty,
+              condition: cubit.posts.isNotEmpty && cubit.userModel != null,
+              // cubit.commentsList.isNotEmpty &&
+              // cubit.likesList.isNotEmpty,
               builder: (context) {
                 return SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
@@ -183,8 +182,9 @@ class ExploreScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10),
                 child: Image.network(
                   model.postImage!,
-                  height: 160,
+                  height: 400,
                   width: double.maxFinite,
+                  fit: BoxFit.cover,
                 ),
               ),
             SizedBox(
@@ -199,7 +199,8 @@ class ExploreScreen extends StatelessWidget {
                       size: 16,
                     ),
                     spacer: false,
-                    title: '${cubit.likesList[index].length}',
+                    title: '0',
+                    // '${cubit.likesList[index].length}',
                     onTap: () {},
                   ),
                   buildLoveCommentCard(
@@ -210,7 +211,8 @@ class ExploreScreen extends StatelessWidget {
                       color: Colors.yellow[800],
                       size: 16,
                     ),
-                    title: '${cubit.commentsList[index].length}',
+                    title: '2',
+                    // '${cubit.commentsList[index].length}',
                     // '${cubit.countComments[index]} Comments',
                     onTap: () {},
                   ),
@@ -331,10 +333,11 @@ class ExploreScreen extends StatelessWidget {
   }
 
   checkIsLikedPost(SocialCubit cubit, int index) {
-    for (var element in cubit.likesList[index]) {
-      if (element.containsKey(currentUserId)) {
-        return true;
-      }
-    }
+    return false;
+    // for (var element in cubit.likesList[index]) {
+    //   if (element.containsKey(currentUserId)) {
+    //     return true;
+    //   }
+    // }
   }
 }

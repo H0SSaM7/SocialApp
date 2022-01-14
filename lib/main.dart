@@ -64,32 +64,31 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => SocialCubit()
         ..getUserDate()
-        ..getPosts()
-        ..getAllUsers(),
+        ..getStreamPosts(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: FlexColorScheme.light(
-                textTheme: const TextTheme(
-                    bodyText1: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    caption: TextStyle(fontSize: 12.5)),
-                fontFamily: GoogleFonts.ptSans().fontFamily,
-                scheme: FlexScheme.bahamaBlue)
-            .toTheme,
+          textTheme: const TextTheme(
+              bodyText1: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+              caption: TextStyle(fontSize: 12.5)),
+          fontFamily: GoogleFonts.ptSans().fontFamily,
+          scheme: FlexScheme.bigStone,
+        ).toTheme,
         darkTheme: FlexColorScheme.dark(
-                textTheme: const TextTheme(
-                  bodyText1: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                fontFamily: GoogleFonts.ptSans().fontFamily,
-                scheme: FlexScheme.bahamaBlue)
-            .toTheme,
-        themeMode: ThemeMode.light,
+          textTheme: const TextTheme(
+            bodyText1: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          fontFamily: GoogleFonts.ptSans().fontFamily,
+          scheme: FlexScheme.bigStone,
+        ).toTheme,
+        themeMode: ThemeMode.dark,
         home: page,
       ),
     );

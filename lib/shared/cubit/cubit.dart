@@ -66,6 +66,9 @@ class SocialCubit extends Cubit<SocialStates> {
   int currentIndex = 0;
 
   changeNavbar(int index) {
+    if (index == 1) {
+      getAllUsers();
+    }
     currentIndex = index;
     emit(SocialChangeNavBarState());
   }
@@ -218,45 +221,59 @@ class SocialCubit extends Cubit<SocialStates> {
 
   List<PostsModel> posts = [];
   List<String> postsId = [];
-  List<List<Map<String, dynamic>>> likesList = [];
-  List<List<Map<String, dynamic>>> commentsList = [];
+  // List<List<Map<String, dynamic>>> likesList = [];
+  // List<List<Map<String, dynamic>>> commentsList = [];
 
-  getPosts() async {
+  getStreamPosts() {
     emit(SocialLoadingGetPostsState());
-    try {
-      QuerySnapshot<Map<String, dynamic>> data =
-          await FirebaseFirestore.instance.collection('posts').get();
-      for (var element in data.docs) {
+    FirebaseFirestore.instance.collection('posts').snapshots().listen((event) {
+      posts = [];
+      for (var element in event.docs) {
         posts.add(PostsModel.fromMap(element.data()));
-        postsId.add(element.id);
-        // after get the post collection go to references of this collection
-        // and open likes collection
-        // and make a list of each post in this list contain userId and its bollen value
-        QuerySnapshot<Map<String, dynamic>> likesData =
-            await element.reference.collection('likes').get();
-        List<Map<String, dynamic>> anyLike = [];
-        for (var e in likesData.docs) {
-          anyLike.add({e.id: e.data()['like']});
-        }
-
-        likesList.add(anyLike);
-        // after get the post collection go to refrence of this collection
-        // and open comment collection
-        // and make a list of each post this list contain userid and its bollen value
-        QuerySnapshot<Map<String, dynamic>> commentsData =
-            await element.reference.collection('comments').get();
-        List<Map<String, dynamic>> anyComment = [];
-        for (var e in commentsData.docs) {
-          anyComment.add({e.id: e.data()['like']});
-        }
-        commentsList.add(anyComment);
+        emit(SocialSuccessGetPostsState());
       }
+    }).onError((handleError) {
+      print(handleError.toString());
       emit(SocialSuccessGetPostsState());
-    } catch (e) {
-      debugPrint(e.toString());
-      emit(SocialSuccessGetPostsState());
-    }
+    });
   }
+
+  // getPosts() async {
+  //   emit(SocialLoadingGetPostsState());
+  //   try {
+  //     QuerySnapshot<Map<String, dynamic>> data =
+  //         await FirebaseFirestore.instance.collection('posts').get();
+  //     for (var element in data.docs) {
+  //       posts.add(PostsModel.fromMap(element.data()));
+  //       postsId.add(element.id);
+  //       // after get the post collection go to references of this collection
+  //       // and open likes collection
+  //       // and make a list of each post in this list contain userId and its bollen value
+  //       QuerySnapshot<Map<String, dynamic>> likesData =
+  //           await element.reference.collection('likes').get();
+  //       List<Map<String, dynamic>> anyLike = [];
+  //       for (var e in likesData.docs) {
+  //         anyLike.add({e.id: e.data()['like']});
+  //       }
+  //
+  //       likesList.add(anyLike);
+  //       // after get the post collection go to refrence of this collection
+  //       // and open comment collection
+  //       // and make a list of each post this list contain userid and its bollen value
+  //       QuerySnapshot<Map<String, dynamic>> commentsData =
+  //           await element.reference.collection('comments').get();
+  //       List<Map<String, dynamic>> anyComment = [];
+  //       for (var e in commentsData.docs) {
+  //         anyComment.add({e.id: e.data()['like']});
+  //       }
+  //       commentsList.add(anyComment);
+  //     }
+  //     emit(SocialSuccessGetPostsState());
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //     emit(SocialSuccessGetPostsState());
+  //   }
+  // }
 
   // getLikes() async {
   //   try {

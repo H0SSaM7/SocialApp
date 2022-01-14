@@ -25,13 +25,24 @@ class HomeLayout extends StatelessWidget {
             bottomNavigationBar: customBottomNavigationBar(context, cubit),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterDocked,
-            floatingActionButton: FloatingActionButton(
-              clipBehavior: Clip.none,
-              tooltip: 'New post',
-              onPressed: () {
-                navigateTo(context, const AddPostScreen());
-              },
-              child: const Icon(Icons.add),
+            floatingActionButton: SizedBox(
+              height: 45,
+              width: 45,
+              child: FittedBox(
+                child: FloatingActionButton(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  clipBehavior: Clip.none,
+                  tooltip: 'New post',
+                  onPressed: () {
+                    navigateTo(context, const AddPostScreen());
+                  },
+                  child: const Icon(
+                    Icons.add,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
             body: cubit.screens[cubit.currentIndex]);
       },
@@ -41,66 +52,51 @@ class HomeLayout extends StatelessWidget {
   BottomAppBar customBottomNavigationBar(
       BuildContext context, SocialCubit cubit) {
     return BottomAppBar(
-        elevation: 20,
-        //bottom navigation bar on scaffold
-        color: Theme.of(context).scaffoldBackgroundColor,
-        shape: const CircularNotchedRectangle(), //shape of notch
-        child: Container(
-          margin: const EdgeInsets.all(5),
-          height: 45,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: FaIcon(
-                  FontAwesomeIcons.home,
-                  color: cubit.currentIndex == 0
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey,
-                ),
-                onPressed: () {
-                  cubit.changeNavbar(0);
-                },
-              ),
-              IconButton(
-                icon: FaIcon(
-                  FontAwesomeIcons.commentDots,
-                  color: cubit.currentIndex == 1
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey,
-                ),
-                onPressed: () {
-                  cubit.changeNavbar(1);
-                },
-              ),
-              const SizedBox(
-                width: 70,
-              ),
-              IconButton(
-                icon: FaIcon(
-                  FontAwesomeIcons.user,
-                  color: cubit.currentIndex == 2
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey,
-                ),
-                onPressed: () {
-                  cubit.changeNavbar(2);
-                },
-              ),
-              IconButton(
-                icon: FaIcon(
-                  Icons.settings_outlined,
-                  color: cubit.currentIndex == 3
-                      ? Theme.of(context).primaryColor
-                      : Colors.grey,
-                ),
-                onPressed: () {
-                  cubit.changeNavbar(3);
-                },
-              ),
-            ],
+      notchMargin: 6.0,
+      elevation: 20,
+      //bottom navigation bar on scaffold
+      color: Theme.of(context).bottomAppBarColor,
+      shape: const CircularNotchedRectangle(), //shape of notch
+      child: Container(
+        margin: const EdgeInsets.all(5.0),
+        height: 50,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            bottomBarIcon(cubit, context, FontAwesomeIcons.home, 0),
+            bottomBarIcon(cubit, context, FontAwesomeIcons.commentDots, 1),
+            const SizedBox(
+              width: 70,
+            ),
+            bottomBarIcon(cubit, context, FontAwesomeIcons.user, 2),
+            bottomBarIcon(cubit, context, Icons.settings_outlined, 3),
+          ],
+        ),
+      ),
+    );
+  }
+
+  CircleAvatar bottomBarIcon(SocialCubit cubit, BuildContext context,
+      IconData icon, int currentNumber) {
+    return CircleAvatar(
+      backgroundColor: cubit.currentIndex == currentNumber
+          ? Colors.grey[400]
+          : Colors.transparent,
+      radius: 35,
+      child: FittedBox(
+        child: IconButton(
+          icon: FaIcon(
+            icon,
+            color: cubit.currentIndex == currentNumber
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
           ),
-        ));
+          onPressed: () {
+            cubit.changeNavbar(currentNumber);
+          },
+        ),
+      ),
+    );
   }
 }
