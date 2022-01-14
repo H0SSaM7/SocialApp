@@ -69,8 +69,8 @@ class HomeLayout extends StatelessWidget {
             const SizedBox(
               width: 70,
             ),
-            bottomBarIcon(cubit, context, FontAwesomeIcons.user, 2),
-            bottomBarIcon(cubit, context, Icons.settings_outlined, 3),
+            bottomBarIcon(cubit, context, FontAwesomeIcons.users, 2),
+            bottomBarIcon(cubit, context, FontAwesomeIcons.solidUserCircle, 3),
           ],
         ),
       ),

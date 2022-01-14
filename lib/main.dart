@@ -9,6 +9,7 @@ import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/shared/bloc_observer.dart';
 import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
+import 'package:social_app/shared/cubit/states.dart';
 import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 import 'package:social_app/shared/network/remote/dio_helper.dart';
 
@@ -39,6 +40,7 @@ void main() async {
       await CachedHelper.init();
       await DioHelper.init();
       currentUserId = CachedHelper.getPref(key: 'uId');
+
       firstPage() {
         if (currentUserId == null) {
           return const LoginScreen();
@@ -56,8 +58,12 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key, this.page}) : super(key: key);
+  const MyApp({
+    Key? key,
+    this.page,
+  }) : super(key: key);
   final Widget? page;
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -65,31 +71,38 @@ class MyApp extends StatelessWidget {
       create: (context) => SocialCubit()
         ..getUserDate()
         ..getStreamPosts(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: FlexColorScheme.light(
-          textTheme: const TextTheme(
-              bodyText1: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+      child: BlocConsumer<SocialCubit, SocialStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: FlexColorScheme.light(
+              textTheme: const TextTheme(
+                  bodyText1: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  caption: TextStyle(fontSize: 12.5)),
+              fontFamily: GoogleFonts.ptSans().fontFamily,
+              scheme: FlexScheme.bigStone,
+            ).toTheme,
+            darkTheme: FlexColorScheme.dark(
+              textTheme: const TextTheme(
+                bodyText1: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              caption: TextStyle(fontSize: 12.5)),
-          fontFamily: GoogleFonts.ptSans().fontFamily,
-          scheme: FlexScheme.bigStone,
-        ).toTheme,
-        darkTheme: FlexColorScheme.dark(
-          textTheme: const TextTheme(
-            bodyText1: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          fontFamily: GoogleFonts.ptSans().fontFamily,
-          scheme: FlexScheme.bigStone,
-        ).toTheme,
-        themeMode: ThemeMode.dark,
-        home: page,
+              fontFamily: GoogleFonts.ptSans().fontFamily,
+              scheme: FlexScheme.bigStone,
+            ).toTheme,
+            themeMode: SocialCubit.get(context).isDarkTheme
+                ? ThemeMode.dark
+                : ThemeMode.light,
+            home: page,
+          );
+        },
       ),
     );
   }

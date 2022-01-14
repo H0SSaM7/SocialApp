@@ -11,11 +11,12 @@ import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/chats/chats_screen.dart';
 import 'package:social_app/modules/explore/explore_screen.dart';
-import 'package:social_app/modules/settings/settings_screen.dart';
+import 'package:social_app/modules/user_profile/user_profile_screen.dart';
 import 'package:social_app/modules/users/users_screen.dart';
 import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/states.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 import 'package:social_app/shared/network/remote/dio_helper.dart';
 
 class SocialCubit extends Cubit<SocialStates> {
@@ -77,9 +78,18 @@ class SocialCubit extends Cubit<SocialStates> {
     ExploreScreen(),
     ChatsScreen(),
     UsersScreen(),
-    SettingsScreen(),
+    UserProfileScreen(),
   ];
   List<String> appBarTitles = const ['Explore', 'Chats', 'Users', 'Profile'];
+  // setting screen
+  late int radioValue;
+
+  bool isDarkTheme = CachedHelper.getPref(key: 'isDark') ?? false;
+  changeTheme() {
+    isDarkTheme = !isDarkTheme;
+    CachedHelper.savePref(key: 'isDark', value: isDarkTheme)
+        .then((value) => emit(SocialChangeThemeState()));
+  }
 
   // image picker and upload methods
 

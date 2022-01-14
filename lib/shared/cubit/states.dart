@@ -22,6 +22,8 @@ class SocialErrorGetPostsState extends SocialStates {}
 
 class SocialChangeNavBarState extends SocialStates {}
 
+class SocialChangeThemeState extends SocialStates {}
+
 class SocialPickImageState extends SocialStates {}
 
 class SocialLoadingUploadProfileImageState extends SocialStates {}

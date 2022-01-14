@@ -2,13 +2,14 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_app/models/settings/settings_screen.dart';
 import 'package:social_app/modules/edit_profile/edit_profile.dart';
 import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+class UserProfileScreen extends StatelessWidget {
+  const UserProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -112,14 +113,19 @@ class SettingsScreen extends StatelessWidget {
                               width: 20,
                             ),
                             OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  navigateTo(
+                                    context,
+                                    const SettingsScreen(),
+                                  );
+                                },
                                 child: const FaIcon(
                                   FontAwesomeIcons.cog,
                                   size: 15,
                                 ))
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
