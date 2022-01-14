@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart ';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/models/posts_model.dart';
+import 'package:social_app/modules/comment/comment_screen.dart';
+import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 
@@ -105,7 +108,7 @@ class PostCardWidget extends StatelessWidget {
             //   ),
             // ),
             if (model.postImage!.isNotEmpty)
-// Post image ----------------------------
+// image of the post  ----------------------------
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Image.network(
@@ -140,8 +143,6 @@ class PostCardWidget extends StatelessWidget {
                       size: 16,
                     ),
                     title: '2',
-                    // '${cubit.commentsList[index].length}',
-                    // '${cubit.countComments[index]} Comments',
                     onTap: () {},
                   ),
                 ],
@@ -160,16 +161,22 @@ class PostCardWidget extends StatelessWidget {
                 ),
 
 // write comment tap -----------------------------
-                SizedBox(
-                  width: 200,
-                  child: TextFormField(
-                    onFieldSubmitted: (value) {},
-                    decoration: const InputDecoration(
-                      hintText: 'Write a comment',
-                      fillColor: Colors.transparent,
-                      border: InputBorder.none,
-                    ),
-                  ),
+//                 SizedBox(
+//                   width: 200,
+//                   child: TextFormField(
+//                     onFieldSubmitted: (value) {},
+//                     decoration: const InputDecoration(
+//                       hintText: 'Write a comment',
+//                       fillColor: Colors.transparent,
+//                       border: InputBorder.none,
+//                     ),
+//                   ),
+//                 ),
+                InkWell(
+                  onTap: () {
+                    navigateTo(context, CommentScreen());
+                  },
+                  child: Text('Write a Comment'),
                 ),
                 const Spacer(),
                 InkWell(
