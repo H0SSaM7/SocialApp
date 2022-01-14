@@ -21,105 +21,107 @@ class SettingsScreen extends StatelessWidget {
             builder: (context) {
               return Container(
                 color: Theme.of(context).hoverColor,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 150,
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          Align(
-                            alignment: AlignmentDirectional.topStart,
-                            child: Container(
-                              height: 100.0,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .appBarTheme
-                                    .backgroundColor,
-                                borderRadius: const BorderRadius.vertical(
-                                  bottom: Radius.elliptical(
-                                    150,
-                                    70,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 150,
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional.topStart,
+                              child: Container(
+                                height: 100.0,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .appBarTheme
+                                      .backgroundColor,
+                                  borderRadius: const BorderRadius.vertical(
+                                    bottom: Radius.elliptical(
+                                      150,
+                                      70,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          myProfileImage(
-                              enableEdit: false,
-                              image:
-                                  NetworkImage(cubit.userModel!.profileImage!),
-                              context: context)
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      cubit.userModel!.name!,
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 250,
-                      alignment: Alignment.center,
-                      child: Text(
-                        cubit.userModel!.bio!,
-                        style: Theme.of(context).textTheme.caption,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        buildPropertiesOption(context, '100', 'Posts'),
-                        Container(
-                          height: 50,
-                          width: 1,
-                          color: Colors.grey[400],
+                            myProfileImage(
+                                enableEdit: false,
+                                image: NetworkImage(
+                                    cubit.userModel!.profileImage!),
+                                context: context)
+                          ],
                         ),
-                        buildPropertiesOption(context, '20 K', 'Followers'),
-                        Container(
-                          height: 50,
-                          width: 1,
-                          color: Colors.grey[400],
-                        ),
-                        buildPropertiesOption(context, '77', 'Following'),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 3.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () {
-                                navigateTo(context, const EidProfile());
-                              },
-                              child: const Text('Edit Profile'),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        cubit.userModel!.name!,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                              fontWeight: FontWeight.w700,
                             ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        width: 250,
+                        alignment: Alignment.center,
+                        child: Text(
+                          cubit.userModel!.bio!,
+                          style: Theme.of(context).textTheme.caption,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          buildPropertiesOption(context, '100', 'Posts'),
+                          Container(
+                            height: 50,
+                            width: 1,
+                            color: Colors.grey[400],
                           ),
-                          const SizedBox(
-                            width: 20,
+                          buildPropertiesOption(context, '20 K', 'Followers'),
+                          Container(
+                            height: 50,
+                            width: 1,
+                            color: Colors.grey[400],
                           ),
-                          OutlinedButton(
-                              onPressed: () {},
-                              child: const FaIcon(
-                                FontAwesomeIcons.cog,
-                                size: 15,
-                              ))
+                          buildPropertiesOption(context, '77', 'Following'),
                         ],
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 3.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  navigateTo(context, const EidProfile());
+                                },
+                                child: const Text('Edit Profile'),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            OutlinedButton(
+                                onPressed: () {},
+                                child: const FaIcon(
+                                  FontAwesomeIcons.cog,
+                                  size: 15,
+                                ))
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             },

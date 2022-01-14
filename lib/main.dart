@@ -13,23 +13,23 @@ import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.
 import 'package:social_app/shared/network/remote/dio_helper.dart';
 
 Future<void> backGroundMessage(RemoteMessage message) async {
-  print(message.data.toString() + 'ONBACKGROUND');
+  // print(message.data.toString() + 'ONBACKGROUND');
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  var token = await FirebaseMessaging.instance.getToken();
-  print(token.toString());
+  // var token = await FirebaseMessaging.instance.getToken();
+  // print(token.toString());
   FirebaseMessaging.onMessage.listen((event) {
-    print(event.data);
+    // print(event.data);
   }).onError((error) {
-    print(error.toString());
+    debugPrint(error.toString());
   });
   FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    print(event.data);
+    // print(event.data);
   }).onError((error) {
-    print(error.toString());
+    debugPrint(error.toString());
   });
 
   FirebaseMessaging.onBackgroundMessage(backGroundMessage);

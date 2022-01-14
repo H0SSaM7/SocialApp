@@ -32,7 +32,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .doc(currentUserId)
         .get()
         .then((value) {
-      print(value.data().toString());
+      // print(value.data().toString());
       userModel = UserModel.fromJson(value.data()!);
 
       emit(SocialSuccessGetUserState());
@@ -205,6 +205,7 @@ class SocialCubit extends Cubit<SocialStates> {
       date: date,
       postDescription: postDescription,
       postImage: postImage,
+      likes: [],
     );
     FirebaseFirestore.instance
         .collection('posts')
@@ -221,19 +222,27 @@ class SocialCubit extends Cubit<SocialStates> {
 
   List<PostsModel> posts = [];
   List<String> postsId = [];
+  List<int> likesCount = [];
+
   // List<List<Map<String, dynamic>>> likesList = [];
   // List<List<Map<String, dynamic>>> commentsList = [];
 
   getStreamPosts() {
     emit(SocialLoadingGetPostsState());
-    FirebaseFirestore.instance.collection('posts').snapshots().listen((event) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .snapshots()
+        .listen((event) async {
       posts = [];
+      postsId = [];
       for (var element in event.docs) {
+        postsId.add(element.id);
         posts.add(PostsModel.fromMap(element.data()));
+
         emit(SocialSuccessGetPostsState());
       }
     }).onError((handleError) {
-      print(handleError.toString());
+      debugPrint(handleError.toString());
       emit(SocialSuccessGetPostsState());
     });
   }
@@ -294,20 +303,32 @@ class SocialCubit extends Cubit<SocialStates> {
   //   }
   // }
 
-  postLike({required String postId}) {
-    FirebaseFirestore.instance
-        .collection('posts')
-        .doc(postId)
-        .collection('likes')
-        .doc(currentUserId)
-        .set({
-      'like': true,
-    }).then((value) {
-      emit(SocialSuccessPostLikeState());
-    }).catchError((error) {
-      emit(SocialErrorPostLikeState());
-      debugPrint(error.toString());
-    });
+  addOrRemoveLike({required String postId, required List likes}) {
+    if (likes.contains(currentUserId)) {
+      FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .update({
+            'likes': FieldValue.arrayRemove([currentUserId]),
+          })
+          .then((value) => emit(SocialSuccessPostLikeState()))
+          .catchError((err) {
+            debugPrint(err.toString());
+            emit(SocialErrorPostLikeState());
+          });
+    } else {
+      FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .update({
+            'likes': FieldValue.arrayUnion([currentUserId]),
+          })
+          .then((value) => emit(SocialSuccessPostLikeState()))
+          .catchError((err) {
+            debugPrint(err.toString());
+            emit(SocialErrorPostLikeState());
+          });
+    }
   }
 
   postComment({required String postId, required String comment}) {
@@ -325,6 +346,8 @@ class SocialCubit extends Cubit<SocialStates> {
       debugPrint(error.toString());
     });
   }
+
+// chats methods ---------------------------------------------------------------
 
   ChatsModel? chatsModel;
 

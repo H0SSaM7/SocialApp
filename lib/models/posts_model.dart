@@ -5,6 +5,7 @@ class PostsModel {
   String? postDescription;
   String? postImage;
   String? profileImage;
+  List? likes;
 
   Map<String, dynamic> toJson() {
     return {
@@ -14,6 +15,7 @@ class PostsModel {
       'postDescription': postDescription,
       'postImage': postImage,
       'profileImage': profileImage,
+      'likes': likes
     };
   }
 
@@ -25,15 +27,16 @@ class PostsModel {
       postDescription: map['postDescription'] as String,
       postImage: map['postImage'] as String,
       profileImage: map['profileImage'] as String,
+      likes: map['likes'],
     );
   }
 
-  PostsModel({
-    this.name,
-    this.uId,
-    this.date,
-    this.postDescription,
-    this.postImage,
-    this.profileImage,
-  });
+  PostsModel(
+      {this.name,
+      this.uId,
+      this.date,
+      this.postDescription,
+      this.postImage,
+      this.profileImage,
+      this.likes});
 }
