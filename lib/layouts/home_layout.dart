@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app/modules/add_post/add_post_screen.dart';
+import 'package:social_app/modules/search/search_screen.dart';
 import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
@@ -21,6 +22,17 @@ class HomeLayout extends StatelessWidget {
             appBar: AppBar(
               title: Text(cubit.appBarTitles[cubit.currentIndex]),
               centerTitle: true,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    navigateTo(
+                      context,
+                      const SearchScreen(),
+                    );
+                  },
+                  icon: const Icon(Icons.search),
+                ),
+              ],
             ),
             bottomNavigationBar: customBottomNavigationBar(context, cubit),
             floatingActionButtonLocation:

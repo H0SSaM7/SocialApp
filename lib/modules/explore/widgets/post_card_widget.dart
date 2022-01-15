@@ -131,7 +131,6 @@ class PostCardWidget extends StatelessWidget {
                     ),
                     spacer: false,
                     title: '${model.likes!.length}',
-                    // '${cubit.likesList[index].length}',
                     onTap: () {},
                   ),
                   buildLoveCommentCard(
@@ -171,8 +170,8 @@ class PostCardWidget extends StatelessWidget {
                     'Write a Comment',
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText2!
-                        .copyWith(color: Colors.grey[700]),
+                        .caption!
+                        .copyWith(fontSize: 14),
                   ),
                 ),
                 const Spacer(),
