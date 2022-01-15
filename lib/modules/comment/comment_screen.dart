@@ -1,40 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/models/comment_model.dart';
+
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
 
 class CommentScreen extends StatelessWidget {
-  const CommentScreen({Key? key}) : super(key: key);
-
+  const CommentScreen({Key? key, required this.postId}) : super(key: key);
+  final String postId;
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-        builder: (context, state) {
-          return SafeArea(
-            child: Scaffold(
-              body: Column(
-                children: [
-                  buildTopCard(context),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: ListView.separated(
-                          itemBuilder: (context, index) {
-                            return buildCommentCard(context);
-                          },
-                          separatorBuilder: (context, index) => const SizedBox(
-                                height: 10,
-                              ),
-                          itemCount: 5),
+    return Builder(builder: (context) {
+      SocialCubit.get(context).getComment(postId: postId);
+      return BlocConsumer<SocialCubit, SocialStates>(
+          builder: (context, state) {
+            return SafeArea(
+              child: Scaffold(
+                body: Column(
+                  children: [
+                    buildTopCard(context),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: ListView.separated(
+                            itemBuilder: (context, index) {
+                              return buildCommentCard(context,
+                                  SocialCubit.get(context).commentList[index]);
+                            },
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                            itemCount:
+                                SocialCubit.get(context).commentList.length),
+                      ),
                     ),
-                  ),
-                  buildBottomCard(context),
-                ],
+                    buildBottomCard(
+                      context,
+                      SocialCubit.get(context),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-        listener: (context, state) {});
+            );
+          },
+          listener: (context, state) {});
+    });
   }
 
   Card buildTopCard(BuildContext context) {
@@ -63,13 +74,16 @@ class CommentScreen extends StatelessWidget {
     );
   }
 
-  Row buildCommentCard(BuildContext context) {
+  Row buildCommentCard(
+    BuildContext context,
+    CommentModel model,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // image -------------------------------------------------
         CircleAvatar(
-          backgroundImage:
-              NetworkImage(SocialCubit.get(context).userModel!.profileImage!),
+          backgroundImage: NetworkImage(model.userImage!),
         ),
         const SizedBox(
           width: 13,
@@ -87,15 +101,17 @@ class CommentScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+// name ----------------------------
                 Text(
-                  SocialCubit.get(context).userModel!.name!,
+                  model.userName!,
                   style: Theme.of(context)
                       .textTheme
                       .bodyText2!
                       .copyWith(fontWeight: FontWeight.w600, fontSize: 15),
                 ),
-                const Text(
-                  'It is a It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to ',
+// comment -----------------------------------
+                Text(
+                  model.comment!,
                   maxLines: 10,
                 )
               ],
@@ -106,7 +122,8 @@ class CommentScreen extends StatelessWidget {
     );
   }
 
-  Card buildBottomCard(BuildContext context) {
+  Card buildBottomCard(BuildContext context, SocialCubit cubit) {
+    TextEditingController commentController = TextEditingController();
     return Card(
       margin: const EdgeInsets.all(0.0),
       child: Padding(
@@ -127,6 +144,7 @@ class CommentScreen extends StatelessWidget {
             SizedBox(
               width: 210,
               child: TextFormField(
+                controller: commentController,
                 minLines: 1,
                 maxLines: 4,
                 onFieldSubmitted: (value) {},
@@ -139,7 +157,12 @@ class CommentScreen extends StatelessWidget {
             ),
             const Spacer(),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                if (commentController.text.isNotEmpty) {
+                  cubit.postComment(
+                      postId: postId, comment: commentController.text);
+                }
+              },
               child: const Text(
                 'SEND',
                 style: TextStyle(color: Colors.deepOrangeAccent),

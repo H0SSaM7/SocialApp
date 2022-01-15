@@ -67,7 +67,7 @@ class ExploreScreen extends StatelessWidget {
                           );
                         },
                         separatorBuilder: (context, index) => const SizedBox(
-                          height: 10,
+                          height: 5,
                         ),
                         itemCount: cubit.posts.length,
                       ),

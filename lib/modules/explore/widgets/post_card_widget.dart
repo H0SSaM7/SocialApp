@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart ';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/models/posts_model.dart';
@@ -142,7 +142,7 @@ class PostCardWidget extends StatelessWidget {
                       color: Colors.yellow[800],
                       size: 16,
                     ),
-                    title: '2',
+                    title: '${cubit.commentList.length}',
                     onTap: () {},
                   ),
                 ],
@@ -159,24 +159,21 @@ class PostCardWidget extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-
-// write comment tap -----------------------------
-//                 SizedBox(
-//                   width: 200,
-//                   child: TextFormField(
-//                     onFieldSubmitted: (value) {},
-//                     decoration: const InputDecoration(
-//                       hintText: 'Write a comment',
-//                       fillColor: Colors.transparent,
-//                       border: InputBorder.none,
-//                     ),
-//                   ),
-//                 ),
                 InkWell(
                   onTap: () {
-                    navigateTo(context, CommentScreen());
+                    navigateTo(
+                        context,
+                        CommentScreen(
+                          postId: cubit.postsId[index],
+                        ));
                   },
-                  child: Text('Write a Comment'),
+                  child: Text(
+                    'Write a Comment',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2!
+                        .copyWith(color: Colors.grey[700]),
+                  ),
                 ),
                 const Spacer(),
                 InkWell(

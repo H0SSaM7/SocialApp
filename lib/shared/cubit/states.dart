@@ -55,6 +55,10 @@ class SocialSuccessPostCommentState extends SocialStates {}
 
 class SocialErrorPostCommentState extends SocialStates {}
 
+class SocialSuccessListenCommentState extends SocialStates {}
+
+class SocialErrorListenCommentState extends SocialStates {}
+
 //chats
 class SocialSuccessSendMessagesFromMeState extends SocialStates {}
 
