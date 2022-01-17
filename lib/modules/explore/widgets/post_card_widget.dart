@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/modules/comment/comment_screen.dart';
+import 'package:social_app/modules/profile_as_visitor/profile_as_visitor_screen.dart';
 import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
@@ -43,25 +44,32 @@ class PostCardWidget extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
+                      InkWell(
+                        onTap: () {
+                          navigateTo(context, const ProfileScreenAsVisitor());
+                        },
+                        child: Row(
+                          children: [
 // publisher name -----------------------------
-                          Text(
-                            model.name!,
-                            style:
-                                Theme.of(context).textTheme.subtitle1!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          const FaIcon(
-                            FontAwesomeIcons.solidCheckCircle,
-                            size: 14,
-                            color: Colors.blue,
-                          )
-                        ],
+                            Text(
+                              model.name!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            const FaIcon(
+                              FontAwesomeIcons.solidCheckCircle,
+                              size: 14,
+                              color: Colors.blue,
+                            )
+                          ],
+                        ),
                       ),
 // date of the post --------------
                       Text(
@@ -95,18 +103,6 @@ class PostCardWidget extends StatelessWidget {
                           .copyWith(fontSize: 16)),
                 ],
               ),
-            // Padding(
-            //   padding: const EdgeInsets.all(5.0),
-            //   child: InkWell(
-            //     onTap: () {},
-            //     child: const Text(
-            //       '#Software',
-            //       style: TextStyle(
-            //         color: Colors.blue,
-            //       ),
-            //     ),
-            //   ),
-            // ),
             if (model.postImage!.isNotEmpty)
 // image of the post  ----------------------------
               Padding(
@@ -142,7 +138,13 @@ class PostCardWidget extends StatelessWidget {
                       size: 16,
                     ),
                     title: '${cubit.commentList.length}',
-                    onTap: () {},
+                    onTap: () {
+                      navigateTo(
+                          context,
+                          CommentScreen(
+                            postId: cubit.postsId[index],
+                          ));
+                    },
                   ),
                 ],
               ),

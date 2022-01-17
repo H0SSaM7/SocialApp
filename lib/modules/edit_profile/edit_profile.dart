@@ -56,6 +56,7 @@ class EidProfile extends StatelessWidget {
                     alignment: Alignment.center,
                     children: [
                       myProfileImage(
+                        radius: 62,
                         enableEdit: true,
                         changeImageTap: () async {
                           await cubit.setProfileImage();

@@ -28,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
                       },
                       value: cubit.isDarkTheme,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

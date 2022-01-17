@@ -49,6 +49,7 @@ class UserProfileScreen extends StatelessWidget {
                               ),
                             ),
                             myProfileImage(
+                                radius: 62,
                                 enableEdit: false,
                                 image: NetworkImage(
                                     cubit.userModel!.profileImage!),

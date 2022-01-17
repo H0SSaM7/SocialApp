@@ -68,7 +68,7 @@ Widget myElevatedButton(
       style: ElevatedButton.styleFrom(
         primary: color ?? Theme.of(context).primaryColor,
         fixedSize: Size(
-          width ?? double.maxFinite,
+          width ?? double.infinity,
           height ?? 55,
         ),
         shape: RoundedRectangleBorder(
@@ -154,21 +154,21 @@ Container myCard(
 }
 
 // profile image with edit icon on it.
-Widget myProfileImage({
-  var image,
-  Function()? changeImageTap,
-  required BuildContext context,
-  required bool enableEdit,
-}) {
+Widget myProfileImage(
+    {var image,
+    Function()? changeImageTap,
+    required BuildContext context,
+    required bool enableEdit,
+    required double radius}) {
   return CircleAvatar(
     backgroundColor: Colors.white,
-    radius: 66,
+    radius: radius + 4,
     child: Stack(
       alignment: const Alignment(0.9, 0.9),
       children: [
         CircleAvatar(
           backgroundImage: image,
-          radius: 62,
+          radius: radius,
           child: image == null
               ? const Icon(
                   Icons.person,

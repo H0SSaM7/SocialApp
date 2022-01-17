@@ -33,6 +33,10 @@ class LoginScreen extends StatelessWidget {
         builder: (context, state) {
           LoginCubit cubit = LoginCubit.get(context);
           return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+            ),
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
