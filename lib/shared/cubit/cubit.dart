@@ -170,6 +170,7 @@ class SocialCubit extends Cubit<SocialStates> {
       emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
       bio: bio,
       profileImage: profileImage,
+      token: userModel!.token,
     );
     FirebaseFirestore.instance
         .collection('users')
