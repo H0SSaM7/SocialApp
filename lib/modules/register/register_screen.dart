@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layouts/Home_layout.dart';
+import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/modules/register/cubit/register_cubit.dart';
 import 'package:social_app/modules/register/cubit/register_states.dart';
 import 'package:social_app/shared/components/components.dart';
@@ -22,10 +23,10 @@ class RegisterScreen extends StatelessWidget {
       child: BlocConsumer<RegisterCubit, RegisterStates>(
         listener: (context, state) {
           if (state is RegisterUserCreateSuccessState) {
-            CachedHelper.savePref(key: 'uId', value: state.uId).then((value) {
-              currentUserId = CachedHelper.getPref(key: 'uId');
-            });
-            navigateAndRemove(context, const HomeLayout());
+            myToast(
+                msg: 'successfully, Login now with you email',
+                state: toastStates.success);
+            navigateTo(context, const LoginScreen());
           }
           if (state is RegisterErrorState) {
             myToast(msg: state.error.split(']')[1], state: toastStates.error);

@@ -36,11 +36,12 @@ class SocialCubit extends Cubit<SocialStates> {
         .get()
         .then((value) {
       // print(value.data().toString());
+
       userModel = UserModel.fromJson(value.data()!);
 
       emit(SocialSuccessGetUserState());
     }).catchError((onError) {
-      debugPrint(onError);
+      debugPrint(onError.toString());
       emit(SocialErrorGetUserState());
     });
   }

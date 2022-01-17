@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
 
   static RegisterCubit get(BuildContext context) => BlocProvider.of(context);
   bool isObscure = true;
+
   void changePasswordVisibility() {
     isObscure = !isObscure;
     emit(RegisterChangePasswordTextState());
@@ -38,7 +40,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
     required String phone,
     required String name,
     required String uId,
-  }) {
+  }) async {
     emit(RegisterUserCreateLoadingState());
 
     UserModel model = UserModel(

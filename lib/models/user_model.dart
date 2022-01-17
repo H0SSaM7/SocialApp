@@ -18,26 +18,30 @@ class UserModel {
     this.emailVerified,
     this.token,
   });
-  UserModel.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    token = json['token'];
-    email = json['email'];
-    phone = json['phone'];
-    uId = json['uId'];
-    profileImage = json['personalImage'];
-    bio = json['bio'];
-    emailVerified = json['emailVerified'];
-  }
+
   Map<String, dynamic> toJson() {
     return {
       'name': name,
       'email': email,
       'phone': phone,
       'uId': uId,
-      'personalImage': profileImage,
+      'token': token,
+      'profileImage': profileImage,
       'bio': bio,
       'emailVerified': emailVerified,
-      'token': token,
     };
+  }
+
+  factory UserModel.fromJson(Map<String, dynamic> map) {
+    return UserModel(
+      name: map['name'] as String,
+      email: map['email'] as String,
+      phone: map['phone'] as String,
+      uId: map['uId'] as String,
+      token: map['token'] as String,
+      profileImage: map['profileImage'] as String,
+      bio: map['bio'] as String,
+      emailVerified: map['emailVerified'] as bool,
+    );
   }
 }

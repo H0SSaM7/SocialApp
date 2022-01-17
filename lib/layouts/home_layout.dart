@@ -12,53 +12,57 @@ class HomeLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        SocialCubit cubit = SocialCubit.get(context);
-        return Scaffold(
-            resizeToAvoidBottomInset: false,
-            extendBody: true,
-            appBar: AppBar(
-              title: Text(cubit.appBarTitles[cubit.currentIndex]),
-              centerTitle: true,
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    navigateTo(
-                      context,
-                      const SearchScreen(),
-                    );
-                  },
-                  icon: const Icon(Icons.search),
-                ),
-              ],
-            ),
-            bottomNavigationBar: customBottomNavigationBar(context, cubit),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.miniCenterDocked,
-            floatingActionButton: SizedBox(
-              height: 45,
-              width: 45,
-              child: FittedBox(
-                child: FloatingActionButton(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  clipBehavior: Clip.none,
-                  tooltip: 'New post',
-                  onPressed: () {
-                    navigateTo(context, const AddPostScreen());
-                  },
-                  child: const Icon(
-                    Icons.add,
-                    size: 30,
-                    color: Colors.white,
+    return Builder(builder: (context) {
+      SocialCubit.get(context).getUserDate();
+      SocialCubit.get(context).getStreamPosts();
+      return BlocConsumer<SocialCubit, SocialStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          SocialCubit cubit = SocialCubit.get(context);
+          return Scaffold(
+              resizeToAvoidBottomInset: false,
+              extendBody: true,
+              appBar: AppBar(
+                title: Text(cubit.appBarTitles[cubit.currentIndex]),
+                centerTitle: true,
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      navigateTo(
+                        context,
+                        const SearchScreen(),
+                      );
+                    },
+                    icon: const Icon(Icons.search),
+                  ),
+                ],
+              ),
+              bottomNavigationBar: customBottomNavigationBar(context, cubit),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.miniCenterDocked,
+              floatingActionButton: SizedBox(
+                height: 45,
+                width: 45,
+                child: FittedBox(
+                  child: FloatingActionButton(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    clipBehavior: Clip.none,
+                    tooltip: 'New post',
+                    onPressed: () {
+                      navigateTo(context, const AddPostScreen());
+                    },
+                    child: const Icon(
+                      Icons.add,
+                      size: 30,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
-            body: cubit.screens[cubit.currentIndex]);
-      },
-    );
+              body: cubit.screens[cubit.currentIndex]);
+        },
+      );
+    });
   }
 
   BottomAppBar customBottomNavigationBar(
