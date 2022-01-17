@@ -1,4 +1,3 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,83 +37,81 @@ class ChatRoomScreen extends StatelessWidget {
                 ],
               ),
             ),
-            body: ConditionalBuilder(
-              condition: cubit.messages.isNotEmpty,
-              builder: (context) => Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 5),
-                      child: SingleChildScrollView(
-                        reverse: true,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemBuilder: (context, index) {
-                            ChatsModel message = cubit.messages[index];
-                            if (message.senderId == currentUserId) {
-                              return buildMyMessage(context, message);
-                            } else {
-                              return buildOtherUserMessage(
-                                  context, userModel, message);
-                            }
-                          },
-                          itemCount: cubit.messages.length,
-                        ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: SingleChildScrollView(
+                      reverse: true,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+                        itemBuilder: (context, index) {
+                          ChatsModel message = cubit.messages[index];
+                          if (message.senderId == currentUserId) {
+                            return buildMyMessage(context, message);
+                          } else {
+                            return buildOtherUserMessage(
+                                context, userModel, message);
+                          }
+                        },
+                        itemCount: cubit.messages.length,
                       ),
                     ),
                   ),
-                  Card(
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    elevation: 20,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: messageController,
-                              minLines: 1,
-                              maxLines: 3,
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Write you message',
-                              ),
+                ),
+                Card(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  elevation: 20,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: messageController,
+                            minLines: 1,
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              hintText: 'Write you message',
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              if (messageController.text.isNotEmpty) {
-                                cubit.sendMessages(
-                                    receiverName: userModel.name!,
-                                    receiverToken: userModel.token!,
-                                    receiverId: userModel.uId!,
-                                    message: messageController.text,
-                                    date: DateTime.now().toString());
-                              }
-                            },
-                            child: CircleAvatar(
-                              radius: 22,
-                              backgroundColor: Theme.of(context).primaryColor,
-                              child: const Icon(
-                                FontAwesomeIcons.solidPaperPlane,
-                                size: 18,
-                                color: Colors.white,
-                              ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (messageController.text.isNotEmpty) {
+                              cubit.sendMessages(
+                                  receiverName: userModel.name!,
+                                  receiverToken: userModel.token!,
+                                  receiverId: userModel.uId!,
+                                  message: messageController.text,
+                                  date: DateTime.now().toString());
+                            }
+                          },
+                          child: CircleAvatar(
+                            radius: 22,
+                            backgroundColor: Theme.of(context).primaryColor,
+                            child: const Icon(
+                              FontAwesomeIcons.solidPaperPlane,
+                              size: 18,
+                              color: Colors.white,
                             ),
-                          )
-                        ],
-                      ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ],
-              ),
-              fallback: (context) => const Center(
-                child: CircularProgressIndicator.adaptive(),
-              ),
+                ),
+              ],
             ),
           );
         },

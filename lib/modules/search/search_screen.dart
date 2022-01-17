@@ -39,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
         height: 50,
         padding: const EdgeInsets.only(right: 10),
         child: TextField(
-          onSubmitted: (value) {
+          onChanged: (value) {
             setState(() {
               textFieldValue = value;
             });

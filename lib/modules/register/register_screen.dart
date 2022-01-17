@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/layouts/Home_layout.dart';
+
 import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/modules/register/cubit/register_cubit.dart';
 import 'package:social_app/modules/register/cubit/register_states.dart';
 import 'package:social_app/shared/components/components.dart';
-import 'package:social_app/shared/consistent/consistent.dart';
-import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
