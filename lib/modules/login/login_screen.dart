@@ -99,6 +99,7 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(height: 20),
                           myElevatedButton(
                             context,
+                            width: double.maxFinite,
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 cubit.userLogin(
