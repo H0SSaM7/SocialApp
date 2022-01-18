@@ -1,4 +1,3 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/user_model.dart';
@@ -17,77 +16,85 @@ class ProfileScreenAsVisitor extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
-        return Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              title: Text(
-                // currentUser!.name ??
-                '',
-              ),
-              titleTextStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-            body: FutureBuilder<UserModel>(
-              builder: (context, snapshot) {
-                if (snapshot.data != null) {
-                  return Container(
-                    color: cubit.isDarkTheme
-                        ? Theme.of(context).hoverColor
-                        : Theme.of(context).scaffoldBackgroundColor,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          buildUpperScreen(context, cubit),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                buildButtonsSection(context, cubit),
-                                const Divider(
-                                  thickness: 1,
+
+        return StreamBuilder<UserModel>(
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              return Scaffold(
+                appBar: AppBar(
+                  centerTitle: true,
+                  title: Text(
+                    snapshot.data!.name!,
+                  ),
+                  titleTextStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+                body: Container(
+                  color: cubit.isDarkTheme
+                      ? Theme.of(context).hoverColor
+                      : Theme.of(context).scaffoldBackgroundColor,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        buildUpperScreen(context, snapshot.data!),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildButtonsSection(context, cubit),
+                              const Divider(
+                                thickness: 1,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 3,
                                 ),
-                                Text(
-                                  'Posts',
+                                child: Text(
+                                  'Posts ---------------',
                                   style: Theme.of(context).textTheme.headline5!,
                                 ),
-                                ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    return PostCardWidget(
-                                      model: cubit.posts[index],
-                                      index: index,
-                                      cubit: cubit,
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    height: 5,
-                                  ),
-                                  itemCount: cubit.posts.length,
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return PostCardWidget(
+                              model: cubit.posts[index],
+                              index: index,
+                              cubit: cubit,
+                            );
+                          },
+                          separatorBuilder: (context, index) => const SizedBox(
+                            height: 5,
+                          ),
+                          itemCount: cubit.posts.length,
+                        ),
+                      ],
                     ),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-              future: SocialCubit.get(context).getUserById(userId: userId),
-            ));
+                  ),
+                ),
+              );
+            } else {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          },
+          stream: SocialCubit.get(context).getUserById(userId: userId),
+        );
       },
     );
   }
@@ -130,7 +137,7 @@ class ProfileScreenAsVisitor extends StatelessWidget {
     );
   }
 
-  Column buildUpperScreen(BuildContext context, SocialCubit cubit) {
+  Column buildUpperScreen(BuildContext context, UserModel snapshot) {
     return Column(
       children: [
         SizedBox(
@@ -156,7 +163,7 @@ class ProfileScreenAsVisitor extends StatelessWidget {
               myProfileImage(
                   radius: 55,
                   enableEdit: false,
-                  image: NetworkImage(cubit.userModel!.profileImage!),
+                  image: NetworkImage(snapshot.profileImage!),
                   context: context)
             ],
           ),
@@ -171,7 +178,7 @@ class ProfileScreenAsVisitor extends StatelessWidget {
           width: 250,
           alignment: Alignment.center,
           child: Text(
-            cubit.userModel!.bio!,
+            snapshot.bio!,
             style: Theme.of(context).textTheme.caption,
             textAlign: TextAlign.center,
           ),

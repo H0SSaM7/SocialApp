@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,18 +67,21 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  Future<UserModel>? getUserById({required String userId}) async {
+  Stream<UserModel>? getUserById({required String userId}) {
     emit(SocialLoadingGetUserByIdState());
+    final controller = StreamController<UserModel>();
     UserModel? userById;
-    return FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
-        .get()
-        .then((value) {
-      return userById = UserModel.fromJson(value.data()!);
-    }).catchError((err) {
+        .snapshots()
+        .listen((event) {
+      controller.add(UserModel.fromJson(event.data()!));
+    }).onError((err) {
+      debugPrint(err.toString());
       emit(SocialErrorGetUserByIdState());
     });
+    return controller.stream;
   }
 
 // home page work

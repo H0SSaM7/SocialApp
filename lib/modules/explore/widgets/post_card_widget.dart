@@ -158,7 +158,7 @@ class PostCardWidget extends StatelessWidget {
               children: [
                 CircleAvatar(
                     radius: 18,
-                    // user phone in beside comments
+                    // user photo in beside comments
                     backgroundImage: NetworkImage(
                         SocialCubit.get(context).userModel!.profileImage!)),
                 const SizedBox(
