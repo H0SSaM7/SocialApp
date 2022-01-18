@@ -66,6 +66,20 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
+  Future<UserModel>? getUserById({required String userId}) async {
+    emit(SocialLoadingGetUserByIdState());
+    UserModel? userById;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get()
+        .then((value) {
+      return userById = UserModel.fromJson(value.data()!);
+    }).catchError((err) {
+      emit(SocialErrorGetUserByIdState());
+    });
+  }
+
 // home page work
   int currentIndex = 0;
 

@@ -14,6 +14,12 @@ class SocialSuccessGetAllUsersState extends SocialStates {}
 
 class SocialErrorGetAllUsersState extends SocialStates {}
 
+class SocialLoadingGetUserByIdState extends SocialStates {}
+
+class SocialSuccessGetUserByIdState extends SocialStates {}
+
+class SocialErrorGetUserByIdState extends SocialStates {}
+
 class SocialLoadingGetPostsState extends SocialStates {}
 
 class SocialSuccessGetPostsState extends SocialStates {}

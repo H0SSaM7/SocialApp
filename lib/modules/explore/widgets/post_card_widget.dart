@@ -46,7 +46,11 @@ class PostCardWidget extends StatelessWidget {
                     children: [
                       InkWell(
                         onTap: () {
-                          navigateTo(context, const ProfileScreenAsVisitor());
+                          navigateTo(
+                              context,
+                              ProfileScreenAsVisitor(
+                                userId: model.uId!,
+                              ));
                         },
                         child: Row(
                           children: [
