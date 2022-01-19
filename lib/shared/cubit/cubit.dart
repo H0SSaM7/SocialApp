@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/models/chats_model.dart';
 import 'package:social_app/models/comment_model.dart';
@@ -18,7 +18,7 @@ import 'package:social_app/modules/user_profile/user_profile_screen.dart';
 import 'package:social_app/modules/users/users_screen.dart';
 import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/states.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
 import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
 import 'package:social_app/shared/network/remote/dio_helper.dart';
 
@@ -34,17 +34,32 @@ class SocialCubit extends Cubit<SocialStates> {
     FirebaseFirestore.instance
         .collection('users')
         .doc(currentUserId)
-        .get()
-        .then((value) {
-      // print(value.data().toString());
-
-      userModel = UserModel.fromJson(value.data()!);
-
+        .snapshots()
+        .listen((event) {
+      userModel = UserModel.fromJson(event.data()!);
       emit(SocialSuccessGetUserState());
-    }).catchError((onError) {
-      debugPrint(onError.toString());
+    }).onError((error) {
+      debugPrint(error.toString());
       emit(SocialErrorGetUserState());
     });
+  }
+
+  followUser({required var userId}) {
+    if (userById!.following!.contains(currentUserId)) {
+      FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'followers': FieldValue.arrayRemove([currentUserId])
+      });
+      FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+        'following': FieldValue.arrayRemove([userId])
+      });
+    } else {
+      FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'followers': FieldValue.arrayUnion([currentUserId])
+      });
+      FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+        'following': FieldValue.arrayUnion([userId])
+      });
+    }
   }
 
   List<UserModel> users = [];
@@ -67,21 +82,22 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  Stream<UserModel>? getUserById({required String userId}) {
+  UserModel? userById;
+
+  getUserById({required String userId}) {
+    userById = null;
     emit(SocialLoadingGetUserByIdState());
-    final controller = StreamController<UserModel>();
-    UserModel? userById;
     FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .snapshots()
         .listen((event) {
-      controller.add(UserModel.fromJson(event.data()!));
+      userById = UserModel.fromJson(event.data()!);
+      emit(SocialSuccessGetUserByIdState());
     }).onError((err) {
       debugPrint(err.toString());
       emit(SocialErrorGetUserByIdState());
     });
-    return controller.stream;
   }
 
 // home page work
@@ -102,10 +118,12 @@ class SocialCubit extends Cubit<SocialStates> {
     UserProfileScreen(),
   ];
   List<String> appBarTitles = const ['Explore', 'Chats', 'Users', 'Profile'];
+
   // setting screen
   late int radioValue;
 
   bool isDarkTheme = CachedHelper.getPref(key: 'isDark') ?? false;
+
   changeTheme() {
     isDarkTheme = !isDarkTheme;
     CachedHelper.savePref(key: 'isDark', value: isDarkTheme)
@@ -279,62 +297,6 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  // getPosts() async {
-  //   emit(SocialLoadingGetPostsState());
-  //   try {
-  //     QuerySnapshot<Map<String, dynamic>> data =
-  //         await FirebaseFirestore.instance.collection('posts').get();
-  //     for (var element in data.docs) {
-  //       posts.add(PostsModel.fromMap(element.data()));
-  //       postsId.add(element.id);
-  //       // after get the post collection go to references of this collection
-  //       // and open likes collection
-  //       // and make a list of each post in this list contain userId and its bollen value
-  //       QuerySnapshot<Map<String, dynamic>> likesData =
-  //           await element.reference.collection('likes').get();
-  //       List<Map<String, dynamic>> anyLike = [];
-  //       for (var e in likesData.docs) {
-  //         anyLike.add({e.id: e.data()['like']});
-  //       }
-  //
-  //       likesList.add(anyLike);
-  //       // after get the post collection go to refrence of this collection
-  //       // and open comment collection
-  //       // and make a list of each post this list contain userid and its bollen value
-  //       QuerySnapshot<Map<String, dynamic>> commentsData =
-  //           await element.reference.collection('comments').get();
-  //       List<Map<String, dynamic>> anyComment = [];
-  //       for (var e in commentsData.docs) {
-  //         anyComment.add({e.id: e.data()['like']});
-  //       }
-  //       commentsList.add(anyComment);
-  //     }
-  //     emit(SocialSuccessGetPostsState());
-  //   } catch (e) {
-  //     debugPrint(e.toString());
-  //     emit(SocialSuccessGetPostsState());
-  //   }
-  // }
-
-  // getLikes() async {
-  //   try {
-  //     QuerySnapshot data =
-  //         await FirebaseFirestore.instance.collection('posts').get();
-  //     for (var element in data.docs) {
-  //       QuerySnapshot<Map<String, dynamic>> likesData =
-  //           await element.reference.collection('likes').get();
-  //       List<Map<String, dynamic>> any = [];
-  //       for (var e in likesData.docs) {
-  //         any.add({e.id: e.data()["like"]});
-  //       }
-  //       likesList.add(any);
-  //       emit(SocialRefreshLikesState());
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
-
   addOrRemoveLike({required String postId, required List likes}) {
     if (likes.contains(currentUserId)) {
       FirebaseFirestore.instance
@@ -385,6 +347,7 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   List<CommentModel> commentList = [];
+
   getComment({required String postId}) {
     FirebaseFirestore.instance
         .collection('posts')

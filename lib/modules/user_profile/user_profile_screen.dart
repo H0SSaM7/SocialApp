@@ -83,19 +83,25 @@ class UserProfileScreen extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          buildPropertiesOption(context, '100', 'Posts'),
+                          buildPropertiesOption(context, '2', 'Posts'),
                           Container(
                             height: 50,
                             width: 1,
                             color: Colors.grey[400],
                           ),
-                          buildPropertiesOption(context, '20 K', 'Followers'),
+                          buildPropertiesOption(
+                              context,
+                              '${cubit.userModel!.followers!.length}',
+                              'Followers'),
                           Container(
                             height: 50,
                             width: 1,
                             color: Colors.grey[400],
                           ),
-                          buildPropertiesOption(context, '77', 'Following'),
+                          buildPropertiesOption(
+                              context,
+                              '${cubit.userModel!.following!.length}',
+                              'Following'),
                         ],
                       ),
                       Padding(

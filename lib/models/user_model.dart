@@ -7,6 +7,8 @@ class UserModel {
   String? profileImage;
   String? bio;
   bool? emailVerified;
+  List? followers;
+  List? following;
 
   UserModel({
     this.name,
@@ -17,6 +19,8 @@ class UserModel {
     this.profileImage,
     this.emailVerified,
     this.token,
+    this.followers,
+    this.following,
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +33,8 @@ class UserModel {
       'profileImage': profileImage,
       'bio': bio,
       'emailVerified': emailVerified,
+      'followers': followers,
+      'following': following,
     };
   }
 
@@ -42,6 +48,8 @@ class UserModel {
       profileImage: map['profileImage'] as String,
       bio: map['bio'] as String,
       emailVerified: map['emailVerified'] as bool,
+      followers: map['followers'],
+      following: map['following'],
     );
   }
 }

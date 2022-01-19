@@ -1,8 +1,11 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/explore/widgets/post_card_widget.dart';
 import 'package:social_app/shared/components/components.dart';
+import 'package:social_app/shared/consistent/consistent.dart';
 import 'package:social_app/shared/cubit/cubit.dart';
 import 'package:social_app/shared/cubit/states.dart';
 
@@ -12,88 +15,91 @@ class ProfileScreenAsVisitor extends StatelessWidget {
   final String userId;
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        SocialCubit cubit = SocialCubit.get(context);
-
-        return StreamBuilder<UserModel>(
-          builder: (context, snapshot) {
-            if (snapshot.data != null) {
-              return Scaffold(
-                appBar: AppBar(
-                  centerTitle: true,
-                  title: Text(
-                    snapshot.data!.name!,
+    return Builder(
+      builder: (context) {
+        SocialCubit.get(context).getUserById(userId: userId);
+        return BlocConsumer<SocialCubit, SocialStates>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            SocialCubit cubit = SocialCubit.get(context);
+            return ConditionalBuilder(
+              condition: cubit.userById != null,
+              fallback: (context) {
+                return const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
                   ),
-                  titleTextStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-                body: Container(
-                  color: cubit.isDarkTheme
-                      ? Theme.of(context).hoverColor
-                      : Theme.of(context).scaffoldBackgroundColor,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildUpperScreen(context, snapshot.data!),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              buildButtonsSection(context, cubit),
-                              const Divider(
-                                thickness: 1,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 15,
-                                  vertical: 3,
-                                ),
-                                child: Text(
-                                  'Posts ---------------',
-                                  style: Theme.of(context).textTheme.headline5!,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return PostCardWidget(
-                              model: cubit.posts[index],
-                              index: index,
-                              cubit: cubit,
-                            );
-                          },
-                          separatorBuilder: (context, index) => const SizedBox(
-                            height: 5,
-                          ),
-                          itemCount: cubit.posts.length,
-                        ),
-                      ],
+                );
+              },
+              builder: (context) {
+                return Scaffold(
+                  appBar: AppBar(
+                    centerTitle: true,
+                    title: Text(cubit.userById!.name!),
+                    titleTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
                     ),
                   ),
-                ),
-              );
-            } else {
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
+                  body: Container(
+                    color: cubit.isDarkTheme
+                        ? Theme.of(context).hoverColor
+                        : Theme.of(context).scaffoldBackgroundColor,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          buildUpperScreen(context, cubit.userById!),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                buildButtonsSection(context, cubit),
+                                Divider(
+                                  thickness: 1,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 3,
+                                  ),
+                                  child: Text(
+                                    'Posts',
+                                    style:
+                                        Theme.of(context).textTheme.headline5!,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return PostCardWidget(
+                                model: cubit.posts[index],
+                                index: index,
+                                cubit: cubit,
+                              );
+                            },
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: 5,
+                            ),
+                            itemCount: cubit.posts.length,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
           },
-          stream: SocialCubit.get(context).getUserById(userId: userId),
         );
       },
     );
@@ -114,10 +120,16 @@ class ProfileScreenAsVisitor extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        myElevatedButton(context,
-            onPressed: () {},
-            child: const Text('Follow'),
+        myElevatedButton(context, onPressed: () {
+          cubit.followUser(userId: userId);
+        },
+            child: cubit.userById!.following!.contains(currentUserId)
+                ? const Text('unFollow')
+                : const Text('Follow'),
             height: 40,
+            color: cubit.userById!.following!.contains(currentUserId)
+                ? Colors.transparent
+                : Theme.of(context).primaryColor,
             width: MediaQuery.of(context).size.width * 0.5,
             borderCircular: 20),
         const SizedBox(
@@ -194,13 +206,15 @@ class ProfileScreenAsVisitor extends StatelessWidget {
               width: 1,
               color: Colors.grey[400],
             ),
-            buildPropertiesOption(context, '20 K', 'Followers'),
+            buildPropertiesOption(
+                context, '${snapshot.followers!.length}', 'Followers'),
             Container(
               height: 50,
               width: 1,
               color: Colors.grey[400],
             ),
-            buildPropertiesOption(context, '77', 'Following'),
+            buildPropertiesOption(
+                context, '${snapshot.following!.length}', 'Following'),
           ],
         ),
       ],

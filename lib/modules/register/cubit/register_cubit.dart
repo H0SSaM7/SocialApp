@@ -44,14 +44,15 @@ class RegisterCubit extends Cubit<RegisterStates> {
     emit(RegisterUserCreateLoadingState());
 
     UserModel model = UserModel(
-      name: name,
-      email: email,
-      phone: phone,
-      uId: uId,
-      emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
-      bio: 'Write your bio ...',
-      profileImage: 'https://image.flaticon.com/icons/png/512/16/16453.png',
-    );
+        name: name,
+        email: email,
+        phone: phone,
+        uId: uId,
+        emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
+        bio: 'Write your bio ...',
+        profileImage: 'https://image.flaticon.com/icons/png/512/16/16453.png',
+        following: [],
+        followers: []);
     FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
