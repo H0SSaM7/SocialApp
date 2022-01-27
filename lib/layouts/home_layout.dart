@@ -2,13 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_app/modules/add_post/add_post_screen.dart';
+import 'package:social_app/controllers/cubit/cubit.dart';
+import 'package:social_app/controllers/cubit/states.dart';
+
 import 'package:social_app/modules/login/login_screen.dart';
-import 'package:social_app/modules/search/search_screen.dart';
-import 'package:social_app/shared/components/components.dart';
-import 'package:social_app/shared/cubit/cubit.dart';
-import 'package:social_app/shared/cubit/states.dart';
-import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
+
+import 'package:social_app/presentation/add_post/add_post_screen.dart';
+import 'package:social_app/presentation/login/login_screen.dart';
+import 'package:social_app/presentation/search/search_screen.dart';
+import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utills/network/local/shared_prefrences/cached_helper.dart';
 
 class HomeLayout extends StatelessWidget {
   const HomeLayout({Key? key}) : super(key: key);

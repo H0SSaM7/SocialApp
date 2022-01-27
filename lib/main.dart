@@ -4,14 +4,16 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:social_app/controllers/cubit/states.dart';
+import 'package:social_app/data/data_provider/remote/dio_helper.dart';
 import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/modules/login/login_screen.dart';
-import 'package:social_app/shared/bloc_observer.dart';
-import 'package:social_app/shared/consistent/consistent.dart';
-import 'package:social_app/shared/cubit/cubit.dart';
-import 'package:social_app/shared/cubit/states.dart';
-import 'package:social_app/shared/network/local/shared_prefrences/cached_helper.dart';
-import 'package:social_app/shared/network/remote/dio_helper.dart';
+import 'package:social_app/presentation/login/login_screen.dart';
+import 'package:social_app/utills/bloc_observer.dart';
+import 'package:social_app/utills/consistent/consistent.dart';
+import 'package:social_app/utills/network/local/shared_prefrences/cached_helper.dart';
+
+import 'controllers/cubit/cubit.dart';
 
 Future<void> backGroundMessage(RemoteMessage message) async {
   // print(message.data.toString() + 'ONBACKGROUND');

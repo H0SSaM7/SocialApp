@@ -33,6 +33,7 @@ dependencies:
   firebase_storage: ^10.2.4
   firebase_messaging: ^11.2.5
   intl: ^0.17.0
+  equatable:
 
 
 
