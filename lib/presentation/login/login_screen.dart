@@ -6,6 +6,7 @@ import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/presentation/register/register_screen.dart';
 
 import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utills/components/regular_form_field.dart';
 import 'package:social_app/utills/consistent/consistent.dart';
 import 'package:social_app/utills/network/local/shared_prefrences/cached_helper.dart';
 

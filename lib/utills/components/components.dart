@@ -11,46 +11,6 @@ Future<dynamic> navigateTo(BuildContext context, Widget screen) {
       context, MaterialPageRoute(builder: (context) => screen));
 }
 
-TextFormField myFormField(
-    {required TextInputType type,
-    bool? isObscure,
-    required TextEditingController controller,
-    Function()? onTap,
-    required Widget icon,
-    required String title,
-    bool? readOnly,
-    required String validateText,
-    Function(String)? onChange,
-    Widget? suffix,
-    Function(String)? onSubmitted}) {
-  return TextFormField(
-      style: const TextStyle(
-        fontSize: 16,
-      ),
-      onChanged: onChange,
-      onFieldSubmitted: onSubmitted,
-      readOnly: readOnly ?? false,
-      keyboardType: type,
-      obscureText: isObscure ?? false,
-      controller: controller,
-      onTap: onTap,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return validateText;
-        } else {
-          null;
-        }
-      },
-      decoration: InputDecoration(
-        suffixIcon: suffix,
-        border: const OutlineInputBorder(),
-        prefixIcon: icon,
-        hintText: title,
-        labelText: title,
-        hintStyle: TextStyle(fontSize: 16, color: Colors.grey[700]),
-      ));
-}
-
 Widget myElevatedButton(
   context, {
   Color? color,

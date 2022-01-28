@@ -5,8 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
 
-import 'package:social_app/modules/login/login_screen.dart';
-
 import 'package:social_app/presentation/add_post/add_post_screen.dart';
 import 'package:social_app/presentation/login/login_screen.dart';
 import 'package:social_app/presentation/search/search_screen.dart';

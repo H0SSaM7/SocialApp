@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
-
 import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
 import 'package:social_app/utills/components/components.dart';
 

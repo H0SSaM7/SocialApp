@@ -31,95 +31,10 @@ class PostCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 2,
-              ),
-              child: Row(
-                children: [
-// profile image -----------------------
-                  CircleAvatar(
-                      radius: 26,
-                      backgroundImage: NetworkImage(model.profileImage!)),
-                  const SizedBox(width: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          navigateTo(
-                              context,
-                              ProfileScreenAsVisitor(
-                                userId: model.uId!,
-                              ));
-                        },
-                        child: Row(
-                          children: [
-// publisher name -----------------------------
-                            Text(
-                              model.name!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1!
-                                  .copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const FaIcon(
-                              FontAwesomeIcons.solidCheckCircle,
-                              size: 14,
-                              color: Colors.blue,
-                            )
-                          ],
-                        ),
-                      ),
-// date of the post --------------
-                      Text(
-                        DateFormat.yMMMd()
-                            .format(DateTime.parse(model.date!))
-                            .toString(),
-                        style: Theme.of(context).textTheme.caption,
-                      )
-                    ],
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.more_horiz,
-                    ),
-                  )
-                ],
-              ),
-            ),
-//description of he post
+            nameAndPhotoOfThePublisher(context),
             if (model.postDescription!.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(),
-                  Text(model.postDescription!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1!
-                          .copyWith(fontSize: 16)),
-                ],
-              ),
-            if (model.postImage!.isNotEmpty)
-// image of the post  ----------------------------
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Image.network(
-                  model.postImage!,
-                  height: 400,
-                  width: double.maxFinite,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              descriptionOfThePost(context),
+            if (model.postImage!.isNotEmpty) imageOfThePost(),
             SizedBox(
               height: 30,
               child: Row(
@@ -156,59 +71,153 @@ class PostCardWidget extends StatelessWidget {
               ),
             ),
             const Divider(),
-            Row(
-              children: [
-                CircleAvatar(
-                    radius: 18,
-                    // user photo in beside comments
-                    backgroundImage: NetworkImage(
-                        SocialCubit.get(context).userModel!.profileImage!)),
-                const SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    navigateTo(
-                        context,
-                        CommentScreen(
-                          postId: cubit.postsId[index],
-                        ));
-                  },
-                  child: Text(
-                    'Write a Comment',
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption!
-                        .copyWith(fontSize: 14),
-                  ),
-                ),
-                const Spacer(),
-                InkWell(
-                  onTap: () {
-                    cubit.addOrRemoveLike(
-                        postId: cubit.postsId[index], likes: model.likes!);
-                  },
-                  child: Row(
-                    children: [
-                      FaIcon(
-                        model.likes!.contains(currentUserId)
-                            ? FontAwesomeIcons.solidHeart
-                            : FontAwesomeIcons.heart,
-                        color: Colors.pink,
-                        size: 20,
-                      ),
-                      const SizedBox(
-                        width: 5.0,
-                      ),
-                      const Text('Like')
-                    ],
-                  ),
-                )
-              ],
-            ),
+            writeCommentAndAddLoveSection(context),
           ],
         ),
       ),
+    );
+  }
+
+  Row writeCommentAndAddLoveSection(BuildContext context) {
+    return Row(
+      children: [
+        CircleAvatar(
+            radius: 18,
+            // user photo in beside comments
+            backgroundImage: NetworkImage(
+                SocialCubit.get(context).userModel!.profileImage!)),
+        const SizedBox(
+          width: 10,
+        ),
+        InkWell(
+          onTap: () {
+            navigateTo(
+                context,
+                CommentScreen(
+                  postId: cubit.postsId[index],
+                ));
+          },
+          child: Text(
+            'Write a Comment',
+            style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
+          ),
+        ),
+        const Spacer(),
+        InkWell(
+          onTap: () {
+            cubit.addOrRemoveLike(
+                postId: cubit.postsId[index], likes: model.likes!);
+          },
+          child: Row(
+            children: [
+              FaIcon(
+                model.likes!.contains(currentUserId)
+                    ? FontAwesomeIcons.solidHeart
+                    : FontAwesomeIcons.heart,
+                color: Colors.pink,
+                size: 20,
+              ),
+              const SizedBox(
+                width: 5.0,
+              ),
+              const Text('Like')
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+//puplisher
+  Padding nameAndPhotoOfThePublisher(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 4,
+        vertical: 2,
+      ),
+      child: Row(
+        children: [
+// profile image -----------------------
+          CircleAvatar(
+              radius: 26, backgroundImage: NetworkImage(model.profileImage!)),
+          const SizedBox(width: 15),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {
+                  if (model.uId != currentUserId) {
+                    navigateTo(
+                        context,
+                        ProfileScreenAsVisitor(
+                          userId: model.uId!,
+                        ));
+                  } else {
+                    SocialCubit.get(context).changeNavbar(3);
+                  }
+                },
+                child: Row(
+                  children: [
+// publisher name -----------------------------
+                    Text(
+                      model.name!,
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    const FaIcon(
+                      FontAwesomeIcons.solidCheckCircle,
+                      size: 14,
+                      color: Colors.blue,
+                    )
+                  ],
+                ),
+              ),
+// date of the post --------------
+              Text(
+                DateFormat.yMMMd()
+                    .format(DateTime.parse(model.date!))
+                    .toString(),
+                style: Theme.of(context).textTheme.caption,
+              )
+            ],
+          ),
+          const Spacer(),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.more_horiz,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Padding imageOfThePost() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Image.network(
+        model.postImage!,
+        height: 400,
+        width: double.maxFinite,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Column descriptionOfThePost(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(),
+        Text(model.postDescription!,
+            style:
+                Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16)),
+      ],
     );
   }
 

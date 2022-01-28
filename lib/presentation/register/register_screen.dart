@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/register_controller/register_cubit.dart';
 import 'package:social_app/controllers/register_controller/register_states.dart';
 
-import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/presentation/login/login_screen.dart';
 import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utills/components/regular_form_field.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);

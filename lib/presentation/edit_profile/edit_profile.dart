@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utills/components/regular_form_field.dart';
 
 class EidProfile extends StatelessWidget {
   const EidProfile({Key? key}) : super(key: key);
@@ -15,15 +16,14 @@ class EidProfile extends StatelessWidget {
     TextEditingController nameController = TextEditingController();
     TextEditingController bioController = TextEditingController();
     TextEditingController phoneController = TextEditingController();
-    return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
+    return BlocBuilder<SocialCubit, SocialStates>(
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
         nameController.text = cubit.userModel!.name!;
         bioController.text = cubit.userModel!.bio!;
         phoneController.text = cubit.userModel!.phone!;
-
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: const Text('Edit Profile'),
           ),

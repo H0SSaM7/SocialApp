@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
+import 'package:social_app/controllers/theme_controller/theme_cubit.dart';
 
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
@@ -44,7 +45,7 @@ class ProfileScreenAsVisitor extends StatelessWidget {
                     ),
                   ),
                   body: Container(
-                    color: cubit.isDarkTheme
+                    color: context.watch<ThemeCubit>().isDarkTheme
                         ? Theme.of(context).hoverColor
                         : Theme.of(context).scaffoldBackgroundColor,
                     child: SingleChildScrollView(

@@ -20,9 +20,11 @@ class LoginCubit extends Cubit<LoginStates> {
       FirebaseFirestore.instance
           .collection('users')
           .doc(value.user!.uid)
-          .update({
-        'token': token,
-      });
+          .update(
+        {
+          'token': token,
+        },
+      );
       emit(LoginSuccessState(value.user!.uid));
     }).catchError((onError) {
       debugPrint(onError.toString());

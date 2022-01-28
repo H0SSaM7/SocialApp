@@ -19,9 +19,7 @@ import 'package:social_app/presentation/chats/chats_screen.dart';
 import 'package:social_app/presentation/explore/explore_screen.dart';
 import 'package:social_app/presentation/user_profile/user_profile_screen.dart';
 import 'package:social_app/presentation/users/users_screen.dart';
-
 import 'package:social_app/utills/consistent/consistent.dart';
-import 'package:social_app/utills/network/local/shared_prefrences/cached_helper.dart';
 
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
@@ -122,14 +120,6 @@ class SocialCubit extends Cubit<SocialStates> {
 
   // setting screen
   late int radioValue;
-
-  bool isDarkTheme = CachedHelper.getPref(key: 'isDark') ?? false;
-
-  changeTheme() {
-    isDarkTheme = !isDarkTheme;
-    CachedHelper.savePref(key: 'isDark', value: isDarkTheme)
-        .then((value) => emit(SocialChangeThemeState()));
-  }
 
   // image picker and upload methods
 

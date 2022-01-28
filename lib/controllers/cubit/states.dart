@@ -27,8 +27,8 @@ class SocialSuccessGetPostsState extends SocialStates {}
 class SocialErrorGetPostsState extends SocialStates {}
 
 class SocialChangeNavBarState extends SocialStates {}
-
-class SocialChangeThemeState extends SocialStates {}
+//
+// class SocialChangeThemeState extends SocialStates {}
 
 class SocialPickImageState extends SocialStates {}
 
