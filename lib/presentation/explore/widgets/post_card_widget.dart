@@ -128,7 +128,6 @@ class PostCardWidget extends StatelessWidget {
     );
   }
 
-//puplisher
   Padding nameAndPhotoOfThePublisher(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(

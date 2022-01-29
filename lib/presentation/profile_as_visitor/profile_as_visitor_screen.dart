@@ -131,7 +131,7 @@ class ProfileScreenAsVisitor extends StatelessWidget {
                 : const Text('Follow'),
             height: 40,
             color: cubit.userById!.followers!.contains(currentUserId)
-                ? Colors.transparent
+                ? Colors.grey[600]
                 : Theme.of(context).primaryColor,
             width: MediaQuery.of(context).size.width * 0.5,
             borderCircular: 20),
