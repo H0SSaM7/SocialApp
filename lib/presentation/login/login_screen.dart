@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/login_controller/login_cubit.dart';
 import 'package:social_app/controllers/login_controller/login_states.dart';
-import 'package:social_app/data/repository/auth_repos/login_repo/login_repository.dart';
+import 'package:social_app/data/repository/auth_repos/auth_repository.dart';
 import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/presentation/register/register_screen.dart';
 
@@ -20,12 +20,13 @@ class LoginScreen extends StatelessWidget {
     var passwordController = TextEditingController();
     var formKey = GlobalKey<FormState>();
     return BlocProvider(
-      create: (context) => LoginCubit(LoginRepository()),
+      create: (context) => LoginCubit(loginRepository: AuthRepository()),
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
           if (state is LoginSuccessState) {
             CachedHelper.savePref(key: 'uId', value: state.uId).then((value) {
               currentUserId = CachedHelper.getPref(key: 'uId');
+              myToast(msg: 'success', state: toastStates.success);
               navigateAndRemove(context, const HomeLayout());
             });
           }
