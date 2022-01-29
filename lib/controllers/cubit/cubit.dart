@@ -261,32 +261,10 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  List<PostsModel> posts = [];
-  List<String> postsId = [];
   List<int> likesCount = [];
 
   // List<List<Map<String, dynamic>>> likesList = [];
   // List<List<Map<String, dynamic>>> commentsList = [];
-
-  getStreamPosts() {
-    emit(SocialLoadingGetPostsState());
-    FirebaseFirestore.instance
-        .collection('posts')
-        .snapshots()
-        .listen((event) async {
-      posts = [];
-      postsId = [];
-      for (var element in event.docs) {
-        postsId.add(element.id);
-        posts.add(PostsModel.fromMap(element.data()));
-
-        emit(SocialSuccessGetPostsState());
-      }
-    }).onError((handleError) {
-      debugPrint(handleError.toString());
-      emit(SocialSuccessGetPostsState());
-    });
-  }
 
   addOrRemoveLike({required String postId, required List likes}) {
     if (likes.contains(currentUserId)) {

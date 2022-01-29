@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/register_controller/register_cubit.dart';
 import 'package:social_app/controllers/register_controller/register_states.dart';
+import 'package:social_app/data/repository/auth_repos/auth_repository.dart';
 
 import 'package:social_app/presentation/login/login_screen.dart';
 import 'package:social_app/utills/components/components.dart';
@@ -18,10 +19,10 @@ class RegisterScreen extends StatelessWidget {
     var nameController = TextEditingController();
     var formKey = GlobalKey<FormState>();
     return BlocProvider(
-      create: (context) => RegisterCubit(),
+      create: (context) => RegisterCubit(authRepository: AuthRepository()),
       child: BlocConsumer<RegisterCubit, RegisterStates>(
         listener: (context, state) {
-          if (state is RegisterUserCreateSuccessState) {
+          if (state is RegisterSuccessState) {
             myToast(
                 msg: 'successfully, Login now with you email',
                 state: toastStates.success);
@@ -107,11 +108,12 @@ class RegisterScreen extends StatelessWidget {
                               ),
                               onSubmitted: (value) {
                                 if (formKey.currentState!.validate()) {
-                                  cubit.userRegister(
-                                      email: emailController.text,
-                                      password: passwordController.text,
-                                      phone: phoneController.text,
-                                      name: nameController.text);
+                                  cubit.registerUserIn(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                    phone: phoneController.text,
+                                    name: nameController.text,
+                                  );
                                 }
                               }),
                           const SizedBox(height: 20),
@@ -120,14 +122,14 @@ class RegisterScreen extends StatelessWidget {
                             width: double.maxFinite,
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                cubit.userRegister(
+                                cubit.registerUserIn(
                                     email: emailController.text,
                                     password: passwordController.text,
                                     name: nameController.text,
                                     phone: phoneController.text);
                               }
                             },
-                            child: state is RegisterUserCreateLoadingState
+                            child: state is RegisterLoadingState
                                 ? const CircularProgressIndicator(
                                     color: Colors.white,
                                   )

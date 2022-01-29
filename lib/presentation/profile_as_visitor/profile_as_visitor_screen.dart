@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/controllers/theme_controller/theme_cubit.dart';
+import 'package:social_app/models/posts_model.dart';
 
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
@@ -18,7 +19,8 @@ class ProfileScreenAsVisitor extends StatelessWidget {
   final String userId;
   @override
   Widget build(BuildContext context) {
-    return Builder(
+    return Container();
+    Builder(
       builder: (context) {
         SocialCubit.get(context).getUserById(userId: userId);
         return BlocConsumer<SocialCubit, SocialStates>(
@@ -80,21 +82,24 @@ class ProfileScreenAsVisitor extends StatelessWidget {
                             ),
                           ),
                           ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return PostCardWidget(
-                                model: cubit.posts[index],
-                                index: index,
-                                cubit: cubit,
-                              );
-                            },
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              height: 5,
-                            ),
-                            itemCount: cubit.posts.length,
-                          ),
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return PostCardWidget(
+                                  postId: '',
+                                  model: PostsModel(uId: ''),
+                                  // cubit.posts[index],
+                                  index: index,
+                                  cubit: cubit,
+                                );
+                              },
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                              itemCount: 1
+                              // cubit.posts.length,
+                              ),
                         ],
                       ),
                     ),

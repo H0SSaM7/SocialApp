@@ -12,14 +12,10 @@ class RegisterErrorState extends RegisterStates {
   RegisterErrorState(this.error);
 }
 
-class RegisterUserCreateLoadingState extends RegisterStates {}
-
-class RegisterUserCreateSuccessState extends RegisterStates {
-  final String uId;
-
-  RegisterUserCreateSuccessState(this.uId);
-}
-
-class RegisterUserCreateErrorState extends RegisterStates {}
+// class RegisterUserCreateLoadingState extends RegisterStates {}
+//
+// class RegisterUserCreateSuccessState extends RegisterStates {}
+//
+// class RegisterUserCreateErrorState extends RegisterStates {}
 
 class RegisterChangePasswordTextState extends RegisterStates {}

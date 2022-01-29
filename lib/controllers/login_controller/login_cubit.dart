@@ -17,6 +17,7 @@ class LoginCubit extends Cubit<LoginStates> {
         await _loginRepository.userLogin(email: email, password: password);
     if (state == 'success') {
       String uid = _loginRepository.getUserId();
+      await _loginRepository.updateUserToken(uid);
       emit(LoginSuccessState(uid));
     } else {
       emit(LoginErrorState(state));
