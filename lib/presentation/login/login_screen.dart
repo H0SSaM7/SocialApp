@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/login_controller/login_cubit.dart';
 import 'package:social_app/controllers/login_controller/login_states.dart';
+import 'package:social_app/data/repository/auth_repos/login_repo/login_repository.dart';
 import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/presentation/register/register_screen.dart';
 
@@ -19,7 +20,7 @@ class LoginScreen extends StatelessWidget {
     var passwordController = TextEditingController();
     var formKey = GlobalKey<FormState>();
     return BlocProvider(
-      create: (context) => LoginCubit(),
+      create: (context) => LoginCubit(LoginRepository()),
       child: BlocConsumer<LoginCubit, LoginStates>(
         listener: (context, state) {
           if (state is LoginSuccessState) {
@@ -92,7 +93,7 @@ class LoginScreen extends StatelessWidget {
                               ),
                               onSubmitted: (value) {
                                 if (formKey.currentState!.validate()) {
-                                  cubit.userLogin(
+                                  cubit.loginUserIn(
                                     email: emailController.text,
                                     password: passwordController.text,
                                   );
@@ -104,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                             width: double.maxFinite,
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                cubit.userLogin(
+                                cubit.loginUserIn(
                                   email: emailController.text,
                                   password: passwordController.text,
                                 );

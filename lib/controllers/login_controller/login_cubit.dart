@@ -1,35 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/login_controller/login_states.dart';
+import 'package:social_app/data/repository/auth_repos/login_repo/login_repository.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
-  LoginCubit() : super(LoginInitialState());
+  LoginCubit(this.loginRepository) : super(LoginInitialState());
+  LoginRepository? loginRepository;
+
   static LoginCubit get(BuildContext context) => BlocProvider.of(context);
-
-  void userLogin({required String email, required String password}) {
-    emit(LoginLoadingState());
-
-    FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password)
-        .then((value) async {
-      var token = await FirebaseMessaging.instance.getToken();
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(value.user!.uid)
-          .update(
-        {
-          'token': token,
-        },
-      );
-      emit(LoginSuccessState(value.user!.uid));
-    }).catchError((onError) {
-      debugPrint(onError.toString());
-      emit(LoginErrorState(onError.toString()));
-    });
+  loginUserIn({required String email, required String password}) async {
+    String? userId =
+        await loginRepository!.userLogin(email: email, password: password);
+    if (userId != null) {
+      await loginRepository!.updateUserToken(userId);
+      emit(LoginSuccessState(userId));
+    }
   }
 
   bool isObscure = true;
