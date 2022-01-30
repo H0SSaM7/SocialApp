@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ThemeCubit()),
         BlocProvider(
             create: (context) =>
-                PostsBloc(PostsRepository())..add(const PostsEvent())),
+                PostsBloc(PostsRepository())..add(LoadPostsEvent())),
       ],
       child: BlocBuilder<ThemeCubit, ThemeStates>(
         builder: (context, state) {

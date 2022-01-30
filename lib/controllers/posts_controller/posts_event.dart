@@ -1,9 +1,18 @@
 part of 'posts_bloc.dart';
 
-class PostsEvent extends Equatable {
+abstract class PostsEvent extends Equatable {
   const PostsEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class LoadPostsEvent extends PostsEvent {}
+
+class UpdatePostsEvent extends PostsEvent {
+  final List<PostsModel> posts;
+  final List<String> postsId;
+  const UpdatePostsEvent({this.postsId = const [], this.posts = const []});
 
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [posts, postsId];
 }

@@ -12,7 +12,8 @@ class PostsInitial extends PostsState {
 class GetPostsSuccessState extends PostsState {
   final List<PostsModel> postsModel;
   final List postsId;
-  const GetPostsSuccessState(this.postsModel, this.postsId);
+  const GetPostsSuccessState(
+      {this.postsModel = const <PostsModel>[], required this.postsId});
   @override
   List<Object?> get props => [postsModel, postsId];
 }

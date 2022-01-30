@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class PostsModel {
   String? name;
   String? uId;
@@ -28,6 +30,17 @@ class PostsModel {
       postImage: map['postImage'] as String,
       profileImage: map['profileImage'] as String,
       likes: map['likes'],
+    );
+  }
+  factory PostsModel.fromSnap(DocumentSnapshot snap) {
+    return PostsModel(
+      name: snap['name'] as String,
+      uId: snap['uId'] as String,
+      date: snap['date'] as String,
+      postDescription: snap['postDescription'] as String,
+      postImage: snap['postImage'] as String,
+      profileImage: snap['profileImage'] as String,
+      likes: snap['likes'],
     );
   }
 
