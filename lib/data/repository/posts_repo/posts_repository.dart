@@ -12,6 +12,8 @@ class PostsRepository {
         .collection('posts')
         .snapshots()
         .map((event) {
+      posts = [];
+      postsId = [];
       for (var element in event.docs) {
         postsId.add(element.id);
         posts.add(
