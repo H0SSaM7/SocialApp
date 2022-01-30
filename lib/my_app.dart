@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
+import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/controllers/theme_controller/theme_cubit.dart';
 import 'package:social_app/controllers/theme_controller/theme_state.dart';
+import 'package:social_app/data/repository/posts_repo/posts_repository.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -18,12 +20,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => SocialCubit()..getUserDate()),
+        BlocProvider(create: (context) => ThemeCubit()),
         BlocProvider(
-          create: (context) => SocialCubit()
-            ..getUserDate()
-            ..getStreamPosts(),
-        ),
-        BlocProvider(create: (context) => ThemeCubit())
+            create: (context) =>
+                PostsBloc(PostsRepository())..add(LoadPostsEvent())),
       ],
       child: BlocBuilder<ThemeCubit, ThemeStates>(
         builder: (context, state) {

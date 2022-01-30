@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
+import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
 import 'package:social_app/utills/components/components.dart';
 
@@ -12,75 +13,66 @@ class ExploreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
+    return BlocConsumer<PostsBloc, PostsState>(
         builder: (context, state) {
-          SocialCubit cubit = SocialCubit.get(context);
           return RefreshIndicator(
             onRefresh: () async {
-              cubit.getStreamPosts();
+              // cubit.getStreamPosts();
             },
-            child: ConditionalBuilder(
-              condition: cubit.posts.isNotEmpty && cubit.userModel != null,
-              // cubit.commentsList.isNotEmpty &&
-              // cubit.likesList.isNotEmpty,
-              builder: (context) {
-                return SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      buildEmailVerifyCheck(),
-                      Card(
-                        elevation: 5.0,
-                        clipBehavior: Clip.antiAlias,
-                        child: Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            Image.network(
-                              'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
-                              height: 185,
-                              width: double.maxFinite,
-                              fit: BoxFit.cover,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Communicate with friends',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1!
-                                    .copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                              ),
-                            )
-                          ],
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  buildEmailVerifyCheck(),
+                  Card(
+                    elevation: 5.0,
+                    clipBehavior: Clip.antiAlias,
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        Image.network(
+                          'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
+                          height: 185,
+                          width: double.maxFinite,
+                          fit: BoxFit.cover,
                         ),
-                      ),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return PostCardWidget(
-                            model: cubit.posts[index],
-                            index: index,
-                            cubit: cubit,
-                          );
-                        },
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 5,
-                        ),
-                        itemCount: cubit.posts.length,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      )
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Communicate with friends',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1!
+                                .copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                );
-              },
-              fallback: (context) {
-                return const Center(child: CircularProgressIndicator());
-              },
+                  if (state is GetPostsSuccessState)
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return PostCardWidget(
+                          postId: state.postsId[index],
+                          model: state.postsModel[index],
+                          index: index,
+                          cubit: SocialCubit.get(context),
+                        );
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 5,
+                      ),
+                      itemCount: state.postsModel.length,
+                    ),
+                  const SizedBox(
+                    height: 10,
+                  )
+                ],
+              ),
             ),
           );
         },

@@ -1,67 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/register_controller/register_states.dart';
-import 'package:social_app/models/user_model.dart';
+import 'package:social_app/data/repository/auth_repos/auth_repository.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {
-  RegisterCubit() : super(RegisterInitialState());
-
+  RegisterCubit({required AuthRepository authRepository})
+      : _authRepository = authRepository,
+        super(RegisterInitialState());
+  final AuthRepository _authRepository;
   static RegisterCubit get(BuildContext context) => BlocProvider.of(context);
   bool isObscure = true;
+  registerUserIn(
+      {required String email,
+      required String password,
+      required String phone,
+      required String name}) async {
+    emit(RegisterLoadingState());
+    String state = await _authRepository.userRegister(
+      email: email,
+      password: password,
+    );
+    if (state == 'success') {
+      String uId = _authRepository.getUserId();
+      await _authRepository.createNewUserInDB(
+          email: email, phone: phone, name: name, uId: uId);
+      emit(RegisterSuccessState());
+    } else {
+      emit(RegisterErrorState(state));
+    }
+  }
 
   void changePasswordVisibility() {
     isObscure = !isObscure;
     emit(RegisterChangePasswordTextState());
-  }
-
-  void userRegister(
-      {required String email,
-      required String password,
-      required String phone,
-      required String name}) {
-    emit(RegisterLoadingState());
-    FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value) {
-      emit(RegisterSuccessState());
-      userCreate(email: email, phone: phone, name: name, uId: value.user!.uid);
-    }).catchError((onError) {
-      debugPrint(onError.toString());
-      emit(RegisterErrorState(onError.toString()));
-    });
-  }
-
-  userCreate({
-    required String email,
-    required String phone,
-    required String name,
-    required String uId,
-  }) async {
-    emit(RegisterUserCreateLoadingState());
-
-    UserModel model = UserModel(
-        name: name,
-        email: email,
-        phone: phone,
-        uId: uId,
-        emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
-        bio: 'Write your bio ...',
-        profileImage: 'https://image.flaticon.com/icons/png/512/16/16453.png',
-        following: [],
-        followers: []);
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(uId)
-        .set(model.toJson())
-        .then((value) {
-      emit(RegisterUserCreateSuccessState(uId));
-    }).catchError((onError) {
-      debugPrint(onError.toString());
-      emit(RegisterUserCreateErrorState());
-    });
   }
 }

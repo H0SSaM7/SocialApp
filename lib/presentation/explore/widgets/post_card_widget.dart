@@ -14,9 +14,14 @@ import 'package:social_app/utills/consistent/consistent.dart';
 class PostCardWidget extends StatelessWidget {
   final PostsModel model;
   final SocialCubit cubit;
+  final String postId;
   final int index;
   const PostCardWidget(
-      {Key? key, required this.model, required this.cubit, required this.index})
+      {Key? key,
+      required this.model,
+      required this.cubit,
+      required this.index,
+      required this.postId})
       : super(key: key);
 
   @override
@@ -63,7 +68,7 @@ class PostCardWidget extends StatelessWidget {
                       navigateTo(
                           context,
                           CommentScreen(
-                            postId: cubit.postsId[index],
+                            postId: postId,
                           ));
                     },
                   ),
@@ -94,7 +99,7 @@ class PostCardWidget extends StatelessWidget {
             navigateTo(
                 context,
                 CommentScreen(
-                  postId: cubit.postsId[index],
+                  postId: postId[index],
                 ));
           },
           child: Text(
@@ -105,8 +110,7 @@ class PostCardWidget extends StatelessWidget {
         const Spacer(),
         InkWell(
           onTap: () {
-            cubit.addOrRemoveLike(
-                postId: cubit.postsId[index], likes: model.likes!);
+            cubit.addOrRemoveLike(postId: postId, likes: model.likes!);
           },
           child: Row(
             children: [

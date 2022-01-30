@@ -114,14 +114,15 @@ Container myCard(
 }
 
 // profile image with edit icon on it.
-Widget myProfileImage(
-    {var image,
-    Function()? changeImageTap,
-    required BuildContext context,
-    required bool enableEdit,
-    required double radius}) {
+Widget myProfileImage({
+  var image,
+  Function()? changeImageTap,
+  required BuildContext context,
+  required bool enableEdit,
+  required double radius,
+}) {
   return CircleAvatar(
-    backgroundColor: Colors.white,
+    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     radius: radius + 4,
     child: Stack(
       alignment: const Alignment(0.9, 0.9),
