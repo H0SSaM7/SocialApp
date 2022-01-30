@@ -109,8 +109,8 @@ class PostCardWidget extends StatelessWidget {
         ),
         const Spacer(),
         InkWell(
-          onTap: () {
-            cubit.addOrRemoveLike(postId: postId, likes: model.likes!);
+          onTap: () async {
+            await cubit.addOrRemoveLike(postId: postId, likes: model.likes!);
           },
           child: Row(
             children: [

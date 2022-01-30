@@ -1,11 +1,11 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
-import 'package:social_app/controllers/cubit/states.dart';
+
 import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
+import 'package:social_app/presentation/explore/widgets/posts_shimmer_widget.dart';
 import 'package:social_app/utills/components/components.dart';
 
 class ExploreScreen extends StatelessWidget {
@@ -51,6 +51,16 @@ class ExploreScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if (state is PostsInitial)
+                    ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) =>
+                            const PostsShimmerWidget(),
+                        separatorBuilder: (context, index) => const SizedBox(
+                              height: 5.0,
+                            ),
+                        itemCount: 5),
                   if (state is GetPostsSuccessState)
                     ListView.separated(
                       shrinkWrap: true,
