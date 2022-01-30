@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_app/models/posts_model.dart';
+import 'package:social_app/utills/consistent/consistent.dart';
 import 'package:tuple/tuple.dart';
 
 class PostsRepository {
@@ -21,5 +22,18 @@ class PostsRepository {
       }
       return Tuple2(posts, postsId);
     });
+  }
+
+  Future<void> addOrRemoveLike(
+      {required String postId, required List likes}) async {
+    if (likes.contains(currentUserId)) {
+      await FirebaseFirestore.instance.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayRemove([currentUserId]),
+      });
+    } else {
+      await FirebaseFirestore.instance.collection('posts').doc(postId).update({
+        'likes': FieldValue.arrayUnion([currentUserId]),
+      });
+    }
   }
 }

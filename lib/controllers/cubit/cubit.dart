@@ -261,39 +261,6 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  List<int> likesCount = [];
-
-  // List<List<Map<String, dynamic>>> likesList = [];
-  // List<List<Map<String, dynamic>>> commentsList = [];
-
-  addOrRemoveLike({required String postId, required List likes}) {
-    if (likes.contains(currentUserId)) {
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .update({
-            'likes': FieldValue.arrayRemove([currentUserId]),
-          })
-          .then((value) => emit(SocialSuccessPostLikeState()))
-          .catchError((err) {
-            debugPrint(err.toString());
-            emit(SocialErrorPostLikeState());
-          });
-    } else {
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .update({
-            'likes': FieldValue.arrayUnion([currentUserId]),
-          })
-          .then((value) => emit(SocialSuccessPostLikeState()))
-          .catchError((err) {
-            debugPrint(err.toString());
-            emit(SocialErrorPostLikeState());
-          });
-    }
-  }
-
   postComment({required String postId, required String comment}) {
     CommentModel commentModel = CommentModel(
       userId: currentUserId,

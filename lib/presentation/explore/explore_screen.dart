@@ -78,6 +78,13 @@ class ExploreScreen extends StatelessWidget {
                       ),
                       itemCount: state.postsModel.length,
                     ),
+                  if (state is GetPostErrorState)
+                    Center(
+                      child: Text(
+                        state.error,
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                    ),
                   const SizedBox(
                     height: 10,
                   )

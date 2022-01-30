@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart ';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
-
+import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/presentation/comment/comment_screen.dart';
 import 'package:social_app/presentation/profile_as_visitor/profile_as_visitor_screen.dart';
-
 import 'package:social_app/utills/components/components.dart';
 import 'package:social_app/utills/consistent/consistent.dart';
 
@@ -109,8 +109,10 @@ class PostCardWidget extends StatelessWidget {
         ),
         const Spacer(),
         InkWell(
-          onTap: () async {
-            await cubit.addOrRemoveLike(postId: postId, likes: model.likes!);
+          onTap: () {
+            BlocProvider.of<PostsBloc>(context).add(
+              LikePostEvent(postId, model.likes!),
+            );
           },
           child: Row(
             children: [
