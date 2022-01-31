@@ -12,7 +12,6 @@ import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/data/data_provider/remote/notificaiton/dio_helper.dart';
 
 import 'package:social_app/models/chats_model.dart';
-import 'package:social_app/models/comment_model.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/presentation/chats/chats_screen.dart';
@@ -257,48 +256,6 @@ class SocialCubit extends Cubit<SocialStates> {
     }).catchError((error) {
       emit(SocialErrorCreateNewPostState());
       debugPrint(error.toString());
-    });
-  }
-
-  postComment({required String postId, required String comment}) {
-    var userModel;
-    CommentModel commentModel = CommentModel(
-      userId: currentUserId,
-      userImage: userModel!.profileImage!,
-      userName: userModel!.name!,
-      comment: comment,
-    );
-    FirebaseFirestore.instance
-        .collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .doc(currentUserId)
-        .set(commentModel.toMap())
-        .then((value) {
-      emit(SocialSuccessPostCommentState());
-    }).catchError((error) {
-      emit(SocialErrorPostCommentState());
-      debugPrint(error.toString());
-    });
-  }
-
-  List<CommentModel> commentList = [];
-
-  getComment({required String postId}) {
-    FirebaseFirestore.instance
-        .collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .snapshots()
-        .listen((event) {
-      commentList = [];
-      for (var element in event.docs) {
-        commentList.add(CommentModel.fromMap(element.data()));
-      }
-      emit(SocialSuccessListenCommentState());
-    }).onError((err) {
-      debugPrint(err.toString());
-      emit(SocialErrorListenCommentState());
     });
   }
 

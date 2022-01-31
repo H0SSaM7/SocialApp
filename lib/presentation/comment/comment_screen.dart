@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/controllers/comments_controller/comments_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/controllers/user_controller/user_bloc.dart';
+import 'package:social_app/data/repository/commets_repo/commets_repository.dart';
 
 import 'package:social_app/models/comment_model.dart';
 
 class CommentScreen extends StatelessWidget {
   const CommentScreen({Key? key, required this.postId}) : super(key: key);
   final String postId;
+
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      SocialCubit.get(context).getComment(postId: postId);
-      return BlocConsumer<SocialCubit, SocialStates>(
+      return BlocProvider(
+        create: (context) =>
+            CommentsBloc(commentsRepository: CommentsRepository())
+              ..add(CommentLoadEvent(postId)),
+        child: BlocBuilder<CommentsBloc, CommentsState>(
           builder: (context, state) {
             return SafeArea(
               child: Scaffold(
@@ -25,15 +31,22 @@ class CommentScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: ListView.separated(
                             itemBuilder: (context, index) {
-                              return buildCommentCard(context,
-                                  SocialCubit.get(context).commentList[index]);
+                              if (state is CommentsLoadingState) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (state is CommentsLoadedState) {
+                                return buildCommentCard(
+                                    context, state.comments[index]);
+                              }
+                              return const SizedBox.shrink();
                             },
                             separatorBuilder: (context, index) =>
                                 const SizedBox(
                                   height: 10,
                                 ),
                             itemCount:
-                                SocialCubit.get(context).commentList.length),
+                                context.read<CommentsBloc>().commentsLength),
                       ),
                     ),
                     buildBottomCard(
@@ -45,7 +58,8 @@ class CommentScreen extends StatelessWidget {
               ),
             );
           },
-          listener: (context, state) {});
+        ),
+      );
     });
   }
 
@@ -169,8 +183,8 @@ class CommentScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 if (commentController.text.isNotEmpty) {
-                  cubit.postComment(
-                      postId: postId, comment: commentController.text);
+                  // cubit.postComment(
+                  //     postId: postId, comment: commentController.text);
                 }
               },
               child: const Text(

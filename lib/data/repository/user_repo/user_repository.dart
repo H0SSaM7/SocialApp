@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart' show debugPrint;
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/utills/consistent/consistent.dart';
 
