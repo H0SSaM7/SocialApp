@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/controllers/cubit/states.dart';
-import 'package:social_app/data/data_provider/remote/dio_helper.dart';
+import 'package:social_app/data/data_provider/remote/notificaiton/dio_helper.dart';
 
 import 'package:social_app/models/chats_model.dart';
 import 'package:social_app/models/comment_model.dart';
