@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/comments_controller/comments_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
-import 'package:social_app/controllers/cubit/states.dart';
+
 import 'package:social_app/controllers/user_controller/user_bloc.dart';
 import 'package:social_app/data/repository/commets_repo/commets_repository.dart';
 
 import 'package:social_app/models/comment_model.dart';
 
 class CommentScreen extends StatelessWidget {
-  const CommentScreen({Key? key, required this.postId}) : super(key: key);
+  const CommentScreen({
+    Key? key,
+    required this.postId,
+  }) : super(key: key);
   final String postId;
 
   @override
@@ -183,8 +186,16 @@ class CommentScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 if (commentController.text.isNotEmpty) {
-                  // cubit.postComment(
-                  //     postId: postId, comment: commentController.text);
+                  context.read<CommentsBloc>().add(
+                        CommentsAddEvent(
+                            postId: postId,
+                            comment: commentController.text,
+                            profileImage: BlocProvider.of<UserBloc>(context)
+                                .user
+                                .profileImage!,
+                            userName:
+                                BlocProvider.of<UserBloc>(context).user.name!),
+                      );
                 }
               },
               child: const Text(

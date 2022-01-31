@@ -12,6 +12,8 @@ part 'user_state.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository _userRepository;
   StreamSubscription? _userSubscription;
+  UserModel? _user;
+  UserModel get user => _user!;
   UserBloc({required UserRepository userRepository})
       : _userRepository = userRepository,
         super(UserLoadingState()) {
@@ -29,6 +31,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   FutureOr<void> _loadedUser(LoadedUserEvent event, Emitter<UserState> emit) {
     if (event.user != null) {
+      _user = event.user!;
       emit(UserLoadedState(event.user!));
     } else {
       emit(const UserErrorState());

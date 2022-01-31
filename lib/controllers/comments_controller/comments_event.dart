@@ -18,3 +18,18 @@ class CommentUpdateEvent extends CommentsEvent {
   @override
   List<Object?> get props => [comments];
 }
+
+class CommentsAddEvent extends CommentsEvent {
+  final String postId;
+  final String comment;
+  final String profileImage;
+  final String userName;
+  const CommentsAddEvent(
+      {required this.postId,
+      required this.comment,
+      required this.profileImage,
+      required this.userName});
+
+  @override
+  List<Object?> get props => [postId, comment, profileImage, userName];
+}

@@ -4,7 +4,26 @@ import 'package:social_app/models/comment_model.dart';
 import 'package:social_app/utills/consistent/consistent.dart';
 
 class CommentsRepository {
-  Future<void> postComment(
+  Stream<List<CommentModel>>? getComment({required String postId}) {
+    List<CommentModel> commentList = [];
+    try {
+      return FirebaseFirestore.instance
+          .collection('posts')
+          .doc(postId)
+          .collection('comments')
+          .snapshots()
+          .map((event) {
+        for (var element in event.docs) {
+          commentList.add(CommentModel.fromMap(element.data()));
+        }
+        return commentList;
+      });
+    } catch (err) {
+      debugPrint(err.toString());
+    }
+  }
+
+  Future<void> postNewComment(
       {required String postId,
       required String comment,
       required String profileImage,
@@ -22,25 +41,6 @@ class CommentsRepository {
           .collection('comments')
           .doc(currentUserId)
           .set(commentModel.toMap());
-    } catch (err) {
-      debugPrint(err.toString());
-    }
-  }
-
-  Stream<List<CommentModel>>? getComment({required String postId}) {
-    List<CommentModel> commentList = [];
-    try {
-      return FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .collection('comments')
-          .snapshots()
-          .map((event) {
-        for (var element in event.docs) {
-          commentList.add(CommentModel.fromMap(element.data()));
-        }
-        return commentList;
-      });
     } catch (err) {
       debugPrint(err.toString());
     }

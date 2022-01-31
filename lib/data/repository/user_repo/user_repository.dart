@@ -6,7 +6,6 @@ class UserRepository {
   final _fireStore = FirebaseFirestore.instance;
 
   Stream<UserModel> getUserData() {
-    UserModel? user;
     return _fireStore
         .collection('users')
         .doc(currentUserId)

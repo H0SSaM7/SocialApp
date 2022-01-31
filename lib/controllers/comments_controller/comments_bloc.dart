@@ -17,6 +17,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
         super(CommentsLoadingState()) {
     on<CommentLoadEvent>(_loadComments);
     on<CommentUpdateEvent>(_updateComments);
+    on<CommentsAddEvent>(_appNewPost);
   }
 
   _loadComments(CommentLoadEvent event, emit) {
@@ -34,5 +35,16 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
   _updateComments(CommentUpdateEvent event, emit) {
     commentsLength = event.comments.length;
     emit(CommentsLoadedState(event.comments));
+  }
+
+  FutureOr<void> _appNewPost(
+      CommentsAddEvent event, Emitter<CommentsState> emit) async {
+    await _commentsRepository.postNewComment(
+      postId: event.postId,
+      comment: event.comment,
+      profileImage: event.profileImage,
+      userName: event.userName,
+    );
+    add(CommentLoadEvent(event.postId));
   }
 }

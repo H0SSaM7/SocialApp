@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/data/data_provider/remote/notificaiton/dio_helper.dart';
-
 import 'package:social_app/models/chats_model.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/models/user_model.dart';
@@ -22,25 +20,7 @@ import 'package:social_app/utills/consistent/consistent.dart';
 
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
-
   static SocialCubit get(context) => BlocProvider.of(context);
-  // UserModel? userModel;
-
-  // getting user data when the app open.
-  // getUserDate() {
-  //   emit(SocialLoadingGetUserState());
-  //   FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(currentUserId)
-  //       .snapshots()
-  //       .listen((event) {
-  //     userModel = UserModel.fromJson(event.data()!);
-  //     emit(SocialSuccessGetUserState());
-  //   }).onError((error) {
-  //     debugPrint(error.toString());
-  //     emit(SocialErrorGetUserState());
-  //   });
-  // }
   followUser({required var userId}) {
     if (userById!.followers!.contains(currentUserId)) {
       FirebaseFirestore.instance.collection('users').doc(userId).update({
