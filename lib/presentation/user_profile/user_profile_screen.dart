@@ -1,13 +1,8 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_app/controllers/cubit/cubit.dart';
-import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/controllers/user_controller/user_bloc.dart';
-import 'package:social_app/presentation/edit_profile/edit_profile.dart';
 import 'package:social_app/presentation/settings/settings_screen.dart';
-
 import 'package:social_app/utills/components/components.dart';
 
 class UserProfileScreen extends StatelessWidget {
