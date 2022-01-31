@@ -9,7 +9,17 @@ import 'package:social_app/utills/components/components.dart';
 import 'package:social_app/utills/components/regular_form_field.dart';
 
 class EidProfile extends StatelessWidget {
-  const EidProfile({Key? key}) : super(key: key);
+  const EidProfile(
+      {Key? key,
+      required this.userBio,
+      required this.userName,
+      required this.userPhone,
+      required this.userImage})
+      : super(key: key);
+  final String userName;
+  final String userBio;
+  final String userPhone;
+  final String userImage;
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +29,9 @@ class EidProfile extends StatelessWidget {
     return BlocBuilder<SocialCubit, SocialStates>(
       builder: (context, state) {
         SocialCubit cubit = SocialCubit.get(context);
-        nameController.text = cubit.userModel!.name!;
-        bioController.text = cubit.userModel!.bio!;
-        phoneController.text = cubit.userModel!.phone!;
+        nameController.text = userName;
+        bioController.text = userBio;
+        phoneController.text = userPhone;
         return Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
@@ -29,18 +39,18 @@ class EidProfile extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              if (state is! SocialLoadingUploadProfileImageState) {
-                await cubit.updateProfile(
-                  email: cubit.userModel!.email!,
-                  phone: phoneController.text,
-                  name: nameController.text,
-                  uId: cubit.userModel!.uId!,
-                  bio: bioController.text,
-                  profileImage:
-                      cubit.profileImageUrl ?? cubit.userModel!.profileImage!,
-                );
-                Navigator.pop(context);
-              }
+              // if (state is! SocialLoadingUploadProfileImageState) {
+              //   await cubit.updateProfile(
+              //     email: cubit.userModel!.email!,
+              //     phone: phoneController.text,
+              //     name: nameController.text,
+              //     uId: cubit.userModel!.uId!,
+              //     bio: bioController.text,
+              //     profileImage:
+              //         cubit.profileImageUrl ?? cubit.userModel!.profileImage!,
+              //   );
+              //   Navigator.pop(context);
+              // }
             },
             child: const Text('Update'),
           ),
@@ -64,7 +74,7 @@ class EidProfile extends StatelessWidget {
                         },
                         image: cubit.profileImage == null
                             ? NetworkImage(
-                                cubit.userModel!.profileImage!,
+                                userImage,
                               )
                             : FileImage(
                                 File(cubit.profileImage!.path),

@@ -19,8 +19,7 @@ class ProfileScreenAsVisitor extends StatelessWidget {
   final String userId;
   @override
   Widget build(BuildContext context) {
-    return Container();
-    Builder(
+    return Builder(
       builder: (context) {
         SocialCubit.get(context).getUserById(userId: userId);
         return BlocConsumer<SocialCubit, SocialStates>(

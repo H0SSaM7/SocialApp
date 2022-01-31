@@ -25,24 +25,23 @@ class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
 
   static SocialCubit get(context) => BlocProvider.of(context);
-  UserModel? userModel;
+  // UserModel? userModel;
 
   // getting user data when the app open.
-  getUserDate() {
-    emit(SocialLoadingGetUserState());
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUserId)
-        .snapshots()
-        .listen((event) {
-      userModel = UserModel.fromJson(event.data()!);
-      emit(SocialSuccessGetUserState());
-    }).onError((error) {
-      debugPrint(error.toString());
-      emit(SocialErrorGetUserState());
-    });
-  }
-
+  // getUserDate() {
+  //   emit(SocialLoadingGetUserState());
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(currentUserId)
+  //       .snapshots()
+  //       .listen((event) {
+  //     userModel = UserModel.fromJson(event.data()!);
+  //     emit(SocialSuccessGetUserState());
+  //   }).onError((error) {
+  //     debugPrint(error.toString());
+  //     emit(SocialErrorGetUserState());
+  //   });
+  // }
   followUser({required var userId}) {
     if (userById!.followers!.contains(currentUserId)) {
       FirebaseFirestore.instance.collection('users').doc(userId).update({
@@ -197,15 +196,14 @@ class SocialCubit extends Cubit<SocialStates> {
       emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
       bio: bio,
       profileImage: profileImage,
-      token: userModel!.token,
+      token: '',
     );
     FirebaseFirestore.instance
         .collection('users')
         .doc(currentUserId)
         .update(model.toJson())
-        .then((value) {
-      getUserDate();
-    }).catchError((error) {});
+        .then((value) {})
+        .catchError((error) {});
   }
 
   uploadPostImageAndCreatePost(
@@ -239,6 +237,7 @@ class SocialCubit extends Cubit<SocialStates> {
     required String postDescription,
   }) {
     emit(SocialLoadingCreateNewPostState());
+    var userModel;
     PostsModel postsModel = PostsModel(
       name: userModel!.name,
       uId: userModel!.uId,
@@ -261,40 +260,8 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  List<int> likesCount = [];
-
-  // List<List<Map<String, dynamic>>> likesList = [];
-  // List<List<Map<String, dynamic>>> commentsList = [];
-
-  addOrRemoveLike({required String postId, required List likes}) {
-    if (likes.contains(currentUserId)) {
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .update({
-            'likes': FieldValue.arrayRemove([currentUserId]),
-          })
-          .then((value) => emit(SocialSuccessPostLikeState()))
-          .catchError((err) {
-            debugPrint(err.toString());
-            emit(SocialErrorPostLikeState());
-          });
-    } else {
-      FirebaseFirestore.instance
-          .collection('posts')
-          .doc(postId)
-          .update({
-            'likes': FieldValue.arrayUnion([currentUserId]),
-          })
-          .then((value) => emit(SocialSuccessPostLikeState()))
-          .catchError((err) {
-            debugPrint(err.toString());
-            emit(SocialErrorPostLikeState());
-          });
-    }
-  }
-
   postComment({required String postId, required String comment}) {
+    var userModel;
     CommentModel commentModel = CommentModel(
       userId: currentUserId,
       userImage: userModel!.profileImage!,

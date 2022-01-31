@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart ';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
-
+import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
+import 'package:social_app/controllers/user_controller/user_bloc.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/presentation/comment/comment_screen.dart';
 import 'package:social_app/presentation/profile_as_visitor/profile_as_visitor_screen.dart';
-
 import 'package:social_app/utills/components/components.dart';
 import 'package:social_app/utills/consistent/consistent.dart';
 
@@ -86,11 +87,19 @@ class PostCardWidget extends StatelessWidget {
   Row writeCommentAndAddLoveSection(BuildContext context) {
     return Row(
       children: [
-        CircleAvatar(
-            radius: 18,
-            // user photo in beside comments
-            backgroundImage: NetworkImage(
-                SocialCubit.get(context).userModel!.profileImage!)),
+        BlocBuilder<UserBloc, UserState>(
+          builder: (context, state) {
+            if (state is UserLoadedState) {
+              return CircleAvatar(
+                radius: 18,
+                // user photo in beside comments
+                backgroundImage: NetworkImage(state.user.profileImage!),
+              );
+            }
+
+            return const CircleAvatar();
+          },
+        ),
         const SizedBox(
           width: 10,
         ),
@@ -110,7 +119,9 @@ class PostCardWidget extends StatelessWidget {
         const Spacer(),
         InkWell(
           onTap: () {
-            cubit.addOrRemoveLike(postId: postId, likes: model.likes!);
+            BlocProvider.of<PostsBloc>(context).add(
+              LikePostEvent(postId, model.likes!),
+            );
           },
           child: Row(
             children: [

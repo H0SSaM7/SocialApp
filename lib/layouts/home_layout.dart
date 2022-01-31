@@ -62,7 +62,11 @@ class HomeLayout extends StatelessWidget {
                   clipBehavior: Clip.none,
                   tooltip: 'New post',
                   onPressed: () {
-                    navigateTo(context, const AddPostScreen());
+                    navigateTo(
+                        context,
+                        const AddPostScreen(
+                          userImage: '',
+                        ));
                   },
                   child: const Icon(
                     Icons.add,

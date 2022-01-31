@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
+import 'package:social_app/controllers/user_controller/user_bloc.dart';
 
 import 'package:social_app/models/comment_model.dart';
 
@@ -133,11 +134,20 @@ class CommentScreen extends StatelessWidget {
             const SizedBox(
               width: 15,
             ),
-            CircleAvatar(
-                radius: 18,
-                // user phone in beside comments
-                backgroundImage: NetworkImage(
-                    SocialCubit.get(context).userModel!.profileImage!)),
+            BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state is UserLoadedState) {
+                  return CircleAvatar(
+                    radius: 18,
+                    // user phone in beside comments
+                    backgroundImage: NetworkImage(state.user.profileImage!),
+                  );
+                }
+                return const CircleAvatar(
+                  radius: 18,
+                );
+              },
+            ),
             const SizedBox(width: 5),
 
 // write comment tap -----------------------------
