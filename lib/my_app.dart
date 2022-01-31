@@ -6,7 +6,9 @@ import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/controllers/theme_controller/theme_cubit.dart';
 import 'package:social_app/controllers/theme_controller/theme_state.dart';
+import 'package:social_app/controllers/user_controller/user_bloc.dart';
 import 'package:social_app/data/repository/posts_repo/posts_repository.dart';
+import 'package:social_app/data/repository/user_repo/user_repository.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({
@@ -20,7 +22,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => SocialCubit()..getUserDate()),
+        BlocProvider(create: (context) => SocialCubit()),
+        BlocProvider(
+          create: (context) =>
+              UserBloc(userRepository: UserRepository())..add(LoadUserEvent()),
+        ),
         BlocProvider(create: (context) => ThemeCubit()),
         BlocProvider(
             create: (context) =>

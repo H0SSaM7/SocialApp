@@ -7,8 +7,8 @@ import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/utills/components/components.dart';
 
 class AddPostScreen extends StatelessWidget {
-  const AddPostScreen({Key? key}) : super(key: key);
-
+  const AddPostScreen({Key? key, required this.userImage}) : super(key: key);
+  final String userImage;
   @override
   Widget build(BuildContext context) {
     var postController = TextEditingController();
@@ -113,7 +113,7 @@ class AddPostScreen extends StatelessWidget {
                           radius: 26,
                           // profile image --------------
                           backgroundImage: NetworkImage(
-                            cubit.userModel!.profileImage!,
+                            userImage,
                           )),
                       const SizedBox(
                         width: 20,
