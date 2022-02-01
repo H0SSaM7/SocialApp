@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/controllers/chats/chat_bloc.dart';
+import 'package:social_app/controllers/chat_contacts_controller/chat_bloc.dart';
 
 import 'package:social_app/data/repository/user_repo/user_repository.dart';
 import 'package:social_app/models/user_model.dart';

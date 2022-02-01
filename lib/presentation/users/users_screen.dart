@@ -1,9 +1,7 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/controllers/chats/chat_bloc.dart';
-import 'package:social_app/controllers/cubit/cubit.dart';
-import 'package:social_app/controllers/cubit/states.dart';
+import 'package:social_app/controllers/chat_contacts_controller/chat_bloc.dart';
+
 import 'package:social_app/data/repository/user_repo/user_repository.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/presentation/profile_as_visitor/profile_as_visitor_screen.dart';

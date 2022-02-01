@@ -16,7 +16,7 @@ class ChatRoomScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var messageController = TextEditingController();
     return Builder(builder: (context) {
-      SocialCubit.get(context).getMessages(receiverId: userModel.uId!);
+      // SocialCubit.get(context).getMessages(receiverId: userModel.uId!);
       return BlocConsumer<SocialCubit, SocialStates>(
         listener: (context, state) {
           if (state is SocialSuccessSendMessagesToOtherState) {
@@ -90,12 +90,12 @@ class ChatRoomScreen extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             if (messageController.text.isNotEmpty) {
-                              cubit.sendMessages(
-                                  receiverName: userModel.name!,
-                                  receiverToken: userModel.token!,
-                                  receiverId: userModel.uId!,
-                                  message: messageController.text,
-                                  date: DateTime.now().toString());
+                              // cubit.sendMessages(
+                              //     receiverName: userModel.name!,
+                              //     receiverToken: userModel.token!,
+                              //     receiverId: userModel.uId!,
+                              //     message: messageController.text,
+                              //     date: DateTime.now().toString());
                             }
                           },
                           child: CircleAvatar(
