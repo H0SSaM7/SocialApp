@@ -1,8 +1,11 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:social_app/controllers/chats/chat_bloc.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
+import 'package:social_app/data/repository/user_repo/user_repository.dart';
+import 'package:social_app/models/user_model.dart';
 import 'package:social_app/presentation/profile_as_visitor/profile_as_visitor_screen.dart';
 
 import 'package:social_app/utills/components/components.dart';
@@ -12,40 +15,45 @@ class UsersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        SocialCubit cubit = SocialCubit.get(context);
-        return ConditionalBuilder(
-            condition: cubit.users.isNotEmpty,
-            builder: (context) {
+    return BlocProvider(
+        create: (context) =>
+            ChatBloc(userRepository: UserRepository())..add(const ChatEvent()),
+        child: BlocBuilder<ChatBloc, ChatState>(
+          builder: (context, state) {
+            if (state is ChatInitial) {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            } else if (state is ChatLoaded) {
               return ListView.separated(
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return buildChatsCard(cubit, context, index);
+                    return buildChatsCard(
+                      state.users[index],
+                      context,
+                    );
                   },
                   separatorBuilder: (context, index) => const SizedBox(
                         height: 5.0,
                       ),
-                  itemCount: cubit.users.length);
-            },
-            fallback: (context) => const Center(
-                  child: CircularProgressIndicator.adaptive(
-                    strokeWidth: 3,
-                  ),
-                ));
-      },
-    );
+                  itemCount: state.users.length);
+            } else if (state is ChatError) {
+              return const Center(
+                  child: Text('Some Thing went Wrong , Please try Again'));
+            }
+            return const SizedBox();
+          },
+        ));
   }
 
-  Widget buildChatsCard(SocialCubit cubit, BuildContext context, int index) {
+  Widget buildChatsCard(UserModel user, BuildContext context) {
     return Card(
       elevation: 4.0,
       child: InkWell(
         onTap: () {
           navigateTo(
             context,
-            ProfileScreenAsVisitor(userId: cubit.users[index].uId!),
+            ProfileScreenAsVisitor(userId: user.uId!),
           );
         },
         child: SizedBox(
@@ -58,11 +66,10 @@ class UsersScreen extends StatelessWidget {
               // profile image -----------------------
               CircleAvatar(
                   radius: 26,
-                  backgroundImage:
-                      NetworkImage(cubit.users[index].profileImage!)),
+                  backgroundImage: NetworkImage(user.profileImage!)),
               const SizedBox(width: 15),
               Text(
-                cubit.users[index].name!,
+                user.name!,
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
