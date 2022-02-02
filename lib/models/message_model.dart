@@ -1,10 +1,10 @@
-class ChatsModel {
+class MessageModel {
   String? senderId;
   String? receiverId;
   String? message;
   String? date;
 
-  ChatsModel({
+  MessageModel({
     this.senderId,
     this.receiverId,
     this.message,
@@ -20,8 +20,8 @@ class ChatsModel {
     };
   }
 
-  factory ChatsModel.fromMap(Map<String, dynamic> map) {
-    return ChatsModel(
+  factory MessageModel.fromMap(Map<String, dynamic> map) {
+    return MessageModel(
       senderId: map['senderId'] as String,
       receiverId: map['receiverId'] as String,
       message: map['message'] as String,

@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
 
-import 'package:social_app/models/chats_model.dart';
+import 'package:social_app/models/message_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/utills/consistent/consistent.dart';
 
@@ -52,7 +52,7 @@ class ChatRoomScreen extends StatelessWidget {
                         keyboardDismissBehavior:
                             ScrollViewKeyboardDismissBehavior.onDrag,
                         itemBuilder: (context, index) {
-                          ChatsModel message = cubit.messages[index];
+                          MessageModel message = cubit.messages[index];
                           if (message.senderId == currentUserId) {
                             return buildMyMessage(context, message);
                           } else {
@@ -121,7 +121,7 @@ class ChatRoomScreen extends StatelessWidget {
   }
 }
 
-Align buildMyMessage(BuildContext context, ChatsModel message) {
+Align buildMyMessage(BuildContext context, MessageModel message) {
   return Align(
     alignment: AlignmentDirectional.centerEnd,
     child: Container(
@@ -148,7 +148,7 @@ Align buildMyMessage(BuildContext context, ChatsModel message) {
 }
 
 Widget buildOtherUserMessage(
-    BuildContext context, UserModel userModel, ChatsModel message) {
+    BuildContext context, UserModel userModel, MessageModel message) {
   return Align(
     alignment: AlignmentDirectional.centerStart,
     child: Container(

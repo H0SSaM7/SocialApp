@@ -8,7 +8,7 @@ class ChatRoomInitial extends ChatRoomState {
 }
 
 class ChatRoomUpdateMessages extends ChatRoomState {
-  final List<ChatsModel> messages;
+  final List<MessageModel> messages;
 
   ChatRoomUpdateMessages({this.messages = const []});
   @override
