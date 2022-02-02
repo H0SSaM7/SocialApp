@@ -17,6 +17,17 @@ class UpdateMessagesEvent extends ChatRoomEvent {
 }
 
 class SendMessagesEvent extends ChatRoomEvent {
+  // receiver
+  final String receiverName;
+  final String receiverToken;
+  final String receiverId;
+  final String message;
+
+  SendMessagesEvent(
+      {required this.receiverId,
+      required this.receiverName,
+      required this.receiverToken,
+      required this.message});
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [receiverName, receiverToken, message, receiverId];
 }

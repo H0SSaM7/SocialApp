@@ -9,7 +9,7 @@ class MessagesRepository {
   }) {
     List<MessageModel> messages = [];
     try {
-      FirebaseFirestore.instance
+      return FirebaseFirestore.instance
           .collection('users')
           .doc(currentUserId)
           .collection('chats')
@@ -33,15 +33,13 @@ class MessagesRepository {
     required String receiverToken,
     required String receiverId,
     required String message,
-    required String date,
   }) async {
-    String state = 'Something Went Wrong';
     MessageModel? chatsModel;
     try {
       chatsModel = MessageModel(
         receiverId: receiverId,
         message: message,
-        date: date,
+        date: DateTime.now().toString(),
         senderId: currentUserId,
       );
       // setup message for me
@@ -65,7 +63,6 @@ class MessagesRepository {
           .collection('messages')
           .add(chatsModel.toMap());
     } catch (e) {
-      state = e.toString();
       debugPrint(e.toString());
     }
   }

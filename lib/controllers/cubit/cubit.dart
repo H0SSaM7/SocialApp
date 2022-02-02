@@ -37,7 +37,6 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  var messages;
   UserModel? userById;
 
   getUserById({required String userId}) {
