@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/controllers/cubit/cubit.dart';
-
 import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
 import 'package:social_app/presentation/explore/widgets/posts_shimmer_widget.dart';
@@ -70,7 +68,6 @@ class ExploreScreen extends StatelessWidget {
                           postId: state.postsId[index],
                           model: state.postsModel[index],
                           index: index,
-                          cubit: SocialCubit.get(context),
                         );
                       },
                       separatorBuilder: (context, index) => const SizedBox(

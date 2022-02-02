@@ -15,13 +15,11 @@ import 'package:social_app/utills/consistent/consistent.dart';
 
 class PostCardWidget extends StatelessWidget {
   final PostsModel model;
-  final SocialCubit cubit;
   final String postId;
   final int index;
   const PostCardWidget(
       {Key? key,
       required this.model,
-      required this.cubit,
       required this.index,
       required this.postId})
       : super(key: key);

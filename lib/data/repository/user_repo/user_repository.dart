@@ -6,10 +6,10 @@ import 'package:social_app/utills/consistent/consistent.dart';
 class UserRepository {
   final _fireStore = FirebaseFirestore.instance;
 
-  Stream<UserModel> getUserData() {
+  Stream<UserModel> getUserData({required String userId}) {
     return _fireStore
         .collection('users')
-        .doc(currentUserId)
+        .doc(userId)
         .snapshots()
         .map((event) => UserModel.fromSnap(event));
   }
@@ -28,5 +28,30 @@ class UserRepository {
       debugPrint(e.toString());
     }
     return users;
+  }
+
+  Future<void> followUser(
+      {required var userId, required List userFollowers}) async {
+    if (userFollowers.contains(currentUserId)) {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'followers': FieldValue.arrayRemove([currentUserId])
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .update({
+        'following': FieldValue.arrayRemove([userId])
+      });
+    } else {
+      await FirebaseFirestore.instance.collection('users').doc(userId).update({
+        'followers': FieldValue.arrayUnion([currentUserId])
+      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUserId)
+          .update({
+        'following': FieldValue.arrayUnion([userId])
+      });
+    }
   }
 }

@@ -13,7 +13,7 @@ part 'chat_room_state.dart';
 
 class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
   final MessagesRepository _messagesRepository;
-  StreamSubscription? _messageSubscription;
+  StreamSubscription<List<MessageModel>>? _messageSubscription;
 
   ChatRoomBloc({required MessagesRepository messagesRepository})
       : _messagesRepository = messagesRepository,
@@ -48,8 +48,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       receiverId: event.receiverId,
       message: event.message,
     );
-    add(GetMessagesEvent(receiverId: event.receiverId));
-    DioHelper.post(
+    await DioHelper.post(
       token: event.receiverToken,
       userName: event.receiverName,
       message: event.message,

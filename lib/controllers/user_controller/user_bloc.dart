@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:social_app/data/repository/user_repo/user_repository.dart';
 import 'package:social_app/models/user_model.dart';
+import 'package:social_app/utills/consistent/consistent.dart';
 
 part 'user_event.dart';
 
@@ -24,7 +25,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   FutureOr<void> _loadUser(LoadUserEvent event, Emitter<UserState> emit) {
     _userSubscription?.cancel();
-    _userSubscription = _userRepository.getUserData().listen((event) {
+    _userSubscription =
+        _userRepository.getUserData(userId: currentUserId).listen((event) {
       add(LoadedUserEvent(event));
     });
   }

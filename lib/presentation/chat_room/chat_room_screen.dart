@@ -20,71 +20,73 @@ class ChatRoomScreen extends StatelessWidget {
             ..add(
               GetMessagesEvent(receiverId: userModel.uId!),
             ),
-      child: BlocListener<ChatRoomBloc, ChatRoomState>(
-        listener: (context, state) {
-          if (state is ChatRoomUpdateMessages) {
-            messageController.clear();
-          }
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: Row(
-              children: [
-                CircleAvatar(
-                    backgroundImage: NetworkImage(userModel.profileImage!)),
-                const SizedBox(
-                  width: 15.0,
-                ),
-                Text(userModel.name!)
-              ],
+      child: Builder(builder: (context) {
+        return BlocListener<ChatRoomBloc, ChatRoomState>(
+          listener: (context, state) {
+            if (state is ChatRoomUpdateMessages) {
+              messageController.clear();
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: Row(
+                children: [
+                  CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.profileImage!)),
+                  const SizedBox(
+                    width: 15.0,
+                  ),
+                  Text(userModel.name!)
+                ],
+              ),
             ),
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                  child: SingleChildScrollView(
-                    reverse: true,
-                    child: BlocBuilder<ChatRoomBloc, ChatRoomState>(
-                      builder: (context, state) {
-                        if (state is ChatRoomInitial) {
-                          return const CircularProgressIndicator.adaptive();
-                        } else if (state is ChatRoomUpdateMessages) {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            keyboardDismissBehavior:
-                                ScrollViewKeyboardDismissBehavior.onDrag,
-                            itemBuilder: (context, index) {
-                              MessageModel message = state.messages[index];
-                              if (message.senderId == currentUserId) {
-                                return buildMyMessage(context, message);
-                              } else {
-                                return buildOtherUserMessage(
-                                    context, userModel, message);
-                              }
-                            },
-                            itemCount: state.messages.length,
-                          );
-                        } else if (state is ChatRoomGetMessagesError) {
-                          return const Center(
-                            child: Text(
-                                'Something went wrong please try again later.'),
-                          );
-                        }
-                        return const SizedBox();
-                      },
+            body: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: SingleChildScrollView(
+                      reverse: true,
+                      child: BlocBuilder<ChatRoomBloc, ChatRoomState>(
+                        builder: (context, state) {
+                          if (state is ChatRoomInitial) {
+                            return const CircularProgressIndicator.adaptive();
+                          } else if (state is ChatRoomUpdateMessages) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
+                              itemBuilder: (context, index) {
+                                MessageModel message = state.messages[index];
+                                if (message.senderId == currentUserId) {
+                                  return buildMyMessage(context, message);
+                                } else {
+                                  return buildOtherUserMessage(
+                                      context, userModel, message);
+                                }
+                              },
+                              itemCount: state.messages.length,
+                            );
+                          } else if (state is ChatRoomGetMessagesError) {
+                            return const Center(
+                              child: Text(
+                                  'Something went wrong please try again later.'),
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-              sentMessageCard(context),
-            ],
+                sentMessageCard(context),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 

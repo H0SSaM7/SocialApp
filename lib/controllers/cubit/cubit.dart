@@ -19,41 +19,6 @@ import 'package:social_app/utills/consistent/consistent.dart';
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
   static SocialCubit get(context) => BlocProvider.of(context);
-  followUser({required var userId}) {
-    if (userById!.followers!.contains(currentUserId)) {
-      FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'followers': FieldValue.arrayRemove([currentUserId])
-      });
-      FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
-        'following': FieldValue.arrayRemove([userId])
-      });
-    } else {
-      FirebaseFirestore.instance.collection('users').doc(userId).update({
-        'followers': FieldValue.arrayUnion([currentUserId])
-      });
-      FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
-        'following': FieldValue.arrayUnion([userId])
-      });
-    }
-  }
-
-  UserModel? userById;
-
-  getUserById({required String userId}) {
-    userById = null;
-    emit(SocialLoadingGetUserByIdState());
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .snapshots()
-        .listen((event) {
-      userById = UserModel.fromJson(event.data()!);
-      emit(SocialSuccessGetUserByIdState());
-    }).onError((err) {
-      debugPrint(err.toString());
-      emit(SocialErrorGetUserByIdState());
-    });
-  }
 
 // home page work
   int currentIndex = 0;
@@ -84,7 +49,7 @@ class SocialCubit extends Cubit<SocialStates> {
   File? postImage;
 
   // Url image variables
-  String? postImageUrl;
+
   String? profileImageUrl;
 
   // this method only to render picked image
@@ -103,7 +68,6 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialDeletePostImageState());
   }
 
-// it return the picked image from device and i store it in any variable
   Future<File?> pickImage() async {
     XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedImage == null) {
@@ -173,12 +137,9 @@ class SocialCubit extends Cubit<SocialStates> {
           .putFile(postImage!)
           .then((p0) {
         p0.ref.getDownloadURL().then((value) {
-          postImageUrl = value;
           emit(SocialSuccessUploadPostImageState());
           createNewPost(
-              postImage: postImageUrl,
-              date: date,
-              postDescription: postDescription);
+              postImage: value, date: date, postDescription: postDescription);
         }).catchError((error) {
           debugPrint(error.toString());
         });
@@ -214,7 +175,4 @@ class SocialCubit extends Cubit<SocialStates> {
       debugPrint(error.toString());
     });
   }
-
-// chats methods ---------------------------------------------------------------
-
 }
