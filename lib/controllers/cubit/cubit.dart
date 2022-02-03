@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -6,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/models/user_model.dart';
@@ -15,6 +13,7 @@ import 'package:social_app/presentation/explore/explore_screen.dart';
 import 'package:social_app/presentation/user_profile/user_profile_screen.dart';
 import 'package:social_app/presentation/users/users_screen.dart';
 import 'package:social_app/utills/consistent/consistent.dart';
+import 'package:social_app/utills/services/pick_services/pick_services.dart';
 
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
@@ -42,7 +41,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   // image picker and upload methods
 
-  final ImagePicker _picker = ImagePicker();
+  final PickServices _pickServices = PickServices();
 
   // file image variables
   File? profileImage;
@@ -54,27 +53,18 @@ class SocialCubit extends Cubit<SocialStates> {
 
   // this method only to render picked image
   setProfileImage() async {
-    profileImage = await pickImage();
+    profileImage = await _pickServices.pickImage();
     emit(SocialPickImageState());
   }
 
   setPostImage() async {
-    postImage = await pickImage();
+    postImage = await _pickServices.pickImage();
     emit(SocialPickImageState());
   }
 
   deletePickedPostImage() {
     postImage = null;
     emit(SocialDeletePostImageState());
-  }
-
-  Future<File?> pickImage() async {
-    XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage == null) {
-      return null;
-    } else {
-      return File(pickedImage.path);
-    }
   }
 
   //its return url of the picked profile image after store it in firebase
