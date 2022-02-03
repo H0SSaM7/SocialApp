@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
+import 'package:social_app/presentation/explore/widgets/advertise_card.dart';
 import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
 import 'package:social_app/presentation/explore/widgets/posts_shimmer_widget.dart';
 import 'package:social_app/utills/components/components.dart';
@@ -22,33 +23,7 @@ class ExploreScreen extends StatelessWidget {
               child: Column(
                 children: [
                   buildEmailVerifyCheck(),
-                  Card(
-                    elevation: 5.0,
-                    clipBehavior: Clip.antiAlias,
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        Image.network(
-                          'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
-                          height: 185,
-                          width: double.maxFinite,
-                          fit: BoxFit.cover,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Communicate with friends',
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1!
-                                .copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                  const AdvertiseCard(),
                   if (state is PostsInitial)
                     ListView.separated(
                         shrinkWrap: true,
