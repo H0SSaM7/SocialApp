@@ -5,6 +5,7 @@ import 'package:social_app/controllers/theme_controller/theme_cubit.dart';
 import 'package:social_app/data/repository/user_repo/user_repository.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utills/components/my_profile_image.dart';
 import 'package:social_app/utills/consistent/consistent.dart';
 
 class ProfileScreenAsVisitor extends StatelessWidget {
@@ -169,11 +170,11 @@ class ProfileScreenAsVisitor extends StatelessWidget {
                   ),
                 ),
               ),
-              myProfileImage(
-                  radius: 55,
-                  enableEdit: false,
-                  image: NetworkImage(snapshot.profileImage!),
-                  context: context)
+              MyProfileImage(
+                radius: 55,
+                enableEdit: false,
+                image: NetworkImage(snapshot.profileImage!),
+              )
             ],
           ),
         ),

@@ -113,46 +113,6 @@ Container myCard(
   );
 }
 
-// profile image with edit icon on it.
-Widget myProfileImage({
-  var image,
-  Function()? changeImageTap,
-  required BuildContext context,
-  required bool enableEdit,
-  required double radius,
-}) {
-  return CircleAvatar(
-    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-    radius: radius + 4,
-    child: Stack(
-      alignment: const Alignment(0.9, 0.9),
-      children: [
-        CircleAvatar(
-          backgroundImage: image,
-          radius: radius,
-          child: image == null
-              ? const Icon(
-                  Icons.person,
-                  size: 40,
-                )
-              : null,
-        ),
-        enableEdit
-            ? InkWell(
-                onTap: changeImageTap,
-                child: const CircleAvatar(
-                  radius: 13,
-                  child: Icon(
-                    Icons.edit_outlined,
-                    size: 12,
-                  ),
-                ))
-            : const SizedBox()
-      ],
-    ),
-  );
-}
-
 mySnackBar({required String content, required BuildContext context}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(

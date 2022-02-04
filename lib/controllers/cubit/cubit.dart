@@ -1,19 +1,16 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/cubit/states.dart';
 import 'package:social_app/models/posts_model.dart';
-import 'package:social_app/models/user_model.dart';
 import 'package:social_app/presentation/chats/chats_screen.dart';
 import 'package:social_app/presentation/explore/explore_screen.dart';
 import 'package:social_app/presentation/user_profile/user_profile_screen.dart';
 import 'package:social_app/presentation/users/users_screen.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
-import 'package:social_app/utills/services/pick_services/pick_services.dart';
+import 'package:social_app/utills/services/pick_image_services.dart';
 
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
@@ -41,21 +38,13 @@ class SocialCubit extends Cubit<SocialStates> {
 
   // image picker and upload methods
 
-  final PickServices _pickServices = PickServices();
+  final PickImageServices _pickServices = PickImageServices();
 
   // file image variables
-  File? profileImage;
+
   File? postImage;
 
   // Url image variables
-
-  String? profileImageUrl;
-
-  // this method only to render picked image
-  setProfileImage() async {
-    profileImage = await _pickServices.pickImage();
-    emit(SocialPickImageState());
-  }
 
   setPostImage() async {
     postImage = await _pickServices.pickImage();
@@ -67,53 +56,7 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialDeletePostImageState());
   }
 
-  //its return url of the picked profile image after store it in firebase
-  uploadProfileImage() {
-    if (profileImage == null) {
-      null;
-    } else {
-      emit(SocialLoadingUploadProfileImageState());
-      firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('users/${Uri.file(profileImage!.path).pathSegments.last}')
-          .putFile(profileImage!)
-          .then((p0) {
-        p0.ref.getDownloadURL().then((value) {
-          profileImageUrl = value;
-          emit(SocialSuccessUploadProfileImageState());
-        }).catchError((error) {
-          debugPrint(error.toString());
-        });
-      });
-    }
-  }
-
   // update the whole profile properties
-  updateProfile({
-    required String email,
-    required String phone,
-    required String name,
-    required String uId,
-    required String bio,
-    required String profileImage,
-  }) {
-    UserModel model = UserModel(
-      name: name,
-      email: email,
-      phone: phone,
-      uId: uId,
-      emailVerified: FirebaseAuth.instance.currentUser!.emailVerified,
-      bio: bio,
-      profileImage: profileImage,
-      token: '',
-    );
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(currentUserId)
-        .update(model.toJson())
-        .then((value) {})
-        .catchError((error) {});
-  }
 
   uploadPostImageAndCreatePost(
       {required String date, required String postDescription}) {

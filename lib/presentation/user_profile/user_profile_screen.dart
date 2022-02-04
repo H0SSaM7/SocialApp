@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app/controllers/user_controller/user_bloc.dart';
+import 'package:social_app/presentation/edit_profile/edit_profile.dart';
 import 'package:social_app/presentation/settings/settings_screen.dart';
 import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utills/components/my_profile_image.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({Key? key}) : super(key: key);
@@ -21,6 +23,7 @@ class UserProfileScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                // image
                 SizedBox(
                   height: 150,
                   child: Stack(
@@ -42,11 +45,10 @@ class UserProfileScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      myProfileImage(
+                      MyProfileImage(
                         radius: 62,
                         enableEdit: false,
                         image: NetworkImage(state.user.profileImage!),
-                        context: context,
                       )
                     ],
                   ),
@@ -102,9 +104,14 @@ class UserProfileScreen extends StatelessWidget {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () {
-                            // navigateTo(context,
-                            //     const EidProfile()
-                            // );
+                            navigateTo(
+                              context,
+                              EditProfile(
+                                  userBio: state.user.bio!,
+                                  userName: state.user.name!,
+                                  userPhone: state.user.phone!,
+                                  userImage: state.user.profileImage!),
+                            );
                           },
                           child: const Text('Edit Profile'),
                         ),

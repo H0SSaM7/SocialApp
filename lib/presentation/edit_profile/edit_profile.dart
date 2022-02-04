@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart ';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/controllers/cubit/cubit.dart';
-import 'package:social_app/controllers/cubit/states.dart';
+import 'package:social_app/controllers/edit_profile_controller/edit_profile_bloc.dart';
+import 'package:social_app/data/repository/update_user/update_repo.dart';
 import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utills/components/my_profile_image.dart';
 import 'package:social_app/utills/components/regular_form_field.dart';
 
-class EidProfile extends StatelessWidget {
-  const EidProfile(
+class EditProfile extends StatelessWidget {
+  const EditProfile(
       {Key? key,
       required this.userBio,
       required this.userName,
@@ -23,107 +24,119 @@ class EidProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController nameController = TextEditingController();
-    TextEditingController bioController = TextEditingController();
-    TextEditingController phoneController = TextEditingController();
-    return BlocBuilder<SocialCubit, SocialStates>(
-      builder: (context, state) {
-        SocialCubit cubit = SocialCubit.get(context);
-        nameController.text = userName;
-        bioController.text = userBio;
-        phoneController.text = userPhone;
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            title: const Text('Edit Profile'),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              // if (state is! SocialLoadingUploadProfileImageState) {
-              //   await cubit.updateProfile(
-              //     email: cubit.userModel!.email!,
-              //     phone: phoneController.text,
-              //     name: nameController.text,
-              //     uId: cubit.userModel!.uId!,
-              //     bio: bioController.text,
-              //     profileImage:
-              //         cubit.profileImageUrl ?? cubit.userModel!.profileImage!,
-              //   );
-              //   Navigator.pop(context);
-              // }
-            },
-            child: const Text('Update'),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
+    TextEditingController _nameController = TextEditingController();
+    TextEditingController _bioController = TextEditingController();
+    TextEditingController _phoneController = TextEditingController();
+    File? pickedImage;
+    return BlocProvider(
+      create: (context) =>
+          EditProfileBloc(updateUserRepository: UpdateUserRepository()),
+      child: BlocConsumer<EditProfileBloc, EditProfileState>(
+        listener: (context, state) {
+          if (state is PickedImageReplaceWithOld) {
+            pickedImage = state.pickedImage;
+          }
+          if (state is NoImageSelectedState) {
+            myToast(msg: 'No Image Selected!', state: toastStates.warning);
+          }
+          if (state is FinishUpdateState) {
+            myToast(msg: 'Successfully Updated!', state: toastStates.warning);
+          }
+          if (state is ErrorUpdateState) {
+            myToast(msg: state.error, state: toastStates.warning);
+          }
+        },
+        builder: (context, state) {
+          _nameController.text = userName;
+          _bioController.text = userBio;
+          _phoneController.text = userPhone;
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              title: const Text('Edit Profile'),
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      myProfileImage(
-                        radius: 62,
-                        enableEdit: true,
-                        changeImageTap: () async {
-                          await cubit.setProfileImage();
-                          cubit.uploadProfileImage();
-                        },
-                        image: cubit.profileImage == null
-                            ? NetworkImage(
-                                userImage,
-                              )
-                            : FileImage(
-                                File(cubit.profileImage!.path),
-                              ),
-                        context: context,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                context.read<EditProfileBloc>().add(
+                      UpdateProfileEvent(
+                        name: _nameController.text,
+                        bio: _bioController.text,
+                        phone: _phoneController.text,
+                        image: pickedImage ?? userImage,
                       ),
-                      if (state is SocialLoadingUploadProfileImageState)
-                        const CircularProgressIndicator.adaptive()
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  myFormField(
-                    type: TextInputType.name,
-                    controller: nameController,
-                    icon: const Icon((Icons.person)),
-                    title: 'Name',
-                    validateText: 'Name must not be empty.',
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  myFormField(
-                    type: TextInputType.name,
-                    controller: bioController,
-                    icon: const Icon((Icons.info)),
-                    title: 'Bio',
-                    validateText: 'Bio must not be empty.',
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  myFormField(
-                    type: TextInputType.phone,
-                    controller: phoneController,
-                    icon: const Icon((Icons.phone_android)),
-                    title: 'Phone',
-                    validateText: 'Phone must not be empty.',
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
+                    );
+              },
+              child: const Text('Update'),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        MyProfileImage(
+                          radius: 62,
+                          enableEdit: true,
+                          changeImageTap: () async {
+                            context
+                                .read<EditProfileBloc>()
+                                .add(PickImageEvent());
+                          },
+                          image: pickedImage == null
+                              ? NetworkImage(
+                                  userImage,
+                                )
+                              : FileImage(
+                                  File(pickedImage!.path),
+                                ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    myFormField(
+                      type: TextInputType.name,
+                      controller: _nameController,
+                      icon: const Icon((Icons.person)),
+                      title: 'Name',
+                      validateText: 'Name must not be empty.',
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    myFormField(
+                      type: TextInputType.name,
+                      controller: _bioController,
+                      icon: const Icon((Icons.info)),
+                      title: 'Bio',
+                      validateText: 'Bio must not be empty.',
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    myFormField(
+                      type: TextInputType.phone,
+                      controller: _phoneController,
+                      icon: const Icon((Icons.phone_android)),
+                      title: 'Phone',
+                      validateText: 'Phone must not be empty.',
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
