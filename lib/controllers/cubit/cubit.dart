@@ -34,7 +34,6 @@ class SocialCubit extends Cubit<SocialStates> {
   List<String> appBarTitles = const ['Explore', 'Chats', 'Users', 'Profile'];
 
   // setting screen
-  late int radioValue;
 
   // image picker and upload methods
 

@@ -23,17 +23,17 @@ class NoImageSelectedState extends EditProfileState {
   List<Object> get props => [];
 }
 
-class UpdateLoadingState extends EditProfileState {
+class UpdateProfileLoadingState extends EditProfileState {
   @override
   List<Object> get props => [];
 }
 
-class FinishUpdateState extends EditProfileState {
+class FinishUpdateProfileState extends EditProfileState {
   @override
   List<Object> get props => [];
 }
 
-class ErrorUpdateState extends EditProfileState {
+class ErrorUpdateProfileState extends EditProfileState {
   final String error = 'Something Went Wrong!';
 
   @override

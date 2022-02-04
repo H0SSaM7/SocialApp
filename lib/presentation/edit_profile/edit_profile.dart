@@ -10,7 +10,7 @@ import 'package:social_app/utills/components/my_profile_image.dart';
 import 'package:social_app/utills/components/regular_form_field.dart';
 
 class EditProfile extends StatelessWidget {
-  const EditProfile(
+  EditProfile(
       {Key? key,
       required this.userBio,
       required this.userName,
@@ -22,12 +22,13 @@ class EditProfile extends StatelessWidget {
   final String userPhone;
   final String userImage;
 
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  File? pickedImage;
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController _nameController = TextEditingController();
-    TextEditingController _bioController = TextEditingController();
-    TextEditingController _phoneController = TextEditingController();
-    File? pickedImage;
     return BlocProvider(
       create: (context) =>
           EditProfileBloc(updateUserRepository: UpdateUserRepository()),
@@ -39,10 +40,11 @@ class EditProfile extends StatelessWidget {
           if (state is NoImageSelectedState) {
             myToast(msg: 'No Image Selected!', state: toastStates.warning);
           }
-          if (state is FinishUpdateState) {
+          if (state is FinishUpdateProfileState) {
             myToast(msg: 'Successfully Updated!', state: toastStates.warning);
+            Navigator.pop(context);
           }
-          if (state is ErrorUpdateState) {
+          if (state is ErrorUpdateProfileState) {
             myToast(msg: state.error, state: toastStates.warning);
           }
         },
@@ -57,16 +59,22 @@ class EditProfile extends StatelessWidget {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
-                context.read<EditProfileBloc>().add(
-                      UpdateProfileEvent(
-                        name: _nameController.text,
-                        bio: _bioController.text,
-                        phone: _phoneController.text,
-                        image: pickedImage ?? userImage,
-                      ),
-                    );
+                if (checkUpdateState()) {
+                  context.read<EditProfileBloc>().add(
+                        UpdateProfileEvent(
+                          name: _nameController.text,
+                          bio: _bioController.text,
+                          phone: _phoneController.text,
+                          image: pickedImage ?? userImage,
+                        ),
+                      );
+                } else {
+                  myToast(msg: 'Nothing to Update', state: toastStates.warning);
+                }
               },
-              child: const Text('Update'),
+              child: state is UpdateProfileLoadingState
+                  ? const FittedBox(child: CircularProgressIndicator.adaptive())
+                  : const Text('Update'),
             ),
             body: Padding(
               padding: const EdgeInsets.symmetric(
@@ -138,5 +146,15 @@ class EditProfile extends StatelessWidget {
         },
       ),
     );
+  }
+
+  bool checkUpdateState() {
+    if (_phoneController.text != userPhone ||
+        _bioController.text != userPhone ||
+        _nameController.text != userName ||
+        pickedImage != null) {
+      return true;
+    }
+    return false;
   }
 }

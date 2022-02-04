@@ -33,15 +33,15 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
   FutureOr<void> _updateProfile(
       UpdateProfileEvent event, Emitter<EditProfileState> emit) async {
-    emit(UpdateLoadingState());
+    emit(UpdateProfileLoadingState());
     try {
-      if (event.image == null) {
+      if (event.image is String) {
         await _updateUserRepository.updateProfile(
             phone: event.phone,
             name: event.name,
             bio: event.bio,
             profileImage: event.image);
-        emit(FinishUpdateState());
+        emit(FinishUpdateProfileState());
       } else {
         String imageUrl = await FirebaseStorageServices()
             .uploadImageAndGetUrl(path: 'users', image: event.image);
@@ -50,11 +50,11 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
             name: event.name,
             bio: event.bio,
             profileImage: imageUrl);
-        emit(FinishUpdateState());
+        emit(FinishUpdateProfileState());
       }
     } catch (e) {
       debugPrint(e.toString());
-      emit(ErrorUpdateState());
+      emit(ErrorUpdateProfileState());
     }
   }
 }
