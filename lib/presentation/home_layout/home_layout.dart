@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_app/controllers/cubit/cubit.dart';
-import 'package:social_app/controllers/cubit/states.dart';
+import 'package:social_app/controllers/home_layout_controller/home_cubit.dart';
+import 'package:social_app/controllers/home_layout_controller/home_states.dart';
+
 import 'package:social_app/controllers/user_controller/user_bloc.dart';
 
 import 'package:social_app/presentation/add_post/add_post_screen.dart';
@@ -17,74 +18,76 @@ class HomeLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        SocialCubit cubit = SocialCubit.get(context);
-        return Scaffold(
-            resizeToAvoidBottomInset: false,
-            extendBody: true,
-            appBar: AppBar(
-              title: Text(cubit.appBarTitles[cubit.currentIndex]),
-              centerTitle: true,
-              leading: cubit.currentIndex == 3
-                  ? IconButton(
-                      onPressed: () {
-                        FirebaseAuth.instance.signOut().then(
-                          (value) {
-                            CachedHelper.removePref(key: 'uId');
-                            navigateAndRemove(context, const LoginScreen());
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.logout))
-                  : const SizedBox.shrink(),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    navigateTo(
-                      context,
-                      const SearchScreen(),
-                    );
-                  },
-                  icon: const Icon(Icons.search),
-                ),
-              ],
-            ),
-            bottomNavigationBar: customBottomNavigationBar(context, cubit),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.miniCenterDocked,
-            floatingActionButton: SizedBox(
-              height: 45,
-              width: 45,
-              child: FittedBox(
-                child: FloatingActionButton(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  clipBehavior: Clip.none,
-                  tooltip: 'New post',
-                  onPressed: () {
-                    navigateTo(
-                      context,
-                      AddPostScreen(
-                        user: context.read<UserBloc>().user,
-                      ),
-                    );
-                  },
-                  child: const Icon(
-                    Icons.add,
-                    size: 30,
-                    color: Colors.white,
+    return BlocProvider(
+      create: (context) => HomeLayoutCubit(),
+      child: BlocBuilder<HomeLayoutCubit, HomeLayoutStates>(
+        builder: (context, state) {
+          HomeLayoutCubit cubit = HomeLayoutCubit.get(context);
+          return Scaffold(
+              resizeToAvoidBottomInset: false,
+              extendBody: true,
+              appBar: AppBar(
+                title: Text(cubit.appBarTitles[cubit.currentIndex]),
+                centerTitle: true,
+                leading: cubit.currentIndex == 3
+                    ? IconButton(
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut().then(
+                            (value) async {
+                              await CachedHelper.removePref(key: 'uId');
+                              navigateAndRemove(context, const LoginScreen());
+                            },
+                          );
+                        },
+                        icon: const Icon(Icons.logout))
+                    : const SizedBox.shrink(),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      navigateTo(
+                        context,
+                        const SearchScreen(),
+                      );
+                    },
+                    icon: const Icon(Icons.search),
+                  ),
+                ],
+              ),
+              bottomNavigationBar: customBottomNavigationBar(context, cubit),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.miniCenterDocked,
+              floatingActionButton: SizedBox(
+                height: 45,
+                width: 45,
+                child: FittedBox(
+                  child: FloatingActionButton(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    clipBehavior: Clip.none,
+                    tooltip: 'New post',
+                    onPressed: () {
+                      navigateTo(
+                        context,
+                        AddPostScreen(
+                          user: context.read<UserBloc>().user,
+                        ),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.add,
+                      size: 30,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
-            body: cubit.screens[cubit.currentIndex]);
-      },
+              body: cubit.screens[cubit.currentIndex]);
+        },
+      ),
     );
   }
 
   BottomAppBar customBottomNavigationBar(
-      BuildContext context, SocialCubit cubit) {
+      BuildContext context, HomeLayoutCubit cubit) {
     return BottomAppBar(
       notchMargin: 6.0,
       elevation: 20,
@@ -111,7 +114,7 @@ class HomeLayout extends StatelessWidget {
     );
   }
 
-  CircleAvatar bottomBarIcon(SocialCubit cubit, BuildContext context,
+  CircleAvatar bottomBarIcon(HomeLayoutCubit cubit, BuildContext context,
       IconData icon, int currentNumber) {
     return CircleAvatar(
       backgroundColor: cubit.currentIndex == currentNumber

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:social_app/controllers/home_layout_controller/home_cubit.dart';
 
-import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/controllers/user_controller/user_bloc.dart';
 import 'package:social_app/models/posts_model.dart';
@@ -166,7 +166,7 @@ class PostCardWidget extends StatelessWidget {
                           userId: model.uId!,
                         ));
                   } else {
-                    SocialCubit.get(context).changeNavbar(3);
+                    HomeLayoutCubit.get(context).changeNavbar(3);
                   }
                 },
                 child: Row(

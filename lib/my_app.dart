@@ -2,7 +2,6 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/controllers/theme_controller/theme_cubit.dart';
 import 'package:social_app/controllers/theme_controller/theme_state.dart';
@@ -22,7 +21,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => SocialCubit()),
         BlocProvider(
           create: (context) =>
               UserBloc(userRepository: UserRepository())..add(LoadUserEvent()),

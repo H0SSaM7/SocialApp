@@ -12,9 +12,13 @@ class AddPostInitial extends AddPostState {}
 class ShowPostPickedImage extends AddPostState {
   final File image;
 
-  const ShowPostPickedImage(this.image);
+  const ShowPostPickedImage({required this.image});
   @override
   List<Object> get props => [image];
 }
 
 class AddPostNoImageSelected extends AddPostState {}
+
+class AddPostLoadingUploadPost extends AddPostState {}
+
+class AddPostSuccessfullyState extends AddPostState {}

@@ -1,11 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
 import 'package:social_app/presentation/explore/widgets/advertise_card.dart';
 import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
 import 'package:social_app/presentation/explore/widgets/posts_shimmer_widget.dart';
-import 'package:social_app/utils/components/components.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({Key? key}) : super(key: key);
@@ -22,7 +20,6 @@ class ExploreScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                buildEmailVerifyCheck(),
                 const AdvertiseCard(),
                 if (state is PostsInitial)
                   ListView.separated(
@@ -65,32 +62,6 @@ class ExploreScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget buildEmailVerifyCheck() {
-    return Visibility(
-      visible: !FirebaseAuth.instance.currentUser!.emailVerified,
-      child: Container(
-        color: Colors.yellow[400],
-        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-        child: Row(
-          children: [
-            const Icon(Icons.info_outline),
-            const SizedBox(width: 15),
-            const Expanded(
-              child: Text('Your email is not verified yet.'),
-            ),
-            TextButton(
-              onPressed: () {
-                FirebaseAuth.instance.currentUser!.sendEmailVerification();
-                myToast(msg: 'Check your mail', state: toastStates.success);
-              },
-              child: const Text('verify'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

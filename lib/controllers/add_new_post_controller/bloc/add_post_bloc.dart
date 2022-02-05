@@ -24,7 +24,9 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
       AddImageToPostEvent event, Emitter<AddPostState> emit) async {
     File? _image = await PickImageServices().pickImage();
     if (_image != null) {
-      emit(ShowPostPickedImage(_image));
+      emit(ShowPostPickedImage(
+        image: _image,
+      ));
     } else {
       emit(AddPostNoImageSelected());
     }
@@ -35,7 +37,7 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
     final state = this.state;
     if (state is ShowPostPickedImage) {
       String _imageUrl = await FirebaseStorageServices()
-          .uploadImageAndGetUrl(path: 'Posts', image: state.image);
+          .uploadImageAndGetUrl(path: 'posts', image: state.image);
       await _postsRepository.createNewPost(
         postImage: _imageUrl,
         profileImage: event.profileImage,
@@ -44,14 +46,17 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
       );
     } else {
       await _postsRepository.createNewPost(
-        postImage: null,
+        postImage: '',
         profileImage: event.profileImage,
         postDescription: event.postdescription,
         name: event.name,
       );
     }
+    emit(AddPostSuccessfullyState());
   }
 
   FutureOr<void> _deletePickedImage(
-      DeletepickedPostImageEvent event, Emitter<AddPostState> emit) {}
+      DeletepickedPostImageEvent event, Emitter<AddPostState> emit) {
+    emit(AddPostNoImageSelected());
+  }
 }

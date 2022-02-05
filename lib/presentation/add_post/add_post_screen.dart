@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app/controllers/add_new_post_controller/bloc/add_post_bloc.dart';
-import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/data/repository/posts_repo/posts_repository.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/utils/components/components.dart';
@@ -23,7 +21,18 @@ class AddPostScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => AddPostBloc(postsRepository: PostsRepository()),
       child: BlocConsumer<AddPostBloc, AddPostState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is AddPostNoImageSelected) {
+            myToast(msg: 'No Image Selected!', state: toastStates.warning);
+          }
+
+          if (state is AddPostSuccessfullyState) {
+            myToast(
+                msg: 'You Post Added Successfully.',
+                state: toastStates.success);
+            Navigator.pop(context);
+          }
+        },
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
@@ -67,12 +76,17 @@ class AddPostScreen extends StatelessWidget {
                       ),
                     ),
                     if (state is ShowPostPickedImage)
-                      Padding(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                            right: 10,
-                          ),
-                          child: buildAddImage(state.image)),
+                      Center(
+                        child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 10,
+                              right: 10,
+                            ),
+                            child: buildAddImage(
+                              context,
+                              state.image,
+                            )),
+                      ),
                   ],
                 ),
               ),
@@ -118,18 +132,24 @@ class AddPostScreen extends StatelessWidget {
               width: 15,
             ),
             // Publish the post button -----------------
-            Expanded(
-              child: myElevatedButton(context, height: 38, borderCircular: 50,
-                  onPressed: () async {
-                if (postController.text.isNotEmpty) {}
+            BlocBuilder<AddPostBloc, AddPostState>(
+              builder: (context, state) {
+                return Expanded(
+                  child: myElevatedButton(context,
+                      height: 38, borderCircular: 50, onPressed: () async {
+                    if (postController.text.isNotEmpty ||
+                        state is ShowPostPickedImage) {
+                      context.read<AddPostBloc>().add(
+                            UploadPostEvent(user.name!, postController.text,
+                                user.profileImage!),
+                          );
+                    } else {
+                      myToast(
+                          msg: 'No post to publish', state: toastStates.error);
+                    }
+                  }, child: const Text('Publish Now')),
+                );
               },
-                  child: const FittedBox(
-                    fit: BoxFit.contain,
-                    child: CircularProgressIndicator.adaptive(
-                      backgroundColor: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )),
             ),
           ],
         ),
@@ -137,28 +157,38 @@ class AddPostScreen extends StatelessWidget {
     );
   }
 
-  Stack buildAddImage(File? image) {
-    return Stack(
-      alignment: Alignment.topRight,
+  Widget buildAddImage(
+    BuildContext context,
+    File? image,
+  ) {
+    return Column(
       children: [
-        Image.file(
-          image!,
-          height: 300,
-          fit: BoxFit.cover,
-        ),
-        IconButton(
-          padding: const EdgeInsets.all(4),
+        const SizedBox(height: 10),
+        Stack(
           alignment: Alignment.topRight,
-          onPressed: () {},
-          icon: const CircleAvatar(
-            backgroundColor: Colors.red,
-            radius: 10,
-            child: Icon(
-              Icons.cancel_outlined,
-              size: 15,
-              color: Colors.white,
+          children: [
+            Image.file(
+              image!,
+              height: 300,
+              fit: BoxFit.cover,
             ),
-          ),
+            IconButton(
+              padding: const EdgeInsets.all(4),
+              alignment: Alignment.topRight,
+              onPressed: () {
+                context.read<AddPostBloc>().add(DeletepickedPostImageEvent());
+              },
+              icon: const CircleAvatar(
+                backgroundColor: Colors.red,
+                radius: 10,
+                child: Icon(
+                  Icons.cancel_outlined,
+                  size: 15,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
