@@ -5,8 +5,9 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:social_app/data/repository/update_user/update_repo.dart';
-import 'package:social_app/utills/services/firebase_storage_services.dart';
-import 'package:social_app/utills/services/pick_image_services.dart';
+
+import 'package:social_app/utils/services/firebase_storage_services.dart';
+import 'package:social_app/utils/services/pick_image_services.dart';
 
 part 'edit_profile_event.dart';
 part 'edit_profile_state.dart';

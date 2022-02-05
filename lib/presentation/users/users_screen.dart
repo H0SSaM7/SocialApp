@@ -6,7 +6,7 @@ import 'package:social_app/data/repository/user_repo/user_repository.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/presentation/profile_as_visitor/profile_as_visitor_screen.dart';
 
-import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utils/components/components.dart';
 
 class UsersScreen extends StatelessWidget {
   const UsersScreen({Key? key}) : super(key: key);

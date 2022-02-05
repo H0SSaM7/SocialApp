@@ -3,12 +3,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/data/data_provider/remote/notificaiton/dio_helper.dart';
-import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/my_app.dart';
+import 'package:social_app/presentation/home_layout/home_layout.dart';
 import 'package:social_app/presentation/login/login_screen.dart';
-import 'package:social_app/utills/bloc_observer.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
-import 'package:social_app/utills/network/local/shared_prefrences/cached_helper.dart';
+import 'package:social_app/utils/bloc_observer.dart';
+import 'package:social_app/utils/consistent/consistent.dart';
+import 'package:social_app/utils/network/local/shared_prefrences/cached_helper.dart';
 
 Future<void> backGroundMessage(RemoteMessage message) async {
   // print(message.data.toString() + 'ONBACKGROUND');

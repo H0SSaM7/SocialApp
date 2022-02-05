@@ -10,8 +10,8 @@ import 'package:social_app/controllers/user_controller/user_bloc.dart';
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/presentation/comment/comment_screen.dart';
 import 'package:social_app/presentation/profile_as_visitor/profile_as_visitor_screen.dart';
-import 'package:social_app/utills/components/components.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
+import 'package:social_app/utils/components/components.dart';
+import 'package:social_app/utils/consistent/consistent.dart';
 
 class PostCardWidget extends StatelessWidget {
   final PostsModel model;
@@ -63,7 +63,6 @@ class PostCardWidget extends StatelessWidget {
                       color: Colors.yellow[800],
                       size: 16,
                     ),
-                    //TODO: comments static need to added to post collection
                     title: '0',
                     onTap: () {
                       navigateTo(

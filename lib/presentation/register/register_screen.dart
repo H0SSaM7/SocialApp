@@ -5,8 +5,8 @@ import 'package:social_app/controllers/register_controller/register_states.dart'
 import 'package:social_app/data/repository/auth_repos/auth_repository.dart';
 
 import 'package:social_app/presentation/login/login_screen.dart';
-import 'package:social_app/utills/components/components.dart';
-import 'package:social_app/utills/components/regular_form_field.dart';
+import 'package:social_app/utils/components/components.dart';
+import 'package:social_app/utils/components/regular_form_field.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);

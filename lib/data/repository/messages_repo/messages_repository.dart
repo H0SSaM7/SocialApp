@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart' show debugPrint;
 import 'package:social_app/models/message_model.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
+import 'package:social_app/utils/consistent/consistent.dart';
 
 class MessagesRepository {
   Stream<List<MessageModel>>? getMessages({

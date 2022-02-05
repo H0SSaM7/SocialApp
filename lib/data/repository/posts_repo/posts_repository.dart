@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:social_app/models/posts_model.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
+import 'package:social_app/utils/consistent/consistent.dart';
+
 import 'package:tuple/tuple.dart';
 
 class PostsRepository {

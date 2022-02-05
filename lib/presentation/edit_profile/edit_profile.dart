@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/edit_profile_controller/edit_profile_bloc.dart';
 import 'package:social_app/data/repository/update_user/update_repo.dart';
-import 'package:social_app/utills/components/components.dart';
-import 'package:social_app/utills/components/my_profile_image.dart';
-import 'package:social_app/utills/components/regular_form_field.dart';
+import 'package:social_app/utils/components/components.dart';
+import 'package:social_app/utils/components/my_profile_image.dart';
+import 'package:social_app/utils/components/regular_form_field.dart';
 
+// ignore: must_be_immutable
 class EditProfile extends StatelessWidget {
   EditProfile(
       {Key? key,

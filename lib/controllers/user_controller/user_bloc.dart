@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:social_app/data/repository/user_repo/user_repository.dart';
 import 'package:social_app/models/user_model.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
+import 'package:social_app/utils/consistent/consistent.dart';
 
 part 'user_event.dart';
 

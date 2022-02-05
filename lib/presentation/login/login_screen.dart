@@ -3,13 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/login_controller/login_cubit.dart';
 import 'package:social_app/controllers/login_controller/login_states.dart';
 import 'package:social_app/data/repository/auth_repos/auth_repository.dart';
-import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/presentation/register/register_screen.dart';
-
-import 'package:social_app/utills/components/components.dart';
-import 'package:social_app/utills/components/regular_form_field.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
-import 'package:social_app/utills/network/local/shared_prefrences/cached_helper.dart';
+import 'package:social_app/presentation/home_layout/home_layout.dart';
+import 'package:social_app/utils/components/components.dart';
+import 'package:social_app/utils/components/regular_form_field.dart';
+import 'package:social_app/utils/consistent/consistent.dart';
+import 'package:social_app/utils/network/local/shared_prefrences/cached_helper.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);

@@ -48,6 +48,7 @@ class ChatRoomBloc extends Bloc<ChatRoomEvent, ChatRoomState> {
       receiverId: event.receiverId,
       message: event.message,
     );
+    add(GetMessagesEvent(receiverId: event.receiverId));
     await DioHelper.post(
       token: event.receiverToken,
       userName: event.receiverName,

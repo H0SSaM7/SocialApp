@@ -10,7 +10,8 @@ import 'package:social_app/presentation/chats/chats_screen.dart';
 import 'package:social_app/presentation/explore/explore_screen.dart';
 import 'package:social_app/presentation/user_profile/user_profile_screen.dart';
 import 'package:social_app/presentation/users/users_screen.dart';
-import 'package:social_app/utills/services/pick_image_services.dart';
+
+import 'package:social_app/utils/services/pick_image_services.dart';
 
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());

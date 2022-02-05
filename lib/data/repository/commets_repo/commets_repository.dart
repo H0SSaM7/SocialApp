@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart' show debugPrint;
 import 'package:social_app/models/comment_model.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
+
+import 'package:social_app/utils/consistent/consistent.dart';
 
 class CommentsRepository {
   Stream<List<CommentModel>>? getComment({required String postId}) {

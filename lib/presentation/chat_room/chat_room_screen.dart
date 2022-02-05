@@ -5,7 +5,7 @@ import 'package:social_app/controllers/chat_room_controller/chat_room_bloc.dart'
 import 'package:social_app/data/repository/messages_repo/messages_repository.dart';
 import 'package:social_app/models/message_model.dart';
 import 'package:social_app/models/user_model.dart';
-import 'package:social_app/utills/consistent/consistent.dart';
+import 'package:social_app/utils/consistent/consistent.dart';
 
 class ChatRoomScreen extends StatelessWidget {
   ChatRoomScreen({Key? key, required this.userModel}) : super(key: key);
@@ -91,34 +91,32 @@ class ChatRoomScreen extends StatelessWidget {
   }
 
   Widget sentMessageCard(BuildContext context) {
-    return BlocBuilder<ChatRoomBloc, ChatRoomState>(
-      builder: (context, state) {
-        return Card(
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          elevation: 20,
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: messageController,
-                    minLines: 1,
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      hintText: 'Write you message',
-                    ),
-                  ),
+    return Card(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: 20,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: messageController,
+                minLines: 1,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  hintText: 'Write you message',
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  onTap: () {
-                    if (messageController.text.isNotEmpty) {
-                      BlocProvider.of<ChatRoomBloc>(context).add(
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            InkWell(
+              onTap: () {
+                if (messageController.text.isNotEmpty) {
+                  context.read<ChatRoomBloc>().add(
                         SendMessagesEvent(
                           receiverId: userModel.uId!,
                           receiverName: userModel.name!,
@@ -126,23 +124,21 @@ class ChatRoomScreen extends StatelessWidget {
                           message: messageController.text,
                         ),
                       );
-                    }
-                  },
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: Theme.of(context).primaryColor,
-                    child: const Icon(
-                      FontAwesomeIcons.solidPaperPlane,
-                      size: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
-      },
+                }
+              },
+              child: CircleAvatar(
+                radius: 22,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: const Icon(
+                  FontAwesomeIcons.solidPaperPlane,
+                  size: 18,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 

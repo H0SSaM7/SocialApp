@@ -4,11 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_app/controllers/cubit/cubit.dart';
 import 'package:social_app/controllers/cubit/states.dart';
-import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utils/components/components.dart';
 
 class AddPostScreen extends StatelessWidget {
-  const AddPostScreen({Key? key, required this.userImage}) : super(key: key);
+  const AddPostScreen({
+    Key? key,
+    required this.userImage,
+    required this.userName,
+  }) : super(key: key);
   final String userImage;
+  final String userName;
   @override
   Widget build(BuildContext context) {
     var postController = TextEditingController();
@@ -26,81 +31,8 @@ class AddPostScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Create post'),
           ),
-          bottomNavigationBar: SizedBox(
-            height: 80,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  // add image button -----------------
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        cubit.setPostImage();
-                      },
-                      icon: const FaIcon(
-                        FontAwesomeIcons.image,
-                        size: 16,
-                      ),
-                      label: const Text('Image'),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  // add tags button -----------------
-                  OutlinedButton(
-                    onPressed: () {},
-                    child: const Text('#Tags'),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  // Publish the post button -----------------
-                  Expanded(
-                    child: myElevatedButton(context,
-                        height: 38, borderCircular: 50, onPressed: () async {
-                      // if the user didn't input any fields
-                      if (cubit.postImage == null &&
-                          postController.text.isEmpty) {
-                        myToast(
-                            msg: 'There is no Post to create !',
-                            state: toastStates.warning);
-                        // if the user input only description
-                      } else if (cubit.postImage == null &&
-                          postController.text.isNotEmpty) {
-                        cubit.createNewPost(
-                            postImage: '',
-                            date: DateTime.now().toString(),
-                            postDescription: postController.text);
-
-                        // case the user input description and choose image
-                      } else {
-                        cubit.uploadPostImageAndCreatePost(
-                            date: DateTime.now().toString(),
-                            postDescription: postController.text);
-                      }
-                    },
-                        child: ConditionalBuilder(
-                            condition:
-                                state is SocialLoadingUploadPostImageState,
-                            builder: (context) {
-                              return const FittedBox(
-                                fit: BoxFit.contain,
-                                child: CircularProgressIndicator.adaptive(
-                                  backgroundColor: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              );
-                            },
-                            fallback: (context) {
-                              return const Text('PUBLISH');
-                            })),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          bottomNavigationBar:
+              buildCustomNavBar(cubit, context, postController, state),
           body: Padding(
             padding: const EdgeInsets.all(20.0),
             child: SingleChildScrollView(
@@ -119,7 +51,7 @@ class AddPostScreen extends StatelessWidget {
                         width: 20,
                       ),
                       Text(
-                        'Hossam Ramadan',
+                        userName,
                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -153,6 +85,83 @@ class AddPostScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  SizedBox buildCustomNavBar(SocialCubit cubit, BuildContext context,
+      TextEditingController postController, SocialStates state) {
+    return SizedBox(
+      height: 80,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            // add image button -----------------
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  cubit.setPostImage();
+                },
+                icon: const FaIcon(
+                  FontAwesomeIcons.image,
+                  size: 16,
+                ),
+                label: const Text('Image'),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            // add tags button -----------------
+            OutlinedButton(
+              onPressed: () {},
+              child: const Text('#Tags'),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+            // Publish the post button -----------------
+            Expanded(
+              child: myElevatedButton(context, height: 38, borderCircular: 50,
+                  onPressed: () async {
+                // if the user didn't input any fields
+                if (cubit.postImage == null && postController.text.isEmpty) {
+                  myToast(
+                      msg: 'There is no Post to create !',
+                      state: toastStates.warning);
+                  // if the user input only description
+                } else if (cubit.postImage == null &&
+                    postController.text.isNotEmpty) {
+                  cubit.createNewPost(
+                      postImage: '',
+                      date: DateTime.now().toString(),
+                      postDescription: postController.text);
+
+                  // case the user input description and choose image
+                } else {
+                  cubit.uploadPostImageAndCreatePost(
+                      date: DateTime.now().toString(),
+                      postDescription: postController.text);
+                }
+              },
+                  child: ConditionalBuilder(
+                      condition: state is SocialLoadingUploadPostImageState,
+                      builder: (context) {
+                        return const FittedBox(
+                          fit: BoxFit.contain,
+                          child: CircularProgressIndicator.adaptive(
+                            backgroundColor: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        );
+                      },
+                      fallback: (context) {
+                        return const Text('PUBLISH');
+                      })),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

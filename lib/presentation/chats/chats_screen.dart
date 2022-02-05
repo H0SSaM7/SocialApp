@@ -6,7 +6,7 @@ import 'package:social_app/data/repository/user_repo/user_repository.dart';
 import 'package:social_app/models/user_model.dart';
 
 import 'package:social_app/presentation/chat_room/chat_room_screen.dart';
-import 'package:social_app/utills/components/components.dart';
+import 'package:social_app/utils/components/components.dart';
 
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({Key? key}) : super(key: key);
