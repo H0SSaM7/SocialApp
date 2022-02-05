@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart' show debugPrint;
 import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/utils/consistent/consistent.dart';
 
@@ -37,6 +38,30 @@ class PostsRepository {
       await FirebaseFirestore.instance.collection('posts').doc(postId).update({
         'likes': FieldValue.arrayUnion([currentUserId]),
       });
+    }
+  }
+
+  Future<void> createNewPost({
+    required String? postImage,
+    required String postDescription,
+    required String name,
+    required String profileImage,
+  }) async {
+    try {
+      PostsModel postsModel = PostsModel(
+        name: name,
+        uId: currentUserId,
+        profileImage: profileImage,
+        date: DateTime.now().toString(),
+        postDescription: postDescription,
+        postImage: postImage,
+        likes: [],
+      );
+      await FirebaseFirestore.instance.collection('posts').add(
+            postsModel.toJson(),
+          );
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

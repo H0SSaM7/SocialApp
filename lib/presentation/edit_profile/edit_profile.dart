@@ -94,7 +94,7 @@ class EditProfile extends StatelessWidget {
                           changeImageTap: () async {
                             context
                                 .read<EditProfileBloc>()
-                                .add(PickImageEvent());
+                                .add(PickProfileImage());
                           },
                           image: pickedImage == null
                               ? NetworkImage(

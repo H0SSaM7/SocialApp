@@ -10,7 +10,6 @@ import 'package:social_app/presentation/add_post/add_post_screen.dart';
 import 'package:social_app/presentation/login/login_screen.dart';
 import 'package:social_app/presentation/search/search_screen.dart';
 import 'package:social_app/utils/components/components.dart';
-
 import 'package:social_app/utils/network/local/shared_prefrences/cached_helper.dart';
 
 class HomeLayout extends StatelessWidget {
@@ -65,12 +64,11 @@ class HomeLayout extends StatelessWidget {
                   tooltip: 'New post',
                   onPressed: () {
                     navigateTo(
-                        context,
-                        AddPostScreen(
-                          userImage:
-                              context.read<UserBloc>().user.profileImage!,
-                          userName: context.read<UserBloc>().user.name!,
-                        ));
+                      context,
+                      AddPostScreen(
+                        user: context.read<UserBloc>().user,
+                      ),
+                    );
                   },
                   child: const Icon(
                     Icons.add,

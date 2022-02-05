@@ -17,13 +17,13 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   EditProfileBloc({required UpdateUserRepository updateUserRepository})
       : _updateUserRepository = updateUserRepository,
         super(EditProfileInitial()) {
-    on<PickImageEvent>(_pickImage);
+    on<PickProfileImage>(_pickImage);
 
     on<UpdateProfileEvent>(_updateProfile);
   }
 
   FutureOr<void> _pickImage(
-      PickImageEvent event, Emitter<EditProfileState> emit) async {
+      PickProfileImage event, Emitter<EditProfileState> emit) async {
     File? _image = await PickImageServices().pickImage();
     if (_image != null) {
       emit(PickedImageReplaceWithOld(_image));

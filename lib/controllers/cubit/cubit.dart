@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/cubit/states.dart';
-import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/presentation/chats/chats_screen.dart';
 import 'package:social_app/presentation/explore/explore_screen.dart';
 import 'package:social_app/presentation/user_profile/user_profile_screen.dart';
@@ -34,17 +32,9 @@ class SocialCubit extends Cubit<SocialStates> {
   ];
   List<String> appBarTitles = const ['Explore', 'Chats', 'Users', 'Profile'];
 
-  // setting screen
-
-  // image picker and upload methods
-
   final PickImageServices _pickServices = PickImageServices();
 
-  // file image variables
-
   File? postImage;
-
-  // Url image variables
 
   setPostImage() async {
     postImage = await _pickServices.pickImage();
@@ -71,41 +61,10 @@ class SocialCubit extends Cubit<SocialStates> {
           .then((p0) {
         p0.ref.getDownloadURL().then((value) {
           emit(SocialSuccessUploadPostImageState());
-          createNewPost(
-              postImage: value, date: date, postDescription: postDescription);
         }).catchError((error) {
           debugPrint(error.toString());
         });
       });
     }
-  }
-
-  createNewPost({
-    required String? postImage,
-    required String date,
-    required String postDescription,
-  }) {
-    emit(SocialLoadingCreateNewPostState());
-    var userModel;
-    PostsModel postsModel = PostsModel(
-      name: userModel!.name,
-      uId: userModel!.uId,
-      profileImage: userModel!.profileImage,
-      date: date,
-      postDescription: postDescription,
-      postImage: postImage,
-      likes: [],
-    );
-    FirebaseFirestore.instance
-        .collection('posts')
-        .add(
-          postsModel.toJson(),
-        )
-        .then((value) {
-      emit(SocialSuccessCreateNewPostState());
-    }).catchError((error) {
-      emit(SocialErrorCreateNewPostState());
-      debugPrint(error.toString());
-    });
   }
 }

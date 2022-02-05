@@ -4,7 +4,7 @@ abstract class EditProfileEvent extends Equatable {
   const EditProfileEvent();
 }
 
-class PickImageEvent extends EditProfileEvent {
+class PickProfileImage extends EditProfileEvent {
   @override
   List<Object?> get props => [];
 }
