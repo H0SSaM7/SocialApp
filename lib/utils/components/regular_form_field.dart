@@ -50,9 +50,8 @@ class myFormField extends StatelessWidget {
         validator: (value) {
           if (value!.isEmpty) {
             return validateText;
-          } else {
-            null;
           }
+          return null;
         },
         decoration: InputDecoration(
           suffixIcon: suffix,

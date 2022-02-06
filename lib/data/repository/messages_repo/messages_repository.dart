@@ -26,6 +26,7 @@ class MessagesRepository {
     } catch (e) {
       debugPrint(e.toString());
     }
+    return null;
   }
 
   Future<void> sendMessages({

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/comments_controller/comments_bloc.dart';
-import 'package:social_app/controllers/home_layout_controller/home_cubit.dart';
 
 import 'package:social_app/controllers/user_controller/user_bloc.dart';
 import 'package:social_app/data/repository/commets_repo/commets_repository.dart';
@@ -54,7 +53,6 @@ class CommentScreen extends StatelessWidget {
                     ),
                     buildBottomCard(
                       context,
-                      HomeLayoutCubit.get(context),
                     ),
                   ],
                 ),
@@ -140,7 +138,9 @@ class CommentScreen extends StatelessWidget {
     );
   }
 
-  Card buildBottomCard(BuildContext context, HomeLayoutCubit cubit) {
+  Card buildBottomCard(
+    BuildContext context,
+  ) {
     TextEditingController commentController = TextEditingController();
     return Card(
       margin: const EdgeInsets.all(0.0),
