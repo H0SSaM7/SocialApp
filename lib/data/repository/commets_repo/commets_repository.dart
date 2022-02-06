@@ -22,6 +22,7 @@ class CommentsRepository {
     } catch (err) {
       debugPrint(err.toString());
     }
+    return null;
   }
 
   Future<void> postNewComment(

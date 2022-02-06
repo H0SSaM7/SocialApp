@@ -57,9 +57,13 @@ class PostsRepository {
         postImage: postImage,
         likes: [],
       );
-      await FirebaseFirestore.instance.collection('posts').add(
-            postsModel.toJson(),
-          );
+      DocumentReference<Map<String, dynamic>> _data =
+          await FirebaseFirestore.instance.collection('posts').add(
+                postsModel.toJson(),
+              );
+      FirebaseFirestore.instance.collection('users').doc(currentUserId).update({
+        'posts': FieldValue.arrayUnion([_data.id])
+      });
     } catch (e) {
       debugPrint(e.toString());
     }

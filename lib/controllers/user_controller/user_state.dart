@@ -11,10 +11,14 @@ class UserLoadingState extends UserState {
 
 class UserLoadedState extends UserState {
   final UserModel user;
+  final List<PostsModel> userPosts;
 
-  const UserLoadedState(this.user);
+  const UserLoadedState({
+    required this.user,
+    this.userPosts = const [],
+  });
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, userPosts];
 }
 
 class UserErrorState extends UserState {
@@ -22,5 +26,5 @@ class UserErrorState extends UserState {
   const UserErrorState(
       {this.error = 'Something went wrong please try again Later'});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [error];
 }

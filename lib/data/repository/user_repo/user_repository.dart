@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:social_app/utils/consistent/consistent.dart';
@@ -12,6 +13,21 @@ class UserRepository {
         .doc(userId)
         .snapshots()
         .map((event) => UserModel.fromSnap(event));
+  }
+
+  Future<List<PostsModel>> getUserPosts({required List postsId}) async {
+    List<PostsModel> posts = [];
+
+    for (var elemnet in postsId) {
+      DocumentSnapshot<Map<String, dynamic>> _data =
+          await _fireStore.collection('posts').doc(elemnet).get();
+      if (_data.exists) {
+        posts.add(
+          PostsModel.fromMap(_data.data()!),
+        );
+      }
+    }
+    return posts;
   }
 
   Future<List<UserModel>> getAllUsers() async {

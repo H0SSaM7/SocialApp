@@ -11,8 +11,11 @@ class ProfileAsVisitorInitial extends ProfileAsVisitorState {
 
 class ProfileAsVisitorGetUserSuccess extends ProfileAsVisitorState {
   final UserModel user;
+  final List<PostsModel> posts;
+  final List<String> postsId;
 
-  const ProfileAsVisitorGetUserSuccess(this.user);
+  const ProfileAsVisitorGetUserSuccess(
+      {this.posts = const [], this.postsId = const [], required this.user});
   @override
   List<Object> get props => [user];
 }

@@ -16,12 +16,8 @@ import 'package:social_app/utils/consistent/consistent.dart';
 class PostCardWidget extends StatelessWidget {
   final PostsModel model;
   final String postId;
-  final int index;
-  const PostCardWidget(
-      {Key? key,
-      required this.model,
-      required this.index,
-      required this.postId})
+
+  const PostCardWidget({Key? key, required this.model, required this.postId})
       : super(key: key);
 
   @override

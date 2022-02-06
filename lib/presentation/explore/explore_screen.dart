@@ -39,7 +39,6 @@ class ExploreScreen extends StatelessWidget {
                       return PostCardWidget(
                         postId: state.postsId[index],
                         model: state.postsModel[index],
-                        index: index,
                       );
                     },
                     separatorBuilder: (context, index) => const SizedBox(

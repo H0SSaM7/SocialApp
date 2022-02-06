@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-class UserModel {
-  String? name;
-  String? email;
-  String? phone;
-  String? uId;
-  String? token;
-  String? profileImage;
-  String? bio;
-  bool? emailVerified;
-  List? followers;
-  List? following;
+class UserModel extends Equatable {
+  final String? name;
+  final String? email;
+  final String? phone;
+  final String? uId;
+  final String? token;
+  final String? profileImage;
+  final String? bio;
+  final bool? emailVerified;
+  final List? followers;
+  final List? following;
+  final List? posts;
 
-  UserModel({
+  const UserModel({
     this.name,
     this.email,
     this.phone,
@@ -23,6 +25,7 @@ class UserModel {
     this.token,
     this.followers,
     this.following,
+    this.posts,
   });
 
   Map<String, dynamic> toJson() {
@@ -37,6 +40,7 @@ class UserModel {
       'emailVerified': emailVerified,
       'followers': followers,
       'following': following,
+      'posts': posts,
     };
   }
 
@@ -52,6 +56,7 @@ class UserModel {
       emailVerified: map['emailVerified'] as bool,
       followers: map['followers'],
       following: map['following'],
+      posts: map['posts'],
     );
   }
   factory UserModel.fromJson(Map<String, dynamic> map) {
@@ -66,6 +71,22 @@ class UserModel {
       emailVerified: map['emailVerified'] as bool,
       followers: map['followers'],
       following: map['following'],
+      posts: map['posts'],
     );
   }
+
+  @override
+  List<Object?> get props => [
+        name,
+        email,
+        phone,
+        uId,
+        token,
+        profileImage,
+        bio,
+        emailVerified,
+        followers,
+        following,
+        posts,
+      ];
 }

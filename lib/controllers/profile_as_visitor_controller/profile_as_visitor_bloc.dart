@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:social_app/data/repository/user_repo/user_repository.dart';
+import 'package:social_app/models/posts_model.dart';
 import 'package:social_app/models/user_model.dart';
 
 part 'profile_as_visitor_event.dart';
@@ -35,7 +36,7 @@ class ProfileAsVisitorBloc
   FutureOr<void> _updateProfile(
       UpdateProfileEvent event, Emitter<ProfileAsVisitorState> emit) {
     user = event.user;
-    emit(ProfileAsVisitorGetUserSuccess(event.user));
+    emit(ProfileAsVisitorGetUserSuccess(user: event.user));
   }
 
   FutureOr<void> _followUser(

@@ -16,3 +16,8 @@ class LoadedUserEvent extends UserEvent {
   @override
   List<Object?> get props => [user];
 }
+
+class LoadedUserPostsEvent extends UserEvent {
+  @override
+  List<Object?> get props => [];
+}
