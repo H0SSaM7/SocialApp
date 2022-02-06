@@ -17,13 +17,13 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
         super(CommentsLoadingState()) {
     on<CommentLoadEvent>(_loadComments);
     on<CommentUpdateEvent>(_updateComments);
-    on<CommentsAddEvent>(_appNewPost);
+    on<CommentsAddEvent>(_appNewComment);
   }
 
   _loadComments(CommentLoadEvent event, emit) {
     _commentsSubscription?.cancel();
     _commentsSubscription =
-        _commentsRepository.getComment(postId: event.postId)!.listen(
+        _commentsRepository.getComment(postId: event.postId)?.listen(
       (event) {
         add(
           CommentUpdateEvent(comments: event),
@@ -37,7 +37,7 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
     emit(CommentsLoadedState(event.comments));
   }
 
-  FutureOr<void> _appNewPost(
+  FutureOr<void> _appNewComment(
       CommentsAddEvent event, Emitter<CommentsState> emit) async {
     await _commentsRepository.postNewComment(
       postId: event.postId,
