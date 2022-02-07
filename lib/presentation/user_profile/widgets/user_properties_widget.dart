@@ -69,7 +69,8 @@ class UserPropertiesWidget extends StatelessWidget {
         ),
         Row(
           children: [
-            buildPropertiesOption(context, '2', 'Posts'),
+            buildPropertiesOption(
+                context, '${state.user.posts!.length}', 'Posts'),
             Container(
               height: 50,
               width: 1,

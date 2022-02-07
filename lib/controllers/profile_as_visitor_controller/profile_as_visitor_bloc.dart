@@ -34,9 +34,10 @@ class ProfileAsVisitorBloc
   }
 
   FutureOr<void> _updateProfile(
-      UpdateProfileEvent event, Emitter<ProfileAsVisitorState> emit) {
+      UpdateProfileEvent event, Emitter<ProfileAsVisitorState> emit) async {
     user = event.user;
-    emit(ProfileAsVisitorGetUserSuccess(user: event.user));
+    var _date = await _userRepository.getUserPosts(postsId: event.user.posts!);
+    emit(ProfileAsVisitorGetUserSuccess(user: event.user, posts: _date));
   }
 
   FutureOr<void> _followUser(

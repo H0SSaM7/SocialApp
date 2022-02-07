@@ -4,6 +4,7 @@ import 'package:social_app/controllers/profile_as_visitor_controller/profile_as_
 import 'package:social_app/controllers/theme_controller/theme_cubit.dart';
 import 'package:social_app/data/repository/user_repo/user_repository.dart';
 import 'package:social_app/models/user_model.dart';
+import 'package:social_app/presentation/explore/widgets/post_card_widget.dart';
 import 'package:social_app/utils/components/components.dart';
 import 'package:social_app/utils/components/my_profile_image.dart';
 import 'package:social_app/utils/consistent/consistent.dart';
@@ -48,46 +49,60 @@ class ProfileScreenAsVisitor extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildButtonsSection(context, state.user),
-                            const Divider(
-                              thickness: 1,
+                      Column(
+                        children: [
+                          buildButtonsSection(context, state.user),
+                          const Divider(
+                            thickness: 1,
+                          ),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).scaffoldBackgroundColor,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 3,
-                              ),
-                              child: Text(
-                                'Posts',
-                                style: Theme.of(context).textTheme.headline5!,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 5,
+                                  ),
+                                  child: Text(
+                                    'Posts',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
+                                  ),
+                                ),
+                                if (state.user.posts!.isEmpty)
+                                  const SizedBox(
+                                    height: 130,
+                                  ),
+                                if (state.user.posts!.isEmpty)
+                                  Text(
+                                    'You have no posts yet',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                if (state.user.posts!.isNotEmpty)
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return PostCardWidget(
+                                        model: state.posts[index],
+                                        postId: state.user.posts![index],
+                                      );
+                                    },
+                                    itemCount: state.posts.length,
+                                  )
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      // TODO posts which include specific user
-                      // ListView.separated(
-                      //     shrinkWrap: true,
-                      //     physics: const NeverScrollableScrollPhysics(),
-                      //     itemBuilder: (context, index) {
-                      //       return PostCardWidget(
-                      //         postId: '',
-                      //         model: PostsModel(uId: userId),
-                      //         // cubit.posts[index],
-                      //         index: index,
-                      //       );
-                      //     },
-                      //     separatorBuilder: (context, index) => const SizedBox(
-                      //           height: 5,
-                      //         ),
-                      //     itemCount: 1
-                      //     // cubit.posts.length,
-                      //     ),
                     ],
                   ),
                 ),

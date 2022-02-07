@@ -22,7 +22,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<LoadUserEvent>(_loadUser);
 
     on<LoadedUserEvent>(_loadedUser);
-    on<LoadedUserPostsEvent>(_loadUserPosts);
   }
 
   FutureOr<void> _loadUser(LoadUserEvent event, Emitter<UserState> emit) {
@@ -33,25 +32,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
   }
 
-  FutureOr<void> _loadedUser(LoadedUserEvent event, Emitter<UserState> emit) {
+  FutureOr<void> _loadedUser(
+      LoadedUserEvent event, Emitter<UserState> emit) async {
     if (event.user != null) {
       _user = event.user!;
-      emit(UserLoadedState(user: event.user!));
+      var _listOfPosts =
+          await _userRepository.getUserPosts(postsId: event.user!.posts!);
+      emit(UserLoadedState(user: event.user!, userPosts: _listOfPosts));
     } else {
       emit(const UserErrorState());
-    }
-  }
-
-  FutureOr<void> _loadUserPosts(
-      LoadedUserPostsEvent event, Emitter<UserState> emit) async {
-    final state = this.state;
-    if (state is UserLoadedState) {
-      var _listOfPosts =
-          await _userRepository.getUserPosts(postsId: state.user.posts!);
-      emit(UserLoadedState(
-        user: state.user,
-        userPosts: _listOfPosts,
-      ));
     }
   }
 }

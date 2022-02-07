@@ -10,7 +10,6 @@ class UserProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      context.read<UserBloc>().add(LoadedUserPostsEvent());
       return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
         if (state is UserLoadingState) {
           return const Center(
