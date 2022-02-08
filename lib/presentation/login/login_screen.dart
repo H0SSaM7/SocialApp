@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/controllers/login_controller/login_cubit.dart';
 import 'package:social_app/controllers/login_controller/login_states.dart';
+import 'package:social_app/controllers/posts_controller/posts_bloc.dart';
+import 'package:social_app/controllers/user_controller/user_bloc.dart';
 import 'package:social_app/data/repository/auth_repos/auth_repository.dart';
 import 'package:social_app/presentation/register/register_screen.dart';
 import 'package:social_app/presentation/home_layout/home_layout.dart';
@@ -27,6 +29,8 @@ class LoginScreen extends StatelessWidget {
               currentUserId = CachedHelper.getPref(key: 'uId');
               myToast(msg: 'success', state: toastStates.success);
               navigateAndRemove(context, const HomeLayout());
+              context.read<UserBloc>().add(LoadUserEvent());
+              context.read<PostsBloc>().add(LoadPostsEvent());
             });
           }
           if (state is LoginErrorState) {

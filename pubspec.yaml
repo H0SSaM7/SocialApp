@@ -48,9 +48,18 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
-
+  flutter_native_splash: 
   flutter_lints: ^1.0.0
+  flutter_launcher_icons: 
+
+flutter_icons:
+  android: "launcher_icon"
+  image_path: "assets/images/appicon.png"
+
+flutter_native_splash:
+  color: "#f1faee"
+  image: "assets/images/appicon.png"
+
 
 
 

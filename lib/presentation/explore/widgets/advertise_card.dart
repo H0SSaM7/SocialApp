@@ -14,7 +14,7 @@ class AdvertiseCard extends StatelessWidget {
         alignment: Alignment.bottomRight,
         children: [
           Image.network(
-            'https://image.freepik.com/free-photo/bearded-man-denim-shirt-round-glasses_273609-11770.jpg',
+            'https://image.freepik.com/free-photo/business-people-casual-meeting_53876-101882.jpg?w=826',
             height: 185,
             width: double.maxFinite,
             fit: BoxFit.cover,
